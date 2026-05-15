@@ -9,5 +9,4 @@ class SmartLearningPlatformApplicationTests {
     @Test
     void contextLoads() {
     }
-
 }

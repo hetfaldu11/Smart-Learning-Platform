@@ -2,11 +2,13 @@ package com.fm.smartlearningplatform.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users",
@@ -16,32 +18,29 @@ import java.time.LocalDateTime;
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(exclude = "userProfile")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private long id;
+    private Long id;
 
-    @Column(name = "email", nullable = false)
     @Email
+    @Column(name = "email", nullable = false, unique = true)
     private String email ;
 
-    @Column(name ="role", nullable = false)
-    @Enumerated(EnumType.STRING)
-    private UserRole role;
-
-    @Column(name= "password", nullable = false)
-    private String password;
+    @Column(name= "password_hash", nullable = false)
+    private String passwordHash;
 
     @Column(name= "enabled", nullable = false)
-    private int enabled;
+    private int enabled = 1;
 
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
 
     @Column(name= "failed_login_attempt")
-    private int failedLoginAttempt;
+    private int failedLoginAttempt = 0;
 
     @Column(name= "last_seen_at")
     private LocalDateTime lastSeenAt;
@@ -52,34 +51,38 @@ public class User {
     @Column(name = "account_locked_until")
     private LocalDateTime accountLockedUntil;
 
+    @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "upLocalDateTimed_at")
+    @UpdateTimestamp
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email='" + email + '\'' +
-                ", role=" + role +
-                ", password='" + password + '\'' +
-                ", enabled=" + enabled +
-                ", lastLoginAt=" + lastLoginAt +
-                ", failedLoginAttempt=" + failedLoginAttempt +
-                ", lastSeenAt=" + lastSeenAt +
-                ", passwordChangedAt=" + passwordChangedAt +
-                ", accountLockedUntil=" + accountLockedUntil +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", deletedAt=" + deletedAt +
-                '}';
+    @OneToOne(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true)
+    private UserProfile userProfile;
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    private Set<UserAuthorization> authorizations = new HashSet<>();
+
+    public void addRole(UserRole role) {
+
+        UserAuthorization authorization =
+                new UserAuthorization();
+
+        authorization.setUser(this);
+        authorization.setUserRole(role);
+
+        this.authorizations.add(authorization);
     }
-
-
-
 }
