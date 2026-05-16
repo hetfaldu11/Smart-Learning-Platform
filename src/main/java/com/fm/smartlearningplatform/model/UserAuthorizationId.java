@@ -8,7 +8,6 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode
 public class UserAuthorizationId implements Serializable {
 
     private Long user;

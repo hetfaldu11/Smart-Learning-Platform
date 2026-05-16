@@ -19,9 +19,8 @@ public class UserTest {
     @Test
     public void createUser(){
         User user = new User();
-        user.setId(1);
+        user.setId(1L);
         user.setEmail("het@gmail.com");
-        user.setRole(UserRole.STUDENT);
         user.setPasswordHash("{noop}123");
         user.setEnabled(1);
         user.setLastLoginAt(LocalDateTime.now());
@@ -39,7 +38,6 @@ public class UserTest {
     public void addUser(){
         User user = new User();
         user.setEmail("het@gmail.com");
-        user.setRole(UserRole.STUDENT);
         user.setPasswordHash("{noop}123");
         user.setEnabled(1);
         user.setLastLoginAt(LocalDateTime.now());
@@ -49,20 +47,20 @@ public class UserTest {
 
         userService.saveUser(user);
 
-        assertEquals(1,user.getId(),"User is not created.");
+        System.out.println(user.getCreatedAt() + "\n" + user.getUpdatedAt());
+
+        assertEquals(2,user.getId(),"User is not created.");
     }
 
     @BeforeEach
     public void beforeEach(){
         User user = new User();
-        user.setEmail("het@gmail.com");
-        user.setRole(UserRole.STUDENT);
+        user.setEmail("hetfaldu@gmail.com");
         user.setPasswordHash("{noop}123");
         user.setEnabled(1);
         user.setLastLoginAt(LocalDateTime.now());
         user.setPasswordChangedAt(LocalDateTime.now());
         user.setLastSeenAt(LocalDateTime.now());
-        user.setCreatedAt(LocalDateTime.now());
         userService.saveUser(user);
     }
 
@@ -76,6 +74,7 @@ public class UserTest {
         User  user = userService.findById(1);
         user.setEmail("h@gmail.com");
         userService.saveUser(user);
+        System.out.println(user.getCreatedAt() + "\n" + user.getUpdatedAt());
         assertEquals("h@gmail.com",userService.findById(1).getEmail(),"User is not created.");
     }
 

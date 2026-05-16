@@ -8,14 +8,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "professions")
+@Table(name = "languages")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class Profession {
-
+public class Language {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,6 +22,9 @@ public class Profession {
 
     @Column(name = "name",nullable = false, unique = true)
     private String name;
+
+    @Column(name= "code",nullable = false, unique = true)
+    private String code;
 
     @CreationTimestamp
     @Column(name = "created_at")

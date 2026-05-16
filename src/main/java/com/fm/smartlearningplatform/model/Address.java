@@ -2,8 +2,14 @@ package com.fm.smartlearningplatform.model;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Enumerated;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Embeddable
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Address {
     private String street;
 

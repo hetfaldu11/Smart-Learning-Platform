@@ -21,8 +21,8 @@ public class UserProfile {
     @Column(name = "user_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -88,5 +88,4 @@ public class UserProfile {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
 }

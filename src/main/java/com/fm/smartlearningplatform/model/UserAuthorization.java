@@ -18,8 +18,6 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "user")
-@EqualsAndHashCode(of = {"user", "userRole"})
 public class UserAuthorization {
 
     @Id
