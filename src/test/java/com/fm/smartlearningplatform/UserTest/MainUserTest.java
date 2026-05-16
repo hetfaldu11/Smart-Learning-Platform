@@ -2,6 +2,8 @@ package com.fm.smartlearningplatform.UserTest;
 
 import com.fm.smartlearningplatform.model.*;
 import com.fm.smartlearningplatform.service.*;
+import org.apache.tomcat.util.http.parser.Authorization;
+import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -233,14 +235,168 @@ public class MainUserTest {
 
         assertNotNull(user);
 
-//        assertNotNull(user.getUserProfile());
-//
-//        assertNotNull(user.getSkills());
-//
-//        assertNotNull(user.getInterests());
-//
-//        assertNotNull(user.getUserPreference());
-//
-//        assertNotNull(user.getUserVerification());
+        assertNotNull(user.getUserProfile());
+
+        assertNotNull(user.getSkills());
+
+        assertNotNull(user.getInterests());
+
+        assertNotNull(user.getUserPreference());
+
+        assertNotNull(user.getUserVerification());
+    }
+
+    // Authorization
+    // Skill
+    // Interest
+    // SocialLink
+
+    @Test void findStudentWithAuthorization(){
+        Long id = user1.getId();
+
+        User user = userService.findById(id);
+        assertFalse(Hibernate.isInitialized(user.getAuthorizations()));
+
+        user = userService.findUserWithUserAuthorization(id);
+        assertTrue(Hibernate.isInitialized(user.getAuthorizations()));
+    }
+
+    @Test void findStudentWithSocialLink(){
+        Long id = user1.getId();
+
+        User user = userService.findById(id);
+        assertFalse(Hibernate.isInitialized(user.getUserSocialLinks()));
+
+        user = userService.findUserWithUserSocialLink(id);
+        assertTrue(Hibernate.isInitialized(user.getUserSocialLinks()));
+    }
+
+    @Test void findStudentWithSkill(){
+        Long id = user1.getId();
+
+        User user = userService.findById(id);
+        assertFalse(Hibernate.isInitialized(user.getSkills()));
+
+        user = userService.findUserWithSkill(id);
+        assertTrue(Hibernate.isInitialized(user.getSkills()));
+    }
+
+    @Test void findStudentWithInterest(){
+        Long id = user1.getId();
+
+        User user = userService.findById(id);
+        assertFalse(Hibernate.isInitialized(user.getInterests()));
+
+        user = userService.findUserWithInterest(id);
+        assertTrue(Hibernate.isInitialized(user.getInterests()));
+    }
+
+    @Test void findFullUser(){
+        Long id = user1.getId();
+
+        User user = userService.findById(id);
+
+        assertFalse(Hibernate.isInitialized(user.getSkills()));
+        assertFalse(Hibernate.isInitialized(user.getInterests()));
+        assertFalse(Hibernate.isInitialized(user.getUserSocialLinks()));
+        assertFalse(Hibernate.isInitialized(user.getAuthorizations()));
+
+        user = userService.findFullUser(id);
+
+        assertTrue(Hibernate.isInitialized(user));
+        assertTrue(Hibernate.isInitialized(user.getUserProfile()));
+        assertTrue(Hibernate.isInitialized(user.getSkills()));
+        assertTrue(Hibernate.isInitialized(user.getInterests()));
+        assertTrue(Hibernate.isInitialized(user.getUserPreference()));
+        assertTrue(Hibernate.isInitialized(user.getUserVerification()));
+        assertTrue(Hibernate.isInitialized(user.getUserSocialLinks()));
+        assertTrue(Hibernate.isInitialized(user.getAuthorizations()));
+    }
+
+    @Test void deleteStudent(){
+        Long id = user1.getId();
+
+        assertNotNull(userService.findById(id));
+        userService.deleteById(1);
+        assertNull(userService.findById(id));
+    }
+
+    @Test void updateUserSkill(){
+        Long id = user1.getId();
+
+        User user = userService.findUserWithSkill(id);
+        assertNotNull(user);
+        assertTrue(Hibernate.isInitialized(user.getSkills()));
+
+        int skillSize = user.getSkills().size();
+
+        Skill skill = Skill.builder()
+                .name("Dev")
+                .build();
+
+        user.addSkill(skill);
+        skillService.save(skill);
+        userService.saveUser(user);
+        assertEquals(skillSize + 1, userService.findUserWithSkill(id).getSkills().size());
+    }
+
+    @Test void updateUserInterest(){
+        Long id = user1.getId();
+
+        User user = userService.findUserWithInterest(id);
+        assertNotNull(user);
+        assertTrue(Hibernate.isInitialized(user.getInterests()));
+
+        int interestSize = user.getInterests().size();
+
+        Interest interest = Interest.builder()
+                .name("Dev")
+                .build();
+
+        user.addInterest(interest);
+        interestService.save(interest);
+        userService.saveUser(user);
+        assertEquals(interestSize + 1, userService.findUserWithInterest(id).getInterests().size());
+    }
+
+    @Test void updateUserAuthorization(){
+        Long id = user1.getId();
+
+        User user = userService.findUserWithUserAuthorization(id);
+        assertNotNull(user);
+        assertTrue(Hibernate.isInitialized(user.getAuthorizations()));
+
+        int authorizationSize = user.getAuthorizations().size();
+
+        UserAuthorization authorization = UserAuthorization.builder()
+                .userRole(UserRole.ADMIN)
+                .user(user)
+                .build();
+
+        user.addRole(authorization);
+        userAuthorizationService.save(authorization);
+        userService.saveUser(user);
+        assertEquals(authorizationSize + 1, userService.findUserWithUserAuthorization(id).getAuthorizations().size());
+    }
+
+    @Test void updateUserSocialLink(){
+        Long id = user1.getId();
+
+        User user = userService.findUserWithUserSocialLink(id);
+        assertNotNull(user);
+        assertTrue(Hibernate.isInitialized(user.getUserSocialLinks()));
+
+        int socialLinkSize = user.getUserSocialLinks().size();
+
+        UserSocialLink userSocialLink = UserSocialLink.builder()
+                .platform(Platform.LINKEDIN)
+                .url("linkedin")
+                .user(user)
+                .build();
+
+        user.addLink(userSocialLink);
+        userSocialLinkService.save(userSocialLink);
+        userService.saveUser(user);
+        assertEquals(socialLinkSize + 1, userService.findUserWithUserSocialLink(id).getUserSocialLinks().size());
     }
 }

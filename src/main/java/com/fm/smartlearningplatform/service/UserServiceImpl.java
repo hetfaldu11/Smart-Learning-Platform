@@ -37,7 +37,19 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public User findUserWithUserProfile(long id) {
-        return userRepository.findUserWithUserProfile(id).orElse(null);
+    public User findUserWithUserAuthorization(long id) {
+        return userRepository.findUserWithUserAuthorizations(id).orElse(null);
     }
+
+    @Override
+    public User findUserWithUserSocialLink(long id) {
+        return userRepository.findUserWithUserSocialLinks(id).orElse(null);
+    }
+
+    @Override
+    public User findFullUser(long id) {
+        return userRepository.findFullUser(id).orElse(null);
+    }
+
+
 }
