@@ -14,6 +14,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@EqualsAndHashCode(of = "name")
+@Builder
 public class Language {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

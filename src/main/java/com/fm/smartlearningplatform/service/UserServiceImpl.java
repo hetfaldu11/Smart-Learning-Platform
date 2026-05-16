@@ -25,4 +25,19 @@ public class UserServiceImpl implements UserService{
     public void deleteById(long id) {
         userRepository.deleteById(id);
     }
+
+    @Override
+    public User findUserWithSkill(long id) {
+        return userRepository.findUserWithSkills(id).orElse(null);
+    }
+
+    @Override
+    public User findUserWithInterest(long id) {
+        return userRepository.findUserWithInterests(id).orElse(null);
+    }
+
+    @Override
+    public User findUserWithUserProfile(long id) {
+        return userRepository.findUserWithUserProfile(id).orElse(null);
+    }
 }

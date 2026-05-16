@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString(exclude = "user")
+@Builder
 public class UserPreference {
 
     @Id
@@ -31,10 +32,12 @@ public class UserPreference {
 
     @Enumerated(EnumType.STRING)
     @Column(name= "theme")
+    @Builder.Default
     private Theme theme = Theme.SYSTEM;
 
     @Column(name= "notification_enabled")
-    private boolean notificationEnabled;
+    @Builder.Default
+    private boolean notificationEnabled= true;
 
     @CreationTimestamp
     @Column(name = "created_at")

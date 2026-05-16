@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString(exclude = "user")
+@Builder
 public class UserSocialLink {
 
     @Id

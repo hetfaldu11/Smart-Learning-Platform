@@ -6,9 +6,11 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name = "professions")
+@Table(name = "skills")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,8 +18,7 @@ import java.time.LocalDateTime;
 @ToString
 @EqualsAndHashCode(of = "name")
 @Builder
-public class Profession {
-
+public class Skill {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -26,6 +27,10 @@ public class Profession {
     @Column(name = "name",nullable = false, unique = true)
     private String name;
 
+    @ManyToMany(mappedBy = "skills")
+    @Builder.Default
+    private Set<User> users = new HashSet<>();
+
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -33,4 +38,6 @@ public class Profession {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+
 }

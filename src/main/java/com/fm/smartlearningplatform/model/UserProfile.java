@@ -15,6 +15,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "user")
+@Builder
 public class UserProfile {
 
     @Id
@@ -36,7 +37,7 @@ public class UserProfile {
     private String aboutMe;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "gender")
+    @Column(name = "gender", nullable = false)
     private Gender gender;
 
     @Column(name = "date_of_birth")

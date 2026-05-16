@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString(exclude = "user")
+@Builder
 public class UserVerification {
 
     @Id
@@ -26,9 +27,11 @@ public class UserVerification {
     private User user;
 
     @Column(name= "email_verified")
+    @Builder.Default
     private boolean emailVerified  = false;
 
     @Column(name= "phone_verified")
+    @Builder.Default
     private boolean phoneVerified = false;
 
     @Column(name = "email_verified_at")
@@ -38,6 +41,7 @@ public class UserVerification {
     private LocalDateTime phoneVerifiedAt;
 
     @Column(name= "two_factor_enabled")
+    @Builder.Default
     private boolean twoFactorEnabled = false;
 
     @CreationTimestamp

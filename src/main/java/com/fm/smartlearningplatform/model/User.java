@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "userProfile")
+@Builder
 public class User {
 
     @Id
@@ -34,12 +36,14 @@ public class User {
     private String passwordHash;
 
     @Column(name= "enabled", nullable = false)
+    @Builder.Default
     private int enabled = 1;
 
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;
 
     @Column(name= "failed_login_attempt")
+    @Builder.Default
     private int failedLoginAttempt = 0;
 
     @Column(name= "last_seen_at")
@@ -73,6 +77,7 @@ public class User {
             cascade = CascadeType.ALL,
             orphanRemoval = true
     )
+    @Builder.Default
     private Set<UserAuthorization> authorizations = new HashSet<>();
 
     public void addRole(UserRole role) {
@@ -84,5 +89,77 @@ public class User {
         authorization.setUserRole(role);
 
         this.authorizations.add(authorization);
+    }
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+    @Builder.Default
+    private Set<UserSocialLink> userSocialLinks = new HashSet<>();
+
+    public void addLink(Platform platform,String url){
+        UserSocialLink userSocialLink = new UserSocialLink();
+
+        userSocialLink.setUser(this);
+        userSocialLink.setPlatform(platform);
+        userSocialLink.setUrl(url);
+
+        this.userSocialLinks.add(userSocialLink);
+    }
+
+    public void addLink(UserSocialLink userSocialLink){
+        this.userSocialLinks.add(userSocialLink);
+    }
+
+    @OneToOne(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true)
+    private UserVerification userVerification;
+
+    @OneToOne(mappedBy = "user",
+            cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY,
+            orphanRemoval = true)
+    private UserPreference userPreference;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_skills",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "skill_id")
+    )
+    @Builder.Default
+    private Set<Skill> skills = new HashSet<>();
+
+    public void addSkill(Skill skill){
+        skills.add(skill);
+        skill.getUsers().add(this);
+    }
+
+    public void removeSkill(Skill skill){
+        skills.remove(skill);
+        skill.getUsers().remove(this);
+    }
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "user_interests",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "interest_id")
+    )
+    @Builder.Default
+    private Set<Interest> interests = new HashSet<>();
+
+    public void addInterest(Interest interest){
+        interests.add(interest);
+        interest.getUsers().add(this);
+    }
+
+    public void removeInterest(Interest interest){
+        interests.remove(interest);
+        interest.getUsers().remove(this);
     }
 }

@@ -12,4 +12,10 @@ public interface UserService {
     User findById(long id);
 
     void deleteById(long id);
+
+    User findUserWithSkill(long id);
+
+    User findUserWithInterest(long id);
+
+    User findUserWithUserProfile(long id);
 }
