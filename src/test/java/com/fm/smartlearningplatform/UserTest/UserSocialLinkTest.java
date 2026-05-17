@@ -1,17 +1,14 @@
 package com.fm.smartlearningplatform.UserTest;
 
-import com.fm.smartlearningplatform.model.Platform;
-import com.fm.smartlearningplatform.model.User;
-import com.fm.smartlearningplatform.model.UserSocialLink;
-import com.fm.smartlearningplatform.model.UserSocialLinkId;
-import com.fm.smartlearningplatform.service.UserService;
-import com.fm.smartlearningplatform.service.UserSocialLinkService;
+import com.fm.smartlearningplatform.model.user.Platform;
+import com.fm.smartlearningplatform.model.user.User;
+import com.fm.smartlearningplatform.model.user.UserSocialLink;
+import com.fm.smartlearningplatform.service.user.UserService;
+import com.fm.smartlearningplatform.service.user.UserSocialLinkService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -44,15 +41,14 @@ public class UserSocialLinkTest {
 
     @Test
     public void createUserSocialLink(){
-        UserSocialLinkId id = new UserSocialLinkId(this.user.getId(),Platform.GITHUB);
+        Long id = userSocialLinkService.findByUserAndPlatform(user,Platform.GITHUB).getId();
         assertNotNull(userSocialLinkService.findById(id));
         assertEquals(Platform.GITHUB,userSocialLinkService.findById(id).getPlatform());
     }
 
     @Test
     public void updateUserSocialLink(){
-        UserSocialLinkId id = new UserSocialLinkId(this.user.getId(),Platform.GITHUB);
-
+        Long id = userSocialLinkService.findByUserAndPlatform(user,Platform.GITHUB).getId();
         UserSocialLink userSocialLink = userSocialLinkService.findById(id);
         assertNotNull(userSocialLink);
 
@@ -65,7 +61,7 @@ public class UserSocialLinkTest {
 
     @Test
     public void deleteUserSocialLink(){
-        UserSocialLinkId id = new UserSocialLinkId(this.user.getId(),Platform.GITHUB);
+        Long id = userSocialLinkService.findByUserAndPlatform(user,Platform.GITHUB).getId();
         assertNotNull(userSocialLinkService.findById(id));
 
         userSocialLinkService.deleteById(id);

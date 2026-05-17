@@ -1,19 +1,14 @@
 package com.fm.smartlearningplatform.UserTest;
 
-import com.fm.smartlearningplatform.model.Skill;
-import com.fm.smartlearningplatform.model.User;
-import com.fm.smartlearningplatform.model.UserRole;
-import com.fm.smartlearningplatform.service.SkillService;
-import com.fm.smartlearningplatform.service.UserService;
-import jakarta.transaction.Transactional;
+import com.fm.smartlearningplatform.model.user.Skill;
+import com.fm.smartlearningplatform.model.user.User;
+import com.fm.smartlearningplatform.service.user.SkillService;
+import com.fm.smartlearningplatform.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;

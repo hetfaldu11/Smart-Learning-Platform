@@ -1,8 +1,7 @@
 package com.fm.smartlearningplatform.UserTest;
 
-import com.fm.smartlearningplatform.model.*;
-import com.fm.smartlearningplatform.service.*;
-import org.apache.tomcat.util.http.parser.Authorization;
+import com.fm.smartlearningplatform.model.user.*;
+import com.fm.smartlearningplatform.service.user.*;
 import org.hibernate.Hibernate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

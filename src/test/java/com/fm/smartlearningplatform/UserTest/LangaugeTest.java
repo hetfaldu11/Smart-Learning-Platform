@@ -1,7 +1,7 @@
 package com.fm.smartlearningplatform.UserTest;
 
-import com.fm.smartlearningplatform.model.Language;
-import com.fm.smartlearningplatform.service.LanguageService;
+import com.fm.smartlearningplatform.model.user.Language;
+import com.fm.smartlearningplatform.service.user.LanguageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

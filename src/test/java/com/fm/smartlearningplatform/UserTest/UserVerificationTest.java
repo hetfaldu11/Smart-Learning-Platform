@@ -1,15 +1,13 @@
 package com.fm.smartlearningplatform.UserTest;
 
-import com.fm.smartlearningplatform.model.*;
-import com.fm.smartlearningplatform.service.ProfessionService;
-import com.fm.smartlearningplatform.service.UserVerificationService;
-import com.fm.smartlearningplatform.service.UserService;
+import com.fm.smartlearningplatform.model.user.User;
+import com.fm.smartlearningplatform.model.user.UserVerification;
+import com.fm.smartlearningplatform.service.user.UserVerificationService;
+import com.fm.smartlearningplatform.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;

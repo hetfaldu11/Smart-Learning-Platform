@@ -1,7 +1,6 @@
 package com.fm.smartlearningplatform.service.course;
 
 import com.fm.smartlearningplatform.model.course.CourseAssistantInstructor;
-import com.fm.smartlearningplatform.model.course.CourseAssistantInstructorId;
 import com.fm.smartlearningplatform.repository.course.CourseAssistantInstructorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,13 +22,13 @@ public class CourseAssistantInstructorServiceImpl implements  CourseAssistantIns
     }
 
     @Override
-    public CourseAssistantInstructor findById(CourseAssistantInstructorId courseAssistantInstructorId)
+    public CourseAssistantInstructor findById(Long id)
     {
-        return courseAssistantInstructorRepository.findById( courseAssistantInstructorId ).orElse(null);
+        return courseAssistantInstructorRepository.findById( id ).orElse(null);
     }
     @Override
-    public void deleteById(CourseAssistantInstructorId courseAssistantInstructorId)
+    public void deleteById(Long id)
     {
-         courseAssistantInstructorRepository.deleteById(courseAssistantInstructorId );
+         courseAssistantInstructorRepository.deleteById(id );
     }
 }

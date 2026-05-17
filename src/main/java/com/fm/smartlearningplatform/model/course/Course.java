@@ -1,6 +1,6 @@
 package com.fm.smartlearningplatform.model.course;
 
-import com.fm.smartlearningplatform.model.User;
+import com.fm.smartlearningplatform.model.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;

@@ -1,6 +1,6 @@
 package com.fm.smartlearningplatform.model.course;
 
-import com.fm.smartlearningplatform.model.Language;
+import com.fm.smartlearningplatform.model.user.Language;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -9,8 +9,15 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "course_languages")
-@IdClass(CourseLanguageId.class)
+@Table(
+        name = "course_languages",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_course_language",
+                        columnNames = {"course_id", "language_id"}
+                )
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -19,11 +26,14 @@ import java.time.LocalDateTime;
 public class CourseLanguage {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @Id
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "language_id")
     private Language language;

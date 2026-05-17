@@ -1,8 +1,7 @@
 package com.fm.smartlearningplatform.repository.course;
 
 import com.fm.smartlearningplatform.model.course.CourseAssistantInstructor;
-import com.fm.smartlearningplatform.model.course.CourseAssistantInstructorId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface CourseAssistantInstructorRepository extends JpaRepository<CourseAssistantInstructor , CourseAssistantInstructorId> {
+public interface CourseAssistantInstructorRepository extends JpaRepository<CourseAssistantInstructor , Long> {
 }

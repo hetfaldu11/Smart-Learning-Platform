@@ -1,7 +1,7 @@
 package com.fm.smartlearningplatform.UserTest;
 
-import com.fm.smartlearningplatform.model.Profession;
-import com.fm.smartlearningplatform.service.ProfessionService;
+import com.fm.smartlearningplatform.model.user.Profession;
+import com.fm.smartlearningplatform.service.user.ProfessionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

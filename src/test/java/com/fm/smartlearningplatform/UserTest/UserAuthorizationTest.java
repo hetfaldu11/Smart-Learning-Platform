@@ -1,8 +1,10 @@
 package com.fm.smartlearningplatform.UserTest;
 
-import com.fm.smartlearningplatform.model.*;
-import com.fm.smartlearningplatform.service.UserAuthorizationService;
-import com.fm.smartlearningplatform.service.UserService;
+import com.fm.smartlearningplatform.model.user.User;
+import com.fm.smartlearningplatform.model.user.UserAuthorization;
+import com.fm.smartlearningplatform.model.user.UserRole;
+import com.fm.smartlearningplatform.service.user.UserAuthorizationService;
+import com.fm.smartlearningplatform.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,16 +36,15 @@ public class UserAuthorizationTest {
 
     @Test
     public void createUserSocialLink(){
-        UserAuthorizationId id = new UserAuthorizationId(this.user.getId(),UserRole.STUDENT);
-        assertNotNull(userAuthorizationService.findById(id));
-        assertEquals(UserRole.STUDENT,userAuthorizationService.findById(id).getUserRole());
+        assertNotNull(userAuthorizationService.findByUserIdAndRole(this.user.getId(),UserRole.STUDENT));
+        assertEquals(UserRole.STUDENT,userAuthorizationService.findByUserAndRole(this.user,UserRole.STUDENT).getUserRole());
     }
 
     @Test
     public void deleteUserSocialLink(){
-        UserAuthorizationId id = new UserAuthorizationId(this.user.getId(),UserRole.STUDENT);
-        assertNotNull(userAuthorizationService.findById(id));
-        userAuthorizationService.deleteById(id);
-        assertNull(userAuthorizationService.findById(id));
+        UserAuthorization userAuthorization = userAuthorizationService.findByUserAndRole(this.user,UserRole.STUDENT);
+        assertNotNull(userAuthorization);
+        userAuthorizationService.deleteById(userAuthorization.getId());
+        assertNull(userAuthorizationService.findById(userAuthorization.getId()));
     }
 }

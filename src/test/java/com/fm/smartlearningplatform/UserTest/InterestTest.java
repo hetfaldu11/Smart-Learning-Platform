@@ -1,9 +1,9 @@
 package com.fm.smartlearningplatform.UserTest;
 
-import com.fm.smartlearningplatform.model.Interest;
-import com.fm.smartlearningplatform.model.User;
-import com.fm.smartlearningplatform.service.InterestService;
-import com.fm.smartlearningplatform.service.UserService;
+import com.fm.smartlearningplatform.model.user.Interest;
+import com.fm.smartlearningplatform.model.user.User;
+import com.fm.smartlearningplatform.service.user.InterestService;
+import com.fm.smartlearningplatform.service.user.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
