@@ -68,14 +68,15 @@ public class User {
 
     @OneToOne(mappedBy = "user",
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
-            orphanRemoval = true)
+            orphanRemoval = true
+    )
     private UserProfile userProfile;
 
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
     )
     @Builder.Default
     private Set<UserAuthorization> authorizations = new HashSet<>();
@@ -91,10 +92,15 @@ public class User {
         this.authorizations.add(authorization);
     }
 
+    public void addRole(UserAuthorization userAuthorization){
+        this.authorizations.add(userAuthorization);
+    }
+
     @OneToMany(
             mappedBy = "user",
             cascade = CascadeType.ALL,
-            orphanRemoval = true
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
     )
     @Builder.Default
     private Set<UserSocialLink> userSocialLinks = new HashSet<>();
@@ -116,13 +122,11 @@ public class User {
 
     @OneToOne(mappedBy = "user",
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
             orphanRemoval = true)
     private UserVerification userVerification;
 
     @OneToOne(mappedBy = "user",
             cascade = CascadeType.ALL,
-            fetch = FetchType.LAZY,
             orphanRemoval = true)
     private UserPreference userPreference;
 

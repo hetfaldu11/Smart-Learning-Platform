@@ -17,5 +17,9 @@ public interface UserService {
 
     User findUserWithInterest(long id);
 
-    User findUserWithUserProfile(long id);
+    User findUserWithUserAuthorization(long id);
+
+    User findUserWithUserSocialLink(long id);
+
+    User findFullUser(long id);
 }
