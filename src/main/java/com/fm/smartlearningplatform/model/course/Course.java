@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(name = "courses")
@@ -76,4 +77,19 @@ public class Course {
             orphanRemoval = true
     )
     private CoursePricing coursePricing;
+
+    @OneToMany(mappedBy = "course")
+    private Set<CourseMessages> courseMessages;
+
+    @OneToMany(mappedBy = "course")
+    private Set<CourseRequirements> courseRequirements;
+
+    @OneToMany(mappedBy = "course")
+    private Set<CourseLearningOutcome> courseLearningOutcomes;
+
+    @OneToMany(mappedBy = "course")
+    private Set<CourseLanguage> courseLanguages;
 }
+
+
+

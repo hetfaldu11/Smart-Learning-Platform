@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_course_message",
-                        columnNames = {"course_id", "type"}
+                        columnNames = {"course_id", "message"}
                 )
         })
 @Getter
@@ -26,7 +26,6 @@ public class CourseMessages {
     @Column(name = "id")
     private Long id;
 
-    @MapsId
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
