@@ -1,5 +1,6 @@
 package com.fm.smartlearningplatform.model.user;
 
+import com.fm.smartlearningplatform.model.course.Course;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;

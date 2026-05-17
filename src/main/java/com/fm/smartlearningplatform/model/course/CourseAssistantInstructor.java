@@ -7,17 +7,10 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
-@Table(
-        name = "course_assistant_instructors",
-        uniqueConstraints = {
-                @UniqueConstraint(
-                        name = "uk_course_instructor",
-                        columnNames = {"course_id", "instructor_id"}
-                )
-        }
-)
+@Table(name = "course_assistant_instructors")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,17 +23,10 @@ public class CourseAssistantInstructor {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name= "course_id")
-    private Course course;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name= "instructor_id")
-    private User user;
-
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
-    private InstructorRole role;
+    @Builder.Default
+    private InstructorRole role = InstructorRole.ASSISTANT;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

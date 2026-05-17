@@ -43,7 +43,7 @@ public class SkillTest {
 
         this.user = user;
 
-        userService.saveUser(user);
+        userService.save(user);
 
     }
     @Test

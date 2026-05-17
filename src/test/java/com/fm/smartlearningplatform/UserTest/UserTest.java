@@ -45,7 +45,7 @@ public class UserTest {
         user.setLastSeenAt(LocalDateTime.now());
         user.setCreatedAt(LocalDateTime.now());
 
-        userService.saveUser(user);
+        userService.save(user);
 
         System.out.println(user.getCreatedAt() + "\n" + user.getUpdatedAt());
 
@@ -61,7 +61,7 @@ public class UserTest {
         user.setLastLoginAt(LocalDateTime.now());
         user.setPasswordChangedAt(LocalDateTime.now());
         user.setLastSeenAt(LocalDateTime.now());
-        userService.saveUser(user);
+        userService.save(user);
     }
 
     @Test
@@ -73,7 +73,7 @@ public class UserTest {
     public void updateUser(){
         User  user = userService.findById(1);
         user.setEmail("h@gmail.com");
-        userService.saveUser(user);
+        userService.save(user);
         System.out.println(user.getCreatedAt() + "\n" + user.getUpdatedAt());
         assertEquals("h@gmail.com",userService.findById(1).getEmail(),"User is not created.");
     }

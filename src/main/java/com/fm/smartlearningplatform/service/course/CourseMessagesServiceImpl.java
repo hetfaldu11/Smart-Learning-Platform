@@ -1,6 +1,6 @@
 package com.fm.smartlearningplatform.service.course;
 
-import com.fm.smartlearningplatform.model.course.CourseMessages;
+import com.fm.smartlearningplatform.model.course.CourseMessage;
 import com.fm.smartlearningplatform.repository.course.CourseMessagesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +15,12 @@ public class CourseMessagesServiceImpl implements CourseMessagesService{
     }
 
     @Override
-    public void save(CourseMessages courseMessages) {
-        courseMessagesRepository.save(courseMessages);
+    public void save(CourseMessage courseMessage) {
+        courseMessagesRepository.save(courseMessage);
     }
 
     @Override
-    public CourseMessages findById(Long id) {
+    public CourseMessage findById(Long id) {
         return courseMessagesRepository.findById(id).orElse(null);
     }
 

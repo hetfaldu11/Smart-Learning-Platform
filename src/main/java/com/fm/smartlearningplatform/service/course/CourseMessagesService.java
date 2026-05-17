@@ -1,11 +1,11 @@
 package com.fm.smartlearningplatform.service.course;
 
-import com.fm.smartlearningplatform.model.course.CourseMessages;
+import com.fm.smartlearningplatform.model.course.CourseMessage;
 
 public interface CourseMessagesService {
-    public  void save(CourseMessages courseMessages);
+    public  void save(CourseMessage courseMessage);
 
-    public CourseMessages findById(Long id);
+    public CourseMessage findById(Long id);
 
     public void deleteById(Long id);
 }

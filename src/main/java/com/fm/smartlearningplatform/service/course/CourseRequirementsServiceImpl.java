@@ -1,9 +1,7 @@
 package com.fm.smartlearningplatform.service.course;
 
-import com.fm.smartlearningplatform.model.course.CourseRequirements;
-import com.fm.smartlearningplatform.model.course.CourseSupport;
+import com.fm.smartlearningplatform.model.course.CourseRequirement;
 import com.fm.smartlearningplatform.repository.course.CourseRequirementsRepository;
-import com.fm.smartlearningplatform.repository.course.CourseSupportRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,12 +16,12 @@ public class CourseRequirementsServiceImpl implements  CourseRequirementsService
     }
 
     @Override
-    public void save(CourseRequirements courseRequirements) {
-        courseRequirementsRepository.save(courseRequirements);
+    public void save(CourseRequirement courseRequirement) {
+        courseRequirementsRepository.save(courseRequirement);
     }
 
     @Override
-    public CourseRequirements findById(Long id) {
+    public CourseRequirement findById(Long id) {
         return courseRequirementsRepository.findById(id).orElse(null);
     }
 

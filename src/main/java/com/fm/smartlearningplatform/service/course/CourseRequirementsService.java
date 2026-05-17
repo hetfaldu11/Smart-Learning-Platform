@@ -1,12 +1,11 @@
 package com.fm.smartlearningplatform.service.course;
 
-import com.fm.smartlearningplatform.model.course.CourseRequirements;
-import com.fm.smartlearningplatform.model.course.CourseSupport;
+import com.fm.smartlearningplatform.model.course.CourseRequirement;
 
 public interface CourseRequirementsService {
-    public  void save(CourseRequirements courseRequirements);
+    public  void save(CourseRequirement courseRequirement);
 
-    public CourseRequirements findById(Long id);
+    public CourseRequirement findById(Long id);
 
      public void deleteById(Long id);
 }

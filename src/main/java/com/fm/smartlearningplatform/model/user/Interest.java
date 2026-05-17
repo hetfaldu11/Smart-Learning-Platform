@@ -18,7 +18,7 @@ import java.util.Set;
 @ToString
 @EqualsAndHashCode(of = "name")
 @Builder
-public class Interest{
+public class Interest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

@@ -5,7 +5,7 @@ import com.fm.smartlearningplatform.model.user.User;
 
 public interface UserService {
 
-    void saveUser(User user);
+    void save(User user);
 
     User findById(long id);
 

@@ -72,7 +72,7 @@ public class MainUserTest {
                 .passwordHash("password")
                 .build();
 
-        userService.saveUser(user);
+        userService.save(user);
 
         // =========================
         // PROFESSION
@@ -220,7 +220,7 @@ public class MainUserTest {
         // FINAL SAVE
         // =========================
 
-        userService.saveUser(user);
+        userService.save(user);
 
         this.user1 = user;
     }
@@ -335,7 +335,7 @@ public class MainUserTest {
 
         user.addSkill(skill);
         skillService.save(skill);
-        userService.saveUser(user);
+        userService.save(user);
         assertEquals(skillSize + 1, userService.findUserWithSkill(id).getSkills().size());
     }
 
@@ -354,7 +354,7 @@ public class MainUserTest {
 
         user.addInterest(interest);
         interestService.save(interest);
-        userService.saveUser(user);
+        userService.save(user);
         assertEquals(interestSize + 1, userService.findUserWithInterest(id).getInterests().size());
     }
 
@@ -374,7 +374,7 @@ public class MainUserTest {
 
         user.addRole(authorization);
         userAuthorizationService.save(authorization);
-        userService.saveUser(user);
+        userService.save(user);
         assertEquals(authorizationSize + 1, userService.findUserWithUserAuthorization(id).getAuthorizations().size());
     }
 
@@ -395,7 +395,7 @@ public class MainUserTest {
 
         user.addLink(userSocialLink);
         userSocialLinkService.save(userSocialLink);
-        userService.saveUser(user);
+        userService.save(user);
         assertEquals(socialLinkSize + 1, userService.findUserWithUserSocialLink(id).getUserSocialLinks().size());
     }
 }

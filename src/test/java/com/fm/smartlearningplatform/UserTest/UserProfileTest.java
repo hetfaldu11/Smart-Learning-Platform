@@ -28,7 +28,7 @@ public class UserProfileTest {
         User user = new User();
         user.setEmail(System.currentTimeMillis() + "@gmail.com");
         user.setPasswordHash("{noop}123");
-        userService.saveUser(user);
+        userService.save(user);
         this.user = user;
         UserProfile userProfile = new UserProfile();
         userProfile.setUser(this.user);

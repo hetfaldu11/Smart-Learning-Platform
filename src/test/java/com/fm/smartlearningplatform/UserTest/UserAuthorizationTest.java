@@ -31,7 +31,7 @@ public class UserAuthorizationTest {
         user.addRole(UserRole.INSTRUCTOR);
         this.user = user;
 
-        userService.saveUser(user);
+        userService.save(user);
     }
 
     @Test

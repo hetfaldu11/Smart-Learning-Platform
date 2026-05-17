@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseMessages {
+public class CourseMessage {
     @Id
     @Column(name = "id")
     private Long id;
@@ -30,8 +30,8 @@ public class CourseMessages {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(name= "type", nullable = false)
-    private Type type;
+    @Column(name= "messageType", nullable = false)
+    private MessageType messageType;
 
     @Column(name = "message", nullable = false,columnDefinition = "TEXT")
     private String message;

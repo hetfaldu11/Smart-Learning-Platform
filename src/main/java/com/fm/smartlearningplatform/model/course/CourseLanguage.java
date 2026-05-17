@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Entity
 @Table(
@@ -48,4 +49,8 @@ public class CourseLanguage {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-}
+}// do not comment or erase before asking me
+select * from user_authorization;
+select * from user_interests;
+select * from user_skills;
+

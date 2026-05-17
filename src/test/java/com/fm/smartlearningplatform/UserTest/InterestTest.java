@@ -43,7 +43,7 @@ public class InterestTest {
 
         this.user = user;
 
-        userService.saveUser(user);
+        userService.save(user);
 
     }
     @Test
@@ -58,7 +58,7 @@ public class InterestTest {
         User user = userService.findUserWithInterest(id);
         Set<Interest> interests = user.getInterests();
 
-        Interest interest= interests.iterator().next();
+        Interest interest = interests.iterator().next();
         Long interestId = interest.getId();
         interest.setName("Cleaning");
 

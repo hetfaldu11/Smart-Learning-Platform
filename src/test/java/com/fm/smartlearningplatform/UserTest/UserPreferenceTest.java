@@ -32,7 +32,7 @@ public class UserPreferenceTest {
         User user = new User();
         user.setEmail(System.currentTimeMillis() + "@gmail.com");
         user.setPasswordHash("{noop}123");
-        userService.saveUser(user);
+        userService.save(user);
         this.user = user;
 
         UserPreference userPreference = new UserPreference();

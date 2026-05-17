@@ -1,5 +1,4 @@
 package com.fm.smartlearningplatform.model.course;
-import com.fm.smartlearningplatform.model.course.Course;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -21,7 +20,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseRequirements {
+public class CourseRequirement {
 
     @Id
     @Column(name = "id")

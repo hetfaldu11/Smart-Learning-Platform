@@ -1,6 +1,6 @@
 package com.fm.smartlearningplatform.model.course;
 
-public enum Status {
+public enum CourseStatus {
     DRAFT,
     REVIEW,
     PUBLISHED,

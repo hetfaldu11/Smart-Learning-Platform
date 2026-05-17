@@ -22,15 +22,16 @@ public class CoursePricing {
     private Long id;
 
     @MapsId
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id")
     private Course course;
 
-    @Column(name = "price", precision = 10, scale = 2,nullable = false)
-    private BigDecimal price=  BigDecimal.ZERO;
+    @Column(name = "price",nullable = false)
+    @Builder.Default
+    private double price = 0.0;
 
-    @Column(name = "discount_price", precision = 10, scale = 2)
-    private BigDecimal discountPrice;
+    @Column(name = "discount_price")
+    private double discountPrice;
 
     @Column(name="currency")
     @Enumerated(EnumType.STRING)
