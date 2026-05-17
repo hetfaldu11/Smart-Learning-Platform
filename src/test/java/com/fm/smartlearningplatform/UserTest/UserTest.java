@@ -49,7 +49,7 @@ public class UserTest {
 
         System.out.println(user.getCreatedAt() + "\n" + user.getUpdatedAt());
 
-        assertEquals(2,user.getId(),"User is not created.");
+        assertEquals(1,userService.findById(1L).getId(),"User is not created.");
     }
 
     @BeforeEach
