@@ -1,6 +1,5 @@
 package com.fm.smartlearningplatform.service.course;
 
-import com.fm.smartlearningplatform.model.course.CourseLearningOutcomes;
 import com.fm.smartlearningplatform.model.course.CourseMessages;
 
 public interface CourseMessagesService {

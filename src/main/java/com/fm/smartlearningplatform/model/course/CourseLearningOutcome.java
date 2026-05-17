@@ -7,13 +7,21 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 @Entity
-@Table(name = "course_learning_outcomes")
+@Table(
+        name = "course_learning_outcomes",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_course_outcome",
+                        columnNames = {"course_id", "outcome"}
+                )
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseLearningOutcomes {
+public class CourseLearningOutcome {
     @Id
     @Column(name = "id")
     private Long id;

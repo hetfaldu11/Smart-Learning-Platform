@@ -1,6 +1,6 @@
 package com.fm.smartlearningplatform.service.course;
 
-import com.fm.smartlearningplatform.model.course.CourseLearningOutcomes;
+import com.fm.smartlearningplatform.model.course.CourseLearningOutcome;
 import com.fm.smartlearningplatform.repository.course.CourseLearningOutcomesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,12 +15,12 @@ public class CourseLearningOutcomesServiceImpl implements CourseLearningOutcomes
     }
 
     @Override
-    public void save(CourseLearningOutcomes courseLearningOutcomes) {
-        courseLearningOutcomesRepository.save(courseLearningOutcomes);
+    public void save(CourseLearningOutcome courseLearningOutcome) {
+        courseLearningOutcomesRepository.save(courseLearningOutcome);
     }
 
     @Override
-    public CourseLearningOutcomes findById(Long id) {
+    public CourseLearningOutcome findById(Long id) {
         return courseLearningOutcomesRepository.findById(id).orElse(null);
     }
 

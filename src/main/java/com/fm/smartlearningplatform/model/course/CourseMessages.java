@@ -8,7 +8,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "course_messages")
+@Table(
+        name = "course_messages",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_course_message",
+                        columnNames = {"course_id", "type"}
+                )
+        })
 @Getter
 @Setter
 @NoArgsConstructor
@@ -24,11 +31,11 @@ public class CourseMessages {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(name = "message", nullable = false,columnDefinition = "TEXT")
-    private String message;
-
     @Column(name= "type", nullable = false)
     private Type type;
+
+    @Column(name = "message", nullable = false,columnDefinition = "TEXT")
+    private String message;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)

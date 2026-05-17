@@ -8,7 +8,14 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "course_requirements")
+@Table(
+        name = "course_requirements",
+        uniqueConstraints = {
+                @UniqueConstraint(
+                        name = "uk_course_requirement",
+                        columnNames = {"course_id", "requirement"}
+                )
+        })
 @Getter
 @Setter
 @NoArgsConstructor
