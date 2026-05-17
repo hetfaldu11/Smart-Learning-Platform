@@ -23,6 +23,7 @@ public class CourseAssistantInstructor {
     @Column(name = "id")
     private Long id;
 
+
     @Column(name = "role")
     @Enumerated(EnumType.STRING)
     @Builder.Default

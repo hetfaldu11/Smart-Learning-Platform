@@ -2,19 +2,32 @@ package com.fm.smartlearningplatform.service.user;
 
 import com.fm.smartlearningplatform.model.user.User;
 import com.fm.smartlearningplatform.repository.user.UserRepository;
+import com.fm.smartlearningplatform.repository.user.UserSkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService{
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private UserSkillRepository userSkillRepository;
+
+    //  ─────Save─────────────────────────────────────────────
 
     @Override
     public void save(User user){
+        if (userRepository.existsByEmail(user.getEmail())) {
+            throw new RuntimeException("Email already exists: " + user.getEmail());
+        }
         userRepository.save(user);
     }
+
+    //  ─────Find─────────────────────────────────────────────
 
     @Override
     public User findById(long id){
@@ -22,8 +35,8 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void deleteById(long id) {
-        userRepository.deleteById(id);
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     @Override
@@ -51,5 +64,21 @@ public class UserServiceImpl implements UserService{
         return userRepository.findFullUser(id).orElse(null);
     }
 
+    //  ─────Delete───────────────────────────────────────────
 
+    @Override
+    public void deleteById(long id) {
+
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found: " + id));
+
+        if (user.getDeletedAt() != null) {
+            throw new RuntimeException("User already deleted");
+        }
+
+        userSkillRepository.deleteByUserId(id);
+
+        user.setDeletedAt(LocalDateTime.now());
+        userRepository.save(user);
+    }
 }

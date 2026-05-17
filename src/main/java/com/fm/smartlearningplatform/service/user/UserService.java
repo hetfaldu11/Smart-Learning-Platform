@@ -2,6 +2,8 @@ package com.fm.smartlearningplatform.service.user;
 
 import com.fm.smartlearningplatform.model.user.User;
 
+import java.util.List;
+
 
 public interface UserService {
 
@@ -20,4 +22,6 @@ public interface UserService {
     User findUserWithUserSocialLink(long id);
 
     User findFullUser(long id);
+
+    List<User> findAll();
 }

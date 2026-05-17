@@ -27,10 +27,6 @@ public class Skill {
     @Column(name = "name",nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "skills")
-    @Builder.Default
-    private Set<User> users = new HashSet<>();
-
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -39,5 +35,6 @@ public class Skill {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
-
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }

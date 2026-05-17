@@ -49,8 +49,5 @@ public class CourseLanguage {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-}// do not comment or erase before asking me
-select * from user_authorization;
-select * from user_interests;
-select * from user_skills;
+}
 

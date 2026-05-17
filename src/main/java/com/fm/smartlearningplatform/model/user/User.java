@@ -1,6 +1,5 @@
 package com.fm.smartlearningplatform.model.user;
 
-import com.fm.smartlearningplatform.model.course.Course;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import lombok.*;
@@ -79,30 +78,6 @@ public class User {
             fetch = FetchType.LAZY
     )
     @Builder.Default
-    private Set<UserAuthorization> authorizations = new HashSet<>();
-
-    public void addRole(UserRole role) {
-
-        UserAuthorization authorization =
-                new UserAuthorization();
-
-        authorization.setUser(this);
-        authorization.setUserRole(role);
-
-        this.authorizations.add(authorization);
-    }
-
-    public void addRole(UserAuthorization userAuthorization){
-        this.authorizations.add(userAuthorization);
-    }
-
-    @OneToMany(
-            mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY
-    )
-    @Builder.Default
     private Set<UserSocialLink> userSocialLinks = new HashSet<>();
 
     public void addLink(Platform platform,String url){
@@ -130,41 +105,53 @@ public class User {
             orphanRemoval = true)
     private UserPreference userPreference;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_skills",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "skill_id")
-    )
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     @Builder.Default
-    private Set<Skill> skills = new HashSet<>();
+    private Set<UserSkill> userSkills = new HashSet<>();
 
     public void addSkill(Skill skill){
-        skills.add(skill);
-        skill.getUsers().add(this);
+        UserSkill userSkill = UserSkill.builder()
+                                .user(this)
+                                .skill(skill)
+                                .build();
+        this.userSkills.add(userSkill);
     }
 
-    public void removeSkill(Skill skill){
-        skills.remove(skill);
-        skill.getUsers().remove(this);
+    public void removeSkill(Skill skill) {
+        this.userSkills.removeIf(us -> us.getSkill().equals(skill));
     }
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(
-            name = "user_interests",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "interest_id")
-    )
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
     @Builder.Default
-    private Set<Interest> interests = new HashSet<>();
+    private Set<UserInterest> userInterests = new HashSet<>();
 
     public void addInterest(Interest interest){
-        interests.add(interest);
-        interest.getUsers().add(this);
+        UserInterest userInterest = UserInterest.builder()
+                                .user(this)
+                                .interest(interest)
+                                .build();
+        this.userInterests.add(userInterest);
     }
 
-    public void removeInterest(Interest interest){
-        interests.remove(interest);
-        interest.getUsers().remove(this);
+    public void removeInterest(Interest interest) {
+        this.userInterests.removeIf(us -> us.getInterest().equals(interest));
     }
+
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    @Builder.Default
+    private Set<UserRole> userRoles = new HashSet<>();
+
+    public void addRole(Role role){
+        UserRole userRole = UserRole.builder()
+                                .user(this)
+                                .role(role)
+                                .build();
+        this.userRoles.add(userRole);
+    }
+
+    public void removeRole(Role role) {
+        this.userRoles.removeIf(us -> us.getRole().equals(role));
+    }
+
+
 }

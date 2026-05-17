@@ -8,6 +8,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -161,23 +162,23 @@ public class Course {
         this.courseLanguages.add(courseLanguage);
     }
 
-    @OneToMany(
-            mappedBy = "course",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    @Builder.Default
-    private Set<CourseAssistantInstructor> courseAssistantInstructors= new HashSet<>();
+//    @OneToMany(
+//            mappedBy = "course",
+//            cascade = CascadeType.ALL,
+//            orphanRemoval = true,
+//            fetch = FetchType.LAZY)
+//    @Builder.Default
+//    private Set<CourseAssistantInstructor> courseAssistantInstructors= new HashSet<>();
 
-    public void addAssistantInstructor(User user, InstructorRole instructorRole){
-        CourseAssistantInstructor courseAssistantInstructor = CourseAssistantInstructor.builder()
-                .role(instructorRole)
-                .build();
-
-        this.courseAssistantInstructors.add(courseAssistantInstructor);
-    }
-
-    public void addAssistantInstructor(CourseAssistantInstructor courseAssistantInstructor){
-        this.courseAssistantInstructors.add(courseAssistantInstructor);
-    }
+//    public void addAssistantInstructor(User user, InstructorRole instructorRole){
+//        CourseAssistantInstructor courseAssistantInstructor = CourseAssistantInstructor.builder()
+//                .role(instructorRole)
+//                .build();
+//
+//        this.courseAssistantInstructors.add(courseAssistantInstructor);
+//    }
+//
+//    public void addAssistantInstructor(CourseAssistantInstructor courseAssistantInstructor){
+//        this.courseAssistantInstructors.add(courseAssistantInstructor);
+//    }
 }

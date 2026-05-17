@@ -10,21 +10,21 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Long> {
     @Query("""
             SELECT u FROM User u
-            LEFT JOIN FETCH u.skills
+            LEFT JOIN FETCH u.userSkills
             WHERE u.id = :id
             """)
     Optional<User> findUserWithSkills(Long id);
 
     @Query("""
             SELECT u FROM User u
-            LEFT JOIN FETCH u.interests
+            LEFT JOIN FETCH u.userInterests
             WHERE u.id = :id
             """)
     Optional<User> findUserWithInterests(Long id);
 
     @Query("""
             SELECT u FROM User u
-            LEFT JOIN FETCH u.authorizations
+            LEFT JOIN FETCH u.userRoles
             WHERE u.id = :id
             """)
     Optional<User> findUserWithUserAuthorizations(Long id);
@@ -38,13 +38,17 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     @Query("""
             SELECT u FROM User u
-            LEFT JOIN FETCH u.skills
-            LEFT JOIN FETCH u.interests
+            LEFT JOIN FETCH u.userSkills
+            LEFT JOIN FETCH u.userInterests
             LEFT JOIN FETCH u.userSocialLinks
-            LEFT JOIN FETCH u.authorizations
+            LEFT JOIN FETCH u.userRoles
             WHERE u.id = :id
             """)
     Optional<User> findFullUser(Long id);
 
+    Optional<User> findByEmail(String email);
 
+    boolean existsByEmail(String email);
+
+    Optional<User> findByIdAndDeletedAtIsNull(Long id);
 }

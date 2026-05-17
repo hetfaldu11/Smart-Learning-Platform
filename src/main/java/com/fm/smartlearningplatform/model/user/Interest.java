@@ -27,10 +27,6 @@ public class Interest {
     @Column(name = "name",nullable = false, unique = true)
     private String name;
 
-    @ManyToMany(mappedBy = "interests")
-    @Builder.Default
-    private Set<User> users = new HashSet<>();
-
     @CreationTimestamp
     @Column(name = "created_at")
     private LocalDateTime createdAt;
@@ -38,4 +34,7 @@ public class Interest {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }

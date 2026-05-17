@@ -8,11 +8,11 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(
-        name = "user_roles",
+        name = "user_skills",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_user_skill",
-                        columnNames = {"user_id", "role_id"}
+                        columnNames = {"user_id", "skill_id"}
                 )
         }
 )
@@ -23,7 +23,8 @@ import java.time.LocalDateTime;
 @ToString
 @EqualsAndHashCode()
 @Builder
-public class UserRole {
+public class UserSkill {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -34,8 +35,8 @@ public class UserRole {
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @JoinColumn(name = "skill_id")
+    private Skill skill;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
