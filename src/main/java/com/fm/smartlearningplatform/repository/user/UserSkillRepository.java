@@ -13,23 +13,25 @@ import java.util.Optional;
 
 public interface UserSkillRepository extends JpaRepository<UserSkill,Long> {
 
-//    List<UserSkill> findByUserId(Long userId);
-//
-//    List<UserSkill> findBySkillId(Long skillId);
-//
-//    Optional<UserSkill> findByUserIdAndSkillId(Long userId, Long skillId);
-//
-//    Optional<UserSkill> findByUserAndSkill(User user, Skill skill);
-//
-//    boolean existsByUserIdAndSkillId(Long userId, Long skillId);
-//
-//    // Hard delete all user_skills for a user (used when user is deleted)
-//    @Modifying
-//    @Query("DELETE FROM UserSkill us WHERE us.user.id = :userId")
-//    void deleteByUserId(@Param("userId") Long userId);
-//
-//    // Hard delete all user_skills for a skill (used when skill is deleted)
-//    @Modifying
-//    @Query("DELETE FROM UserSkill us WHERE us.skill.id = :skillId")
-//    void deleteBySkillId(@Param("skillId") Long skillId);
+    // ─── Find ────────────────────────────────────────────────
+
+    List<UserSkill> findByUserId(Long userId);
+
+    List<UserSkill> findBySkillId(Long skillId);
+
+    boolean existsByUserIdAndSkillId(Long userId, Long skillId);
+
+    Optional<UserSkill> findByUserIdAndSkillId(Long userId, Long skillId);
+
+    boolean existsByUserAndSkill(User user, Skill skill);
+
+    Optional<UserSkill> findByUserAndSkill(User user, Skill skill);
+
+
+    // ─── Delete ────────────────────────────────────────────────
+
+    // Hard delete all user_skills for a skill (used when skill is deleted)
+    @Modifying
+    @Query("DELETE FROM UserSkill us WHERE us.skill.id = :skillId")
+    void deleteBySkillId(@Param("skillId") Long skillId);
 }

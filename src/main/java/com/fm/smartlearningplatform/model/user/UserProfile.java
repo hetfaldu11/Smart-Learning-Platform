@@ -9,7 +9,16 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_profiles")
+@Table(name = "user_profiles",
+        indexes =
+        {
+                @Index
+                (
+                        name = "idx_user_profile_phone_number",
+                        columnList = "phone_number"
+                )
+        }
+)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -41,14 +50,16 @@ public class UserProfile {
     private EducationLevel educationLevel;
 
     @ManyToOne
+    @JoinColumn(name = "profession_id")
+    private Profession profession;
+
+    @ManyToOne
     @JoinColumn(name = "gender_id")
     private Gender gender;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @Column(name = "phone_number", unique = true)
-    private String phoneNumber;
 
     @Embedded
     @AttributeOverrides({
@@ -75,9 +86,6 @@ public class UserProfile {
     @Column(name = "institute_name")
     private String instituteName;
 
-    @ManyToOne
-    @JoinColumn(name = "profession_id")
-    private Profession profession;
 
     @Column(name = "profile_picture_url")
     private String profilePictureUrl;

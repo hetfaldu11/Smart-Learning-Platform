@@ -7,9 +7,20 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RoleRepository extends JpaRepository<Role, Long> {
-//    List<Role> findByDeletedAtIsNull();
-//
-//    Optional<Role> findByIdAndDeletedAtIsNull(Long id);
-//
-//    boolean existsByNameAndDeletedAtIsNull(String name);
+
+    // ─── Find ────────────────────────────────────────────────
+
+    boolean existsByIdAndDeletedAtIsNull(Long id);
+
+    Optional<Role> findByIdAndDeletedAtIsNull(Long id);
+
+    boolean existsByNameAndDeletedAtIsNull(String name);
+
+    Optional<Role> findByNameAndDeletedAtIsNull(String name);
+
+    boolean existsByName(String name);
+
+    Optional<Role> findByName(String name);
+
+    List<Role> findByDeletedAtIsNull();
 }

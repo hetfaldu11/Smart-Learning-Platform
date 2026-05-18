@@ -35,7 +35,7 @@ public class UserSocialLink {
     @JoinColumn(name = "platform_id")
     private Platform platform;
 
-    @Column(name= "url")
+    @Column(name= "url", nullable = false)
     private String url;
 
     @Column(name="created_at")

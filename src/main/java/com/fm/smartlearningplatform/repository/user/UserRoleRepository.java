@@ -11,24 +11,26 @@ import java.util.List;
 import java.util.Optional;
 
 public interface UserRoleRepository extends JpaRepository<UserRole, Long> {
+    
+    // ─── Find ────────────────────────────────────────────────
 
-//    List<UserRole> findByUserId(Long userId);
-//
-//    List<UserRole> findByRoleId(Long roleId);
-//
-//    Optional<UserRole> findByUserIdAndRoleId(Long userId, Long roleId);
-//
-//    Optional<UserRole> findByUserAndRole(User user, Role role);
-//
-//    boolean existsByUserIdAndRoleId(Long userId, Long roleId);
-//
-//    // Hard delete all user_Roles for a user (used when the user is deleted)
-//    @Modifying
-//    @Query("DELETE FROM UserRole us WHERE us.user.id = :userId")
-//    void deleteByUserId(@Param("userId") Long userId);
-//
-//    // Hard delete all user_Roles for a Role (used when Role is deleted)
-//    @Modifying
-//    @Query("DELETE FROM UserRole us WHERE us.role.id = :roleId")
-//    void deleteByRoleId(@Param("RoleId") Long roleId);
+    List<UserRole> findByUserId(Long userId);
+
+    List<UserRole> findByRoleId(Long roleId);
+
+    boolean existsByUserIdAndRoleId(Long userId, Long roleId);
+
+    Optional<UserRole> findByUserIdAndRoleId(Long userId, Long roleId);
+
+    boolean existsByUserAndRole(User user, Role role);
+
+    Optional<UserRole> findByUserAndRole(User user, Role role);
+
+
+    // ─── Delete ────────────────────────────────────────────────
+
+    // Hard delete all user_roles for a role (used when role is deleted)
+    @Modifying
+    @Query("DELETE FROM UserRole us WHERE us.role.id = :roleId")
+    void deleteByRoleId(@Param("roleId") Long roleId);
 }

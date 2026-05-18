@@ -7,9 +7,20 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SkillRepository extends JpaRepository<Skill, Long> {
-//    List<Skill> findByDeletedAtIsNull();
-//
-//    Optional<Skill> findByIdAndDeletedAtIsNull(Long id);
-//
-//    boolean existsByNameAndDeletedAtIsNull(String name);
+
+    // ─── Find ────────────────────────────────────────────────
+
+    boolean existsByIdAndDeletedAtIsNull(Long id);
+
+    Optional<Skill> findByIdAndDeletedAtIsNull(Long id);
+
+    boolean existsByNameAndDeletedAtIsNull(String name);
+
+    Optional<Skill> findByNameAndDeletedAtIsNull(String name);
+
+    boolean existsByName(String name);
+
+    Optional<Skill> findByName(String name);
+
+    List<Skill> findByDeletedAtIsNull();
 }

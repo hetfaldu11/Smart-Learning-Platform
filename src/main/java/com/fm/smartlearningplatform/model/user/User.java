@@ -5,16 +5,14 @@ import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.processing.Find;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "users",
-        indexes = {
-            @Index(name = "idx_user_email", columnList = "email")
-        })
+@Table(name = "users")
 @Getter @Setter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,8 +26,11 @@ public class User {
     private Long id;
 
     @Email
-    @Column(name = "email", nullable = false, unique = true)
+    @Column(name = "email", nullable = false)
     private String email ;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     @Column(name= "password_hash", nullable = false)
     private String passwordHash;
@@ -65,22 +66,26 @@ public class User {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-    @OneToOne(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
+    @OneToOne(mappedBy = "user",cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private UserProfile userProfile;
+
+    // ─── User Social Link ────────────────────────────────────────────────
 
     @OneToMany(
             mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             fetch = FetchType.LAZY
     )
     @Builder.Default
     private Set<UserSocialLink> userSocialLinks = new HashSet<>();
 
-    public void addLink(Platform platform,String url){
+    public UserSocialLink addLink(Platform platform,String url){
+
+        for(UserSocialLink userSocialLink : userSocialLinks){
+            if(userSocialLink.getPlatform().equals(platform))
+                throw new RuntimeException("Link is already existed.");
+        }
+
         UserSocialLink userSocialLink = new UserSocialLink();
 
         userSocialLink.setUser(this);
@@ -88,67 +93,131 @@ public class User {
         userSocialLink.setUrl(url);
 
         this.userSocialLinks.add(userSocialLink);
+
+        return userSocialLink;
     }
 
-    public void addLink(UserSocialLink userSocialLink){
+    public UserSocialLink addLink(UserSocialLink userSocialLink){
+        if(userSocialLinks.contains(userSocialLink))
+            throw new RuntimeException("UserSocialLink is already attached.");
+
         this.userSocialLinks.add(userSocialLink);
+
+        return userSocialLink;
     }
+
+    // ─── User Verification ────────────────────────────────────────────────
 
     @OneToOne(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+             cascade = {CascadeType.PERSIST,CascadeType.MERGE}
+            )
     private UserVerification userVerification;
 
+    // ─── User Preference ────────────────────────────────────────────────
+
     @OneToOne(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE})
     private UserPreference userPreference;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    // ─── User Skill ────────────────────────────────────────────────
+
+    @OneToMany(mappedBy = "user",cascade = {CascadeType.PERSIST,CascadeType.MERGE},fetch = FetchType.LAZY,orphanRemoval = true)
     @Builder.Default
     private Set<UserSkill> userSkills = new HashSet<>();
 
-    public void addSkill(Skill skill){
+    public UserSkill addSkill(Skill skill){
+        for(UserSkill userSkill : userSkills){
+            if(userSkill.getSkill().equals(skill))
+                throw new RuntimeException("Skill is already attached.");
+        }
+
         UserSkill userSkill = UserSkill.builder()
                                 .user(this)
                                 .skill(skill)
                                 .build();
+
         this.userSkills.add(userSkill);
+
+        return userSkill;
     }
 
     public void removeSkill(Skill skill) {
-        this.userSkills.removeIf(us -> us.getSkill().equals(skill));
+
+        for(UserSkill userSkill : userSkills){
+            if(userSkill.getSkill().equals(skill)){
+                this.userSkills.removeIf(us -> us.getSkill().equals(skill));
+                return;
+            }
+        }
+
+        throw new RuntimeException("Skill is already detached.");
     }
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    // ─── User Interest ────────────────────────────────────────────────
+
+    @OneToMany(mappedBy = "user",cascade = {CascadeType.PERSIST,CascadeType.MERGE},fetch = FetchType.LAZY,orphanRemoval = true)
     @Builder.Default
     private Set<UserInterest> userInterests = new HashSet<>();
 
-    public void addInterest(Interest interest){
+    public UserInterest addInterest(Interest interest){
+        for(UserInterest userInterest : userInterests){
+            if(userInterest.getInterest().equals(interest))
+                throw new RuntimeException("Interest is already attached.");
+        }
+
         UserInterest userInterest = UserInterest.builder()
-                                .user(this)
-                                .interest(interest)
-                                .build();
+                .user(this)
+                .interest(interest)
+                .build();
+
         this.userInterests.add(userInterest);
+
+        return userInterest;
     }
 
     public void removeInterest(Interest interest) {
-        this.userInterests.removeIf(us -> us.getInterest().equals(interest));
+
+        for(UserInterest userInterest : userInterests){
+            if(userInterest.getInterest().equals(interest)){
+                this.userInterests.removeIf(us -> us.getInterest().equals(interest));
+                return;
+            }
+        }
+
+        throw new RuntimeException("Interest is already detached.");
     }
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
+    // ─── User Role ────────────────────────────────────────────────
+
+    @OneToMany(mappedBy = "user",cascade = {CascadeType.PERSIST,CascadeType.MERGE},fetch = FetchType.LAZY,orphanRemoval = true)
     @Builder.Default
     private Set<UserRole> userRoles = new HashSet<>();
 
-    public void addRole(Role role){
+    public UserRole addRole(Role role){
+        for(UserRole userRole : userRoles){
+            if(userRole.getRole().equals(role))
+                throw new RuntimeException("Role is already attached.");
+        }
+
         UserRole userRole = UserRole.builder()
-                                .user(this)
-                                .role(role)
-                                .build();
+                .user(this)
+                .role(role)
+                .build();
+
         this.userRoles.add(userRole);
+
+        return userRole;
     }
 
     public void removeRole(Role role) {
-        this.userRoles.removeIf(us -> us.getRole().equals(role));
+
+        for(UserRole userRole : userRoles){
+            if(userRole.getRole().equals(role)){
+                this.userRoles.removeIf(us -> us.getRole().equals(role));
+                return;
+            }
+        }
+
+        throw new RuntimeException("Role is already detached.");
     }
 }
