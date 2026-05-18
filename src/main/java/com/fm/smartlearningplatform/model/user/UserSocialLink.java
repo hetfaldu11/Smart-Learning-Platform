@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Table(name= "user_social_links",
         uniqueConstraints = {
         @UniqueConstraint(name= "uk_user_platform",
-                        columnNames = {"user_id", "platform"}
+                        columnNames = {"user_id", "platform_id"}
         )
         }
 )
@@ -31,8 +31,8 @@ public class UserSocialLink {
     @JoinColumn(name= "user_id")
     private User user;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name= "platform")
+    @ManyToOne
+    @JoinColumn(name = "platform_id")
     private Platform platform;
 
     @Column(name= "url")
@@ -46,4 +46,6 @@ public class UserSocialLink {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }

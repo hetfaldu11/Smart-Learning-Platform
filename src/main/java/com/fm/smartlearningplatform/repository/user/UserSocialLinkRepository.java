@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface UserSocialLinkRepository extends JpaRepository<UserSocialLink, Long>{
 
-    Optional<UserSocialLink> findByUserAndPlatform(User user, Platform platform);
-    Optional<UserSocialLink> findByUserIdAndPlatform(Long userId, Platform platform);
+//    Optional<UserSocialLink> findByUserAndPlatform(User user, Platform platform);
+//    Optional<UserSocialLink> findByUserIdAndPlatform(Long userId, Platform platform);
 }

@@ -36,8 +36,12 @@ public class UserProfile {
     @Column(name = "about_me",columnDefinition = "TEXT")
     private String aboutMe;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "gender", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "education_level_id")
+    private EducationLevel educationLevel;
+
+    @ManyToOne
+    @JoinColumn(name = "gender_id")
     private Gender gender;
 
     @Column(name = "date_of_birth")
@@ -45,10 +49,6 @@ public class UserProfile {
 
     @Column(name = "phone_number", unique = true)
     private String phoneNumber;
-
-    @Enumerated(EnumType.STRING)
-    @Column(name = "education_level")
-    private EducationLevel educationLevel;
 
     @Embedded
     @AttributeOverrides({
@@ -75,7 +75,7 @@ public class UserProfile {
     @Column(name = "institute_name")
     private String instituteName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "profession_id")
     private Profession profession;
 

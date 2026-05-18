@@ -91,7 +91,6 @@ public class User {
     }
 
     public void addLink(UserSocialLink userSocialLink){
-
         this.userSocialLinks.add(userSocialLink);
     }
 
@@ -105,7 +104,7 @@ public class User {
             orphanRemoval = true)
     private UserPreference userPreference;
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     @Builder.Default
     private Set<UserSkill> userSkills = new HashSet<>();
 
@@ -121,7 +120,7 @@ public class User {
         this.userSkills.removeIf(us -> us.getSkill().equals(skill));
     }
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     @Builder.Default
     private Set<UserInterest> userInterests = new HashSet<>();
 
@@ -137,7 +136,7 @@ public class User {
         this.userInterests.removeIf(us -> us.getInterest().equals(interest));
     }
 
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true)
+    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     @Builder.Default
     private Set<UserRole> userRoles = new HashSet<>();
 
@@ -152,6 +151,4 @@ public class User {
     public void removeRole(Role role) {
         this.userRoles.removeIf(us -> us.getRole().equals(role));
     }
-
-
 }

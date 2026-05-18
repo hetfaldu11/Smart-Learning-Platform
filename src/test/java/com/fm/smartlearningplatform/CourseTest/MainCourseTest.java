@@ -1,4 +1,4 @@
-package com.fm.smartlearningplatform.CourseTest;
-
-public class MainCourseTest {
-}
+//package com.fm.smartlearningplatform.CourseTest;
+//
+//public class MainCourseTest {
+//}

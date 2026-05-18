@@ -26,18 +26,17 @@ public class UserPreference {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "languages_id")
     private Language language;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name= "theme")
-    @Builder.Default
-    private Theme theme = Theme.SYSTEM;
+    @ManyToOne
+    @JoinColumn(name = "theme_id")
+    private Theme theme;
 
     @Column(name= "notification_enabled")
     @Builder.Default
-    private boolean notificationEnabled= true;
+    private boolean notificationEnabled = true;
 
     @CreationTimestamp
     @Column(name = "created_at")
