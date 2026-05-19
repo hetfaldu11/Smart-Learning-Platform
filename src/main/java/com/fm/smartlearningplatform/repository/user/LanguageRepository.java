@@ -35,6 +35,10 @@ LanguageRepository extends JpaRepository<Language,Long> {
 
     boolean existsByIdNotAndCode(Long id, String code);
 
+    boolean existsByIdNotAndNameAndDeletedAtIsNull(Long id, String name);
+
+    boolean existsByIdNotAndCodeAndDeletedAtIsNull(Long id, String code);
+
     Optional<Language> findByCode(String name);
 
     List<Language> findByDeletedAtIsNull();

@@ -11,5 +11,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateLanguageRequest {
+    @NotBlank(message = "Name is emtpy.")
+    private String name;
 
+    @NotBlank(message = "Code is empty.")
+    private String code;
 }

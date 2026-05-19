@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RoleServiceTest {
+public class RoleServiceTest {
 
     @Mock
     private RoleRepository roleRepository;
@@ -39,25 +39,25 @@ class RoleServiceTest {
 
     @Test
     void createRole_Success() {
-        CreateRoleRequest request = new CreateRoleRequest("Java");
-        Role role = Role.builder().id(1L).name("Java").build();
-        RoleResponse response = new RoleResponse(1L, "Java");
+        CreateRoleRequest request = new CreateRoleRequest("Student");
+        Role role = Role.builder().id(1L).name("Student").build();
+        RoleResponse response = new RoleResponse(1L, "Student");
 
-        when(roleRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(false);
+        when(roleRepository.existsByNameAndDeletedAtIsNull("Student")).thenReturn(false);
         when(roleMapper.toEntity(request)).thenReturn(role);
         when(roleRepository.save(role)).thenReturn(role);
         when(roleMapper.toResponse(role)).thenReturn(response);
 
         RoleResponse result = roleService.createRole(request);
 
-        assertThat(result.getName()).isEqualTo("Java");
+        assertThat(result.getName()).isEqualTo("Student");
     }
 
     @Test
     void createRole_ThrowsDuplicate() {
-        CreateRoleRequest request = new CreateRoleRequest("Java");
+        CreateRoleRequest request = new CreateRoleRequest("Student");
 
-        when(roleRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(true);
+        when(roleRepository.existsByNameAndDeletedAtIsNull("Student")).thenReturn(true);
 
         assertThrows(DuplicateResourceException.class,
                 () -> roleService.createRole(request));
@@ -67,23 +67,23 @@ class RoleServiceTest {
 
     @Test
     void updateRole_Success() {
-        UpdateRoleRequest request = new UpdateRoleRequest("Python");
-        Role role = Role.builder().id(1L).name("Java").build();
-        RoleResponse response = new RoleResponse(1L, "Python");
+        UpdateRoleRequest request = new UpdateRoleRequest("Instructor");
+        Role role = Role.builder().id(1L).name("Student").build();
+        RoleResponse response = new RoleResponse(1L, "Instructor");
 
         when(roleRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(role));
-        when(roleRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(false);
+        when(roleRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Instructor")).thenReturn(false);
         when(roleRepository.save(role)).thenReturn(role);
         when(roleMapper.toResponse(role)).thenReturn(response);
 
         RoleResponse result = roleService.updateRole(1L, request);
 
-        assertThat(result.getName()).isEqualTo("Python");
+        assertThat(result.getName()).isEqualTo("Instructor");
     }
 
     @Test
     void updateRole_ThrowsNotFound() {
-        UpdateRoleRequest request = new UpdateRoleRequest("Python");
+        UpdateRoleRequest request = new UpdateRoleRequest("Instructor");
 
         when(roleRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
 
@@ -93,11 +93,11 @@ class RoleServiceTest {
 
     @Test
     void updateRole_ThrowsDuplicate() {
-        UpdateRoleRequest request = new UpdateRoleRequest("Python");
-        Role role = Role.builder().id(1L).name("Java").build();
+        UpdateRoleRequest request = new UpdateRoleRequest("Instructor");
+        Role role = Role.builder().id(1L).name("Student").build();
 
         when(roleRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(role));
-        when(roleRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(true);
+        when(roleRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Instructor")).thenReturn(true);
 
         assertThrows(DuplicateResourceException.class,
                 () -> roleService.updateRole(1L, request));
@@ -107,8 +107,8 @@ class RoleServiceTest {
 
     @Test
     void findByIdAndDeletedAtIsNull_Success() {
-        Role role = Role.builder().id(1L).name("Java").build();
-        RoleResponse response = new RoleResponse(1L, "Java");
+        Role role = Role.builder().id(1L).name("Student").build();
+        RoleResponse response = new RoleResponse(1L, "Student");
 
         when(roleRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(role));
         when(roleMapper.toResponse(role)).thenReturn(response);
@@ -116,7 +116,7 @@ class RoleServiceTest {
         RoleResponse result = roleService.findByIdAndDeletedAtIsNull(1L);
 
         assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getName()).isEqualTo("Java");
+        assertThat(result.getName()).isEqualTo("Student");
     }
 
     @Test
@@ -129,8 +129,8 @@ class RoleServiceTest {
 
     @Test
     void findAllActive_Success() {
-        Role role = Role.builder().id(1L).name("Java").build();
-        RoleResponse response = new RoleResponse(1L, "Java");
+        Role role = Role.builder().id(1L).name("Student").build();
+        RoleResponse response = new RoleResponse(1L, "Student");
 
         when(roleRepository.findByDeletedAtIsNull()).thenReturn(List.of(role));
         when(roleMapper.toResponse(role)).thenReturn(response);
@@ -138,14 +138,14 @@ class RoleServiceTest {
         List<RoleResponse> result = roleService.findAllActive();
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Java");
+        assertThat(result.get(0).getName()).isEqualTo("Student");
     }
 
     // ─── Delete ────────────────────────────────────────────────
 
     @Test
     void deleteById_Success() {
-        Role role = Role.builder().id(1L).name("Java").build();
+        Role role = Role.builder().id(1L).name("Student").build();
 
         when(roleRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(role));
 

@@ -39,8 +39,8 @@ class GenderControllerTest {
 
     @Test
     void createGender_Returns201() throws Exception {
-        CreateGenderRequest request = new CreateGenderRequest("Java");
-        GenderResponse response = new GenderResponse(1L, "Java");
+        CreateGenderRequest request = new CreateGenderRequest("Male");
+        GenderResponse response = new GenderResponse(1L, "Male");
 
         when(genderService.createGender(any())).thenReturn(response);
 
@@ -49,7 +49,7 @@ class GenderControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Java"));
+                .andExpect(jsonPath("$.name").value("Male"));
     }
 
     @Test
@@ -64,7 +64,7 @@ class GenderControllerTest {
 
     @Test
     void createGender_Returns409_WhenDuplicate() throws Exception {
-        CreateGenderRequest request = new CreateGenderRequest("Java");
+        CreateGenderRequest request = new CreateGenderRequest("Male");
 
         when(genderService.createGender(any()))
                 .thenThrow(new DuplicateResourceException("Gender already exists."));
@@ -80,8 +80,8 @@ class GenderControllerTest {
 
     @Test
     void updateGender_Returns200() throws Exception {
-        UpdateGenderRequest request = new UpdateGenderRequest("Python");
-        GenderResponse response = new GenderResponse(1L, "Python");
+        UpdateGenderRequest request = new UpdateGenderRequest("Female");
+        GenderResponse response = new GenderResponse(1L, "Female");
 
         when(genderService.updateGender(eq(1L), any())).thenReturn(response);
 
@@ -89,12 +89,12 @@ class GenderControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Python"));
+                .andExpect(jsonPath("$.name").value("Female"));
     }
 
     @Test
     void updateGender_Returns404_WhenNotFound() throws Exception {
-        UpdateGenderRequest request = new UpdateGenderRequest("Python");
+        UpdateGenderRequest request = new UpdateGenderRequest("Female");
 
         when(genderService.updateGender(eq(1L), any()))
                 .thenThrow(new ResourceNotFoundException("Gender not found."));
@@ -110,14 +110,14 @@ class GenderControllerTest {
 
     @Test
     void getGender_Returns200() throws Exception {
-        GenderResponse response = new GenderResponse(1L, "Java");
+        GenderResponse response = new GenderResponse(1L, "Male");
 
         when(genderService.findByIdAndDeletedAtIsNull(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/genders/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Java"));
+                .andExpect(jsonPath("$.name").value("Male"));
     }
 
     @Test
@@ -133,8 +133,8 @@ class GenderControllerTest {
     @Test
     void getAllGenders_Returns200() throws Exception {
         List<GenderResponse> response = List.of(
-                new GenderResponse(1L, "Java"),
-                new GenderResponse(2L, "Python")
+                new GenderResponse(1L, "Male"),
+                new GenderResponse(2L, "Female")
         );
 
         when(genderService.findAllActive()).thenReturn(response);
@@ -142,8 +142,8 @@ class GenderControllerTest {
         mockMvc.perform(get("/api/v1/genders"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].name").value("Java"))
-                .andExpect(jsonPath("$[1].name").value("Python"));
+                .andExpect(jsonPath("$[0].name").value("Male"))
+                .andExpect(jsonPath("$[1].name").value("Female"));
     }
 
     // ─── Delete ────────────────────────────────────────────────

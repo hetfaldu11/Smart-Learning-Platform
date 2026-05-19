@@ -40,25 +40,25 @@ class EducationLevelServiceTest {
 
     @Test
     void createEducationLevel_Success() {
-        CreateEducationLevelRequest request = new CreateEducationLevelRequest("Java");
-        EducationLevel educationLevel = EducationLevel.builder().id(1L).name("Java").build();
-        EducationLevelResponse response = new EducationLevelResponse(1L, "Java");
+        CreateEducationLevelRequest request = new CreateEducationLevelRequest("School");
+        EducationLevel educationLevel = EducationLevel.builder().id(1L).name("School").build();
+        EducationLevelResponse response = new EducationLevelResponse(1L, "School");
 
-        when(educationLevelRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(false);
+        when(educationLevelRepository.existsByNameAndDeletedAtIsNull("School")).thenReturn(false);
         when(educationLevelMapper.toEntity(request)).thenReturn(educationLevel);
         when(educationLevelRepository.save(educationLevel)).thenReturn(educationLevel);
         when(educationLevelMapper.toResponse(educationLevel)).thenReturn(response);
 
         EducationLevelResponse result = educationLevelService.createEducationLevel(request);
 
-        assertThat(result.getName()).isEqualTo("Java");
+        assertThat(result.getName()).isEqualTo("School");
     }
 
     @Test
     void createEducationLevel_ThrowsDuplicate() {
-        CreateEducationLevelRequest request = new CreateEducationLevelRequest("Java");
+        CreateEducationLevelRequest request = new CreateEducationLevelRequest("School");
 
-        when(educationLevelRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(true);
+        when(educationLevelRepository.existsByNameAndDeletedAtIsNull("School")).thenReturn(true);
 
         assertThrows(DuplicateResourceException.class,
                 () -> educationLevelService.createEducationLevel(request));
@@ -68,23 +68,23 @@ class EducationLevelServiceTest {
 
     @Test
     void updateEducationLevel_Success() {
-        UpdateEducationLevelRequest request = new UpdateEducationLevelRequest("Python");
-        EducationLevel educationLevel = EducationLevel.builder().id(1L).name("Java").build();
-        EducationLevelResponse response = new EducationLevelResponse(1L, "Python");
+        UpdateEducationLevelRequest request = new UpdateEducationLevelRequest("Diploma");
+        EducationLevel educationLevel = EducationLevel.builder().id(1L).name("School").build();
+        EducationLevelResponse response = new EducationLevelResponse(1L, "Diploma");
 
         when(educationLevelRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(educationLevel));
-        when(educationLevelRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(false);
+        when(educationLevelRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Diploma")).thenReturn(false);
         when(educationLevelRepository.save(educationLevel)).thenReturn(educationLevel);
         when(educationLevelMapper.toResponse(educationLevel)).thenReturn(response);
 
         EducationLevelResponse result = educationLevelService.updateEducationLevel(1L, request);
 
-        assertThat(result.getName()).isEqualTo("Python");
+        assertThat(result.getName()).isEqualTo("Diploma");
     }
 
     @Test
     void updateEducationLevel_ThrowsNotFound() {
-        UpdateEducationLevelRequest request = new UpdateEducationLevelRequest("Python");
+        UpdateEducationLevelRequest request = new UpdateEducationLevelRequest("Diploma");
 
         when(educationLevelRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
 
@@ -94,11 +94,11 @@ class EducationLevelServiceTest {
 
     @Test
     void updateEducationLevel_ThrowsDuplicate() {
-        UpdateEducationLevelRequest request = new UpdateEducationLevelRequest("Python");
-        EducationLevel educationLevel = EducationLevel.builder().id(1L).name("Java").build();
+        UpdateEducationLevelRequest request = new UpdateEducationLevelRequest("Diploma");
+        EducationLevel educationLevel = EducationLevel.builder().id(1L).name("School").build();
 
         when(educationLevelRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(educationLevel));
-        when(educationLevelRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(true);
+        when(educationLevelRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Diploma")).thenReturn(true);
 
         assertThrows(DuplicateResourceException.class,
                 () -> educationLevelService.updateEducationLevel(1L, request));
@@ -108,8 +108,8 @@ class EducationLevelServiceTest {
 
     @Test
     void findByIdAndDeletedAtIsNull_Success() {
-        EducationLevel educationLevel = EducationLevel.builder().id(1L).name("Java").build();
-        EducationLevelResponse response = new EducationLevelResponse(1L, "Java");
+        EducationLevel educationLevel = EducationLevel.builder().id(1L).name("School").build();
+        EducationLevelResponse response = new EducationLevelResponse(1L, "School");
 
         when(educationLevelRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(educationLevel));
         when(educationLevelMapper.toResponse(educationLevel)).thenReturn(response);
@@ -117,7 +117,7 @@ class EducationLevelServiceTest {
         EducationLevelResponse result = educationLevelService.findByIdAndDeletedAtIsNull(1L);
 
         assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getName()).isEqualTo("Java");
+        assertThat(result.getName()).isEqualTo("School");
     }
 
     @Test
@@ -130,8 +130,8 @@ class EducationLevelServiceTest {
 
     @Test
     void findAllActive_Success() {
-        EducationLevel educationLevel = EducationLevel.builder().id(1L).name("Java").build();
-        EducationLevelResponse response = new EducationLevelResponse(1L, "Java");
+        EducationLevel educationLevel = EducationLevel.builder().id(1L).name("School").build();
+        EducationLevelResponse response = new EducationLevelResponse(1L, "School");
 
         when(educationLevelRepository.findByDeletedAtIsNull()).thenReturn(List.of(educationLevel));
         when(educationLevelMapper.toResponse(educationLevel)).thenReturn(response);
@@ -139,14 +139,14 @@ class EducationLevelServiceTest {
         List<EducationLevelResponse> result = educationLevelService.findAllActive();
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Java");
+        assertThat(result.get(0).getName()).isEqualTo("School");
     }
 
     // ─── Delete ────────────────────────────────────────────────
 
     @Test
     void deleteById_Success() {
-        EducationLevel educationLevel = EducationLevel.builder().id(1L).name("Java").build();
+        EducationLevel educationLevel = EducationLevel.builder().id(1L).name("School").build();
 
         when(educationLevelRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(educationLevel));
 

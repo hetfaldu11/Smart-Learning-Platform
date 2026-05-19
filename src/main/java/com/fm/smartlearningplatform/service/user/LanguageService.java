@@ -1,146 +1,118 @@
 package com.fm.smartlearningplatform.service.user;
-
+import com.fm.smartlearningplatform.dto.user.language.request.CreateLanguageRequest;
+import com.fm.smartlearningplatform.dto.user.language.request.UpdateLanguageRequest;
+import com.fm.smartlearningplatform.dto.user.language.response.LanguageResponse;
+import com.fm.smartlearningplatform.exception.DuplicateResourceException;
+import com.fm.smartlearningplatform.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.mapper.user.LanguageMapper;
 import com.fm.smartlearningplatform.model.user.Language;
 import com.fm.smartlearningplatform.repository.user.LanguageRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class LanguageService {
+
     private final LanguageRepository languageRepository;
 
-    @Autowired
-    public LanguageService (LanguageRepository languageRepository) {
-        this.languageRepository = languageRepository;
-    }
+    private final LanguageMapper languageMapper;
 
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    public Language createLanguage(String name, String code){
+    public LanguageResponse createLanguage(CreateLanguageRequest request) {
+        if (languageRepository.existsByNameAndDeletedAtIsNull(request.getName()))
+            throw new DuplicateResourceException("Language name already exists.");
 
-        if(name==null) {
-            throw new RuntimeException("Name is null.");
-        }
+        if (languageRepository.existsByCodeAndDeletedAtIsNull(request.getCode()))
+            throw new DuplicateResourceException("Language code already exists.");
 
-        if(code==null) {
-            throw new RuntimeException("Code is null.");
-        }
-
-        if(languageRepository.existsByName(name))
-            throw new RuntimeException("Language name is already exist.");
-
-        if(languageRepository.existsByCode(code))
-            throw new RuntimeException("Language code is already exist.");
-
-        Language language = Language.builder()
-                .name(name)
-                .code(code)
-                .build();
-
-        return languageRepository.save(language);
+        return languageMapper.toResponse(
+                languageRepository.save(
+                        languageMapper.toEntity(request)
+                )
+        );
     }
 
     // ─── Update ────────────────────────────────────────────────
 
     @Transactional
-    public Language updateLanguageName(Long id, String newName) {
-
-        if(newName==null) {
-            throw new RuntimeException("Name is null.");
-        }
-
-        if(languageRepository.existsByName(newName))
-            throw new RuntimeException("Language name is already exist.");
-
+    public LanguageResponse updateLanguage(Long id, UpdateLanguageRequest request) {
         Language language = languageRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new RuntimeException("Language is not exist."));
+                .orElseThrow(() -> new ResourceNotFoundException("Language not found."));
 
-        language.setName(newName);
+        if (request.getName()!=null && languageRepository.existsByIdNotAndNameAndDeletedAtIsNull(id, request.getName()))
+            throw new DuplicateResourceException("Language already exists.");
 
-        return languageRepository.save(language);
-    }
+        if (request.getCode()!=null && languageRepository.existsByIdNotAndCodeAndDeletedAtIsNull(id, request.getCode()))
+            throw new DuplicateResourceException("Code already exists.");
 
-    @Transactional
-    public Language updateLanguageCode(Long id, String newCode) {
+        languageMapper.updateLanguageFromRequest(request, language);
 
-        if(newCode==null) {
-            throw new RuntimeException("Code is null.");
-        }
-
-        if(languageRepository.existsByCode(newCode))
-            throw new RuntimeException("Language code is already exist.");
-
-        Language language = languageRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new RuntimeException("Language is not exist."));
-
-        language.setCode(newCode);
-
-        return languageRepository.save(language);
+        return languageMapper.toResponse(languageRepository.save(language));
     }
 
     // ─── Find ────────────────────────────────────────────────
 
+    @Transactional(readOnly = true)
     public boolean existsByIdAndDeletedAtIsNull(Long id) {
         return languageRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
-    public Language findByIdAndDeletedAtIsNull(Long id){
-        Language language = languageRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Language is not existed."));
-
-        if(language.getDeletedAt() != null)
-            throw new RuntimeException("Language is deleted.");
-        return language;
+    @Transactional(readOnly = true)
+    public LanguageResponse findByIdAndDeletedAtIsNull(Long id){
+        return languageMapper.toResponse(
+                languageRepository.findByIdAndDeletedAtIsNull(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Language not exists.")));
     }
 
+    @Transactional(readOnly = true)
     public boolean existsByNameAndDeletedAtIsNull(String name){
         return languageRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    public Language findByNameAndDeletedAtIsNull(String name){
-        Language language = languageRepository.findByName(name)
-
-                .orElseThrow(()->new RuntimeException("Language is not existed."));
-
-        if(language.getDeletedAt() != null)
-            throw new RuntimeException("Language is deleted.");
-        return language;
+    @Transactional(readOnly = true)
+    public LanguageResponse findByNameAndDeletedAtIsNull(String name){
+        return languageMapper.toResponse(
+                languageRepository.findByNameAndDeletedAtIsNull(name)
+                        .orElseThrow(()->new ResourceNotFoundException("Language not exists."))
+        );
     }
 
+    @Transactional(readOnly = true)
     public boolean existsByCodeAndDeletedAtIsNull(String code){
         return languageRepository.existsByCodeAndDeletedAtIsNull(code);
     }
 
-    public Language findByCodeAndDeletedAtIsNull(String code){
-        Language language = languageRepository.findByCode(code)
-                .orElseThrow(()->new RuntimeException("Language is not existed."));
-
-        if(language.getDeletedAt() != null)
-            throw new RuntimeException("Language is deleted.");
-        return language;
+    @Transactional(readOnly = true)
+    public LanguageResponse findByCodeAndDeletedAtIsNull(String code){
+        return languageMapper.toResponse(
+                languageRepository.findByCodeAndDeletedAtIsNull(code)
+                        .orElseThrow(()->new ResourceNotFoundException("Language not exists."))
+        );
     }
 
-    public List<Language> findByDeletedAtIsNull(){
-        return languageRepository.findByDeletedAtIsNull();
+    @Transactional(readOnly = true)
+    public List<LanguageResponse> findAllActive() {
+        return languageRepository.findByDeletedAtIsNull()
+                .stream()
+                .map(languageMapper::toResponse)
+                .toList();
     }
 
     // ─── Delete ────────────────────────────────────────────────
     @Transactional
     public void deleteById(Long id){
-        Language language = languageRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Language is not exist."));
-
-        if(language.getDeletedAt() != null){
-            throw  new RuntimeException("Language is already deleted.");
-        }
+        Language language = languageRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Language not exist."));
 
         language.setDeletedAt(LocalDateTime.now());
 
         languageRepository.save(language);
-    } 
+    }
 }

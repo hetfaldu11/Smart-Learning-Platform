@@ -39,8 +39,8 @@ class RoleControllerTest {
 
     @Test
     void createRole_Returns201() throws Exception {
-        CreateRoleRequest request = new CreateRoleRequest("Java");
-        RoleResponse response = new RoleResponse(1L, "Java");
+        CreateRoleRequest request = new CreateRoleRequest("Student");
+        RoleResponse response = new RoleResponse(1L, "Student");
 
         when(roleService.createRole(any())).thenReturn(response);
 
@@ -49,7 +49,7 @@ class RoleControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Java"));
+                .andExpect(jsonPath("$.name").value("Student"));
     }
 
     @Test
@@ -64,7 +64,7 @@ class RoleControllerTest {
 
     @Test
     void createRole_Returns409_WhenDuplicate() throws Exception {
-        CreateRoleRequest request = new CreateRoleRequest("Java");
+        CreateRoleRequest request = new CreateRoleRequest("Student");
 
         when(roleService.createRole(any()))
                 .thenThrow(new DuplicateResourceException("Role already exists."));
@@ -80,8 +80,8 @@ class RoleControllerTest {
 
     @Test
     void updateRole_Returns200() throws Exception {
-        UpdateRoleRequest request = new UpdateRoleRequest("Python");
-        RoleResponse response = new RoleResponse(1L, "Python");
+        UpdateRoleRequest request = new UpdateRoleRequest("Instructor");
+        RoleResponse response = new RoleResponse(1L, "Instructor");
 
         when(roleService.updateRole(eq(1L), any())).thenReturn(response);
 
@@ -89,12 +89,12 @@ class RoleControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Python"));
+                .andExpect(jsonPath("$.name").value("Instructor"));
     }
 
     @Test
     void updateRole_Returns404_WhenNotFound() throws Exception {
-        UpdateRoleRequest request = new UpdateRoleRequest("Python");
+        UpdateRoleRequest request = new UpdateRoleRequest("Instructor");
 
         when(roleService.updateRole(eq(1L), any()))
                 .thenThrow(new ResourceNotFoundException("Role not found."));
@@ -110,14 +110,14 @@ class RoleControllerTest {
 
     @Test
     void getRole_Returns200() throws Exception {
-        RoleResponse response = new RoleResponse(1L, "Java");
+        RoleResponse response = new RoleResponse(1L, "Student");
 
         when(roleService.findByIdAndDeletedAtIsNull(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/roles/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Java"));
+                .andExpect(jsonPath("$.name").value("Student"));
     }
 
     @Test
@@ -133,8 +133,8 @@ class RoleControllerTest {
     @Test
     void getAllRoles_Returns200() throws Exception {
         List<RoleResponse> response = List.of(
-                new RoleResponse(1L, "Java"),
-                new RoleResponse(2L, "Python")
+                new RoleResponse(1L, "Student"),
+                new RoleResponse(2L, "Instructor")
         );
 
         when(roleService.findAllActive()).thenReturn(response);
@@ -142,8 +142,8 @@ class RoleControllerTest {
         mockMvc.perform(get("/api/v1/roles"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].name").value("Java"))
-                .andExpect(jsonPath("$[1].name").value("Python"));
+                .andExpect(jsonPath("$[0].name").value("Student"))
+                .andExpect(jsonPath("$[1].name").value("Instructor"));
     }
 
     // ─── Delete ────────────────────────────────────────────────

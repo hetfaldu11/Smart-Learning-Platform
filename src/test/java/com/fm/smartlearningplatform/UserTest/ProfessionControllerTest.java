@@ -39,8 +39,8 @@ class ProfessionControllerTest {
 
     @Test
     void createProfession_Returns201() throws Exception {
-        CreateProfessionRequest request = new CreateProfessionRequest("Java");
-        ProfessionResponse response = new ProfessionResponse(1L, "Java");
+        CreateProfessionRequest request = new CreateProfessionRequest("Student");
+        ProfessionResponse response = new ProfessionResponse(1L, "Student");
 
         when(professionService.createProfession(any())).thenReturn(response);
 
@@ -49,7 +49,7 @@ class ProfessionControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Java"));
+                .andExpect(jsonPath("$.name").value("Student"));
     }
 
     @Test
@@ -64,7 +64,7 @@ class ProfessionControllerTest {
 
     @Test
     void createProfession_Returns409_WhenDuplicate() throws Exception {
-        CreateProfessionRequest request = new CreateProfessionRequest("Java");
+        CreateProfessionRequest request = new CreateProfessionRequest("Student");
 
         when(professionService.createProfession(any()))
                 .thenThrow(new DuplicateResourceException("Profession already exists."));
@@ -80,8 +80,8 @@ class ProfessionControllerTest {
 
     @Test
     void updateProfession_Returns200() throws Exception {
-        UpdateProfessionRequest request = new UpdateProfessionRequest("Python");
-        ProfessionResponse response = new ProfessionResponse(1L, "Python");
+        UpdateProfessionRequest request = new UpdateProfessionRequest("Web developer");
+        ProfessionResponse response = new ProfessionResponse(1L, "Web developer");
 
         when(professionService.updateProfession(eq(1L), any())).thenReturn(response);
 
@@ -89,12 +89,12 @@ class ProfessionControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Python"));
+                .andExpect(jsonPath("$.name").value("Web developer"));
     }
 
     @Test
     void updateProfession_Returns404_WhenNotFound() throws Exception {
-        UpdateProfessionRequest request = new UpdateProfessionRequest("Python");
+        UpdateProfessionRequest request = new UpdateProfessionRequest("Web developer");
 
         when(professionService.updateProfession(eq(1L), any()))
                 .thenThrow(new ResourceNotFoundException("Profession not found."));
@@ -110,14 +110,14 @@ class ProfessionControllerTest {
 
     @Test
     void getProfession_Returns200() throws Exception {
-        ProfessionResponse response = new ProfessionResponse(1L, "Java");
+        ProfessionResponse response = new ProfessionResponse(1L, "Student");
 
         when(professionService.findByIdAndDeletedAtIsNull(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/professions/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Java"));
+                .andExpect(jsonPath("$.name").value("Student"));
     }
 
     @Test
@@ -133,8 +133,8 @@ class ProfessionControllerTest {
     @Test
     void getAllProfessions_Returns200() throws Exception {
         List<ProfessionResponse> response = List.of(
-                new ProfessionResponse(1L, "Java"),
-                new ProfessionResponse(2L, "Python")
+                new ProfessionResponse(1L, "Student"),
+                new ProfessionResponse(2L, "Web developer")
         );
 
         when(professionService.findAllActive()).thenReturn(response);
@@ -142,8 +142,8 @@ class ProfessionControllerTest {
         mockMvc.perform(get("/api/v1/professions"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].name").value("Java"))
-                .andExpect(jsonPath("$[1].name").value("Python"));
+                .andExpect(jsonPath("$[0].name").value("Student"))
+                .andExpect(jsonPath("$[1].name").value("Web developer"));
     }
 
     // ─── Delete ────────────────────────────────────────────────

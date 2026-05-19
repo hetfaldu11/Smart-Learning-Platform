@@ -39,8 +39,8 @@ class EducationLevelControllerTest {
 
     @Test
     void createEducationLevel_Returns201() throws Exception {
-        CreateEducationLevelRequest request = new CreateEducationLevelRequest("Java");
-        EducationLevelResponse response = new EducationLevelResponse(1L, "Java");
+        CreateEducationLevelRequest request = new CreateEducationLevelRequest("School");
+        EducationLevelResponse response = new EducationLevelResponse(1L, "School");
 
         when(educationLevelService.createEducationLevel(any())).thenReturn(response);
 
@@ -49,7 +49,7 @@ class EducationLevelControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Java"));
+                .andExpect(jsonPath("$.name").value("School"));
     }
 
     @Test
@@ -64,7 +64,7 @@ class EducationLevelControllerTest {
 
     @Test
     void createEducationLevel_Returns409_WhenDuplicate() throws Exception {
-        CreateEducationLevelRequest request = new CreateEducationLevelRequest("Java");
+        CreateEducationLevelRequest request = new CreateEducationLevelRequest("School");
 
         when(educationLevelService.createEducationLevel(any()))
                 .thenThrow(new DuplicateResourceException("EducationLevel already exists."));
@@ -80,8 +80,8 @@ class EducationLevelControllerTest {
 
     @Test
     void updateEducationLevel_Returns200() throws Exception {
-        UpdateEducationLevelRequest request = new UpdateEducationLevelRequest("Python");
-        EducationLevelResponse response = new EducationLevelResponse(1L, "Python");
+        UpdateEducationLevelRequest request = new UpdateEducationLevelRequest("Diploma");
+        EducationLevelResponse response = new EducationLevelResponse(1L, "Diploma");
 
         when(educationLevelService.updateEducationLevel(eq(1L), any())).thenReturn(response);
 
@@ -89,12 +89,12 @@ class EducationLevelControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Python"));
+                .andExpect(jsonPath("$.name").value("Diploma"));
     }
 
     @Test
     void updateEducationLevel_Returns404_WhenNotFound() throws Exception {
-        UpdateEducationLevelRequest request = new UpdateEducationLevelRequest("Python");
+        UpdateEducationLevelRequest request = new UpdateEducationLevelRequest("Diploma");
 
         when(educationLevelService.updateEducationLevel(eq(1L), any()))
                 .thenThrow(new ResourceNotFoundException("EducationLevel not found."));
@@ -110,14 +110,14 @@ class EducationLevelControllerTest {
 
     @Test
     void getEducationLevel_Returns200() throws Exception {
-        EducationLevelResponse response = new EducationLevelResponse(1L, "Java");
+        EducationLevelResponse response = new EducationLevelResponse(1L, "School");
 
         when(educationLevelService.findByIdAndDeletedAtIsNull(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/educationLevels/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Java"));
+                .andExpect(jsonPath("$.name").value("School"));
     }
 
     @Test
@@ -133,8 +133,8 @@ class EducationLevelControllerTest {
     @Test
     void getAllEducationLevels_Returns200() throws Exception {
         List<EducationLevelResponse> response = List.of(
-                new EducationLevelResponse(1L, "Java"),
-                new EducationLevelResponse(2L, "Python")
+                new EducationLevelResponse(1L, "School"),
+                new EducationLevelResponse(2L, "Diploma")
         );
 
         when(educationLevelService.findAllActive()).thenReturn(response);
@@ -142,8 +142,8 @@ class EducationLevelControllerTest {
         mockMvc.perform(get("/api/v1/educationLevels"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].name").value("Java"))
-                .andExpect(jsonPath("$[1].name").value("Python"));
+                .andExpect(jsonPath("$[0].name").value("School"))
+                .andExpect(jsonPath("$[1].name").value("Diploma"));
     }
 
     // ─── Delete ────────────────────────────────────────────────

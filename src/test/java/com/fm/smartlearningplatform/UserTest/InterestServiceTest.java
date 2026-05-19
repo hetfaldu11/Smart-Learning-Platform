@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class InterestServiceTest {
+public class InterestServiceTest {
 
     @Mock
     private InterestRepository interestRepository;
@@ -39,25 +39,25 @@ class InterestServiceTest {
 
     @Test
     void createInterest_Success() {
-        CreateInterestRequest request = new CreateInterestRequest("Java");
-        Interest interest = Interest.builder().id(1L).name("Java").build();
-        InterestResponse response = new InterestResponse(1L, "Java");
+        CreateInterestRequest request = new CreateInterestRequest("Web development");
+        Interest interest = Interest.builder().id(1L).name("Web development").build();
+        InterestResponse response = new InterestResponse(1L, "Web development");
 
-        when(interestRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(false);
+        when(interestRepository.existsByNameAndDeletedAtIsNull("Web development")).thenReturn(false);
         when(interestMapper.toEntity(request)).thenReturn(interest);
         when(interestRepository.save(interest)).thenReturn(interest);
         when(interestMapper.toResponse(interest)).thenReturn(response);
 
         InterestResponse result = interestService.createInterest(request);
 
-        assertThat(result.getName()).isEqualTo("Java");
+        assertThat(result.getName()).isEqualTo("Web development");
     }
 
     @Test
     void createInterest_ThrowsDuplicate() {
-        CreateInterestRequest request = new CreateInterestRequest("Java");
+        CreateInterestRequest request = new CreateInterestRequest("Web development");
 
-        when(interestRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(true);
+        when(interestRepository.existsByNameAndDeletedAtIsNull("Web development")).thenReturn(true);
 
         assertThrows(DuplicateResourceException.class,
                 () -> interestService.createInterest(request));
@@ -67,23 +67,23 @@ class InterestServiceTest {
 
     @Test
     void updateInterest_Success() {
-        UpdateInterestRequest request = new UpdateInterestRequest("Python");
-        Interest interest = Interest.builder().id(1L).name("Java").build();
-        InterestResponse response = new InterestResponse(1L, "Python");
+        UpdateInterestRequest request = new UpdateInterestRequest("Business");
+        Interest interest = Interest.builder().id(1L).name("Web development").build();
+        InterestResponse response = new InterestResponse(1L, "Business");
 
         when(interestRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(interest));
-        when(interestRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(false);
+        when(interestRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Business")).thenReturn(false);
         when(interestRepository.save(interest)).thenReturn(interest);
         when(interestMapper.toResponse(interest)).thenReturn(response);
 
         InterestResponse result = interestService.updateInterest(1L, request);
 
-        assertThat(result.getName()).isEqualTo("Python");
+        assertThat(result.getName()).isEqualTo("Business");
     }
 
     @Test
     void updateInterest_ThrowsNotFound() {
-        UpdateInterestRequest request = new UpdateInterestRequest("Python");
+        UpdateInterestRequest request = new UpdateInterestRequest("Business");
 
         when(interestRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
 
@@ -93,11 +93,11 @@ class InterestServiceTest {
 
     @Test
     void updateInterest_ThrowsDuplicate() {
-        UpdateInterestRequest request = new UpdateInterestRequest("Python");
-        Interest interest = Interest.builder().id(1L).name("Java").build();
+        UpdateInterestRequest request = new UpdateInterestRequest("Business");
+        Interest interest = Interest.builder().id(1L).name("Web development").build();
 
         when(interestRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(interest));
-        when(interestRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(true);
+        when(interestRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Business")).thenReturn(true);
 
         assertThrows(DuplicateResourceException.class,
                 () -> interestService.updateInterest(1L, request));
@@ -107,8 +107,8 @@ class InterestServiceTest {
 
     @Test
     void findByIdAndDeletedAtIsNull_Success() {
-        Interest interest = Interest.builder().id(1L).name("Java").build();
-        InterestResponse response = new InterestResponse(1L, "Java");
+        Interest interest = Interest.builder().id(1L).name("Web development").build();
+        InterestResponse response = new InterestResponse(1L, "Web development");
 
         when(interestRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(interest));
         when(interestMapper.toResponse(interest)).thenReturn(response);
@@ -116,7 +116,7 @@ class InterestServiceTest {
         InterestResponse result = interestService.findByIdAndDeletedAtIsNull(1L);
 
         assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getName()).isEqualTo("Java");
+        assertThat(result.getName()).isEqualTo("Web development");
     }
 
     @Test
@@ -129,8 +129,8 @@ class InterestServiceTest {
 
     @Test
     void findAllActive_Success() {
-        Interest interest = Interest.builder().id(1L).name("Java").build();
-        InterestResponse response = new InterestResponse(1L, "Java");
+        Interest interest = Interest.builder().id(1L).name("Web development").build();
+        InterestResponse response = new InterestResponse(1L, "Web development");
 
         when(interestRepository.findByDeletedAtIsNull()).thenReturn(List.of(interest));
         when(interestMapper.toResponse(interest)).thenReturn(response);
@@ -138,14 +138,14 @@ class InterestServiceTest {
         List<InterestResponse> result = interestService.findAllActive();
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Java");
+        assertThat(result.get(0).getName()).isEqualTo("Web development");
     }
 
     // ─── Delete ────────────────────────────────────────────────
 
     @Test
     void deleteById_Success() {
-        Interest interest = Interest.builder().id(1L).name("Java").build();
+        Interest interest = Interest.builder().id(1L).name("Web development").build();
 
         when(interestRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(interest));
 

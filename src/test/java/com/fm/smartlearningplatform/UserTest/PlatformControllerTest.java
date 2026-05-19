@@ -39,8 +39,8 @@ class PlatformControllerTest {
 
     @Test
     void createPlatform_Returns201() throws Exception {
-        CreatePlatformRequest request = new CreatePlatformRequest("Java");
-        PlatformResponse response = new PlatformResponse(1L, "Java");
+        CreatePlatformRequest request = new CreatePlatformRequest("Github");
+        PlatformResponse response = new PlatformResponse(1L, "Github");
 
         when(platformService.createPlatform(any())).thenReturn(response);
 
@@ -49,7 +49,7 @@ class PlatformControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Java"));
+                .andExpect(jsonPath("$.name").value("Github"));
     }
 
     @Test
@@ -64,7 +64,7 @@ class PlatformControllerTest {
 
     @Test
     void createPlatform_Returns409_WhenDuplicate() throws Exception {
-        CreatePlatformRequest request = new CreatePlatformRequest("Java");
+        CreatePlatformRequest request = new CreatePlatformRequest("Github");
 
         when(platformService.createPlatform(any()))
                 .thenThrow(new DuplicateResourceException("Platform already exists."));
@@ -80,8 +80,8 @@ class PlatformControllerTest {
 
     @Test
     void updatePlatform_Returns200() throws Exception {
-        UpdatePlatformRequest request = new UpdatePlatformRequest("Python");
-        PlatformResponse response = new PlatformResponse(1L, "Python");
+        UpdatePlatformRequest request = new UpdatePlatformRequest("Linkdin");
+        PlatformResponse response = new PlatformResponse(1L, "Linkdin");
 
         when(platformService.updatePlatform(eq(1L), any())).thenReturn(response);
 
@@ -89,12 +89,12 @@ class PlatformControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Python"));
+                .andExpect(jsonPath("$.name").value("Linkdin"));
     }
 
     @Test
     void updatePlatform_Returns404_WhenNotFound() throws Exception {
-        UpdatePlatformRequest request = new UpdatePlatformRequest("Python");
+        UpdatePlatformRequest request = new UpdatePlatformRequest("Linkdin");
 
         when(platformService.updatePlatform(eq(1L), any()))
                 .thenThrow(new ResourceNotFoundException("Platform not found."));
@@ -110,14 +110,14 @@ class PlatformControllerTest {
 
     @Test
     void getPlatform_Returns200() throws Exception {
-        PlatformResponse response = new PlatformResponse(1L, "Java");
+        PlatformResponse response = new PlatformResponse(1L, "Github");
 
         when(platformService.findByIdAndDeletedAtIsNull(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/platforms/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Java"));
+                .andExpect(jsonPath("$.name").value("Github"));
     }
 
     @Test
@@ -133,8 +133,8 @@ class PlatformControllerTest {
     @Test
     void getAllPlatforms_Returns200() throws Exception {
         List<PlatformResponse> response = List.of(
-                new PlatformResponse(1L, "Java"),
-                new PlatformResponse(2L, "Python")
+                new PlatformResponse(1L, "Github"),
+                new PlatformResponse(2L, "Linkdin")
         );
 
         when(platformService.findAllActive()).thenReturn(response);
@@ -142,8 +142,8 @@ class PlatformControllerTest {
         mockMvc.perform(get("/api/v1/platforms"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].name").value("Java"))
-                .andExpect(jsonPath("$[1].name").value("Python"));
+                .andExpect(jsonPath("$[0].name").value("Github"))
+                .andExpect(jsonPath("$[1].name").value("Linkdin"));
     }
 
     // ─── Delete ────────────────────────────────────────────────

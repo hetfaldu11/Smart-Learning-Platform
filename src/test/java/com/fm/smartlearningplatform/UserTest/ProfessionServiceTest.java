@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ProfessionServiceTest {
+public class ProfessionServiceTest {
 
     @Mock
     private ProfessionRepository professionRepository;
@@ -39,25 +39,25 @@ class ProfessionServiceTest {
 
     @Test
     void createProfession_Success() {
-        CreateProfessionRequest request = new CreateProfessionRequest("Java");
-        Profession profession = Profession.builder().id(1L).name("Java").build();
-        ProfessionResponse response = new ProfessionResponse(1L, "Java");
+        CreateProfessionRequest request = new CreateProfessionRequest("Student");
+        Profession profession = Profession.builder().id(1L).name("Student").build();
+        ProfessionResponse response = new ProfessionResponse(1L, "Student");
 
-        when(professionRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(false);
+        when(professionRepository.existsByNameAndDeletedAtIsNull("Student")).thenReturn(false);
         when(professionMapper.toEntity(request)).thenReturn(profession);
         when(professionRepository.save(profession)).thenReturn(profession);
         when(professionMapper.toResponse(profession)).thenReturn(response);
 
         ProfessionResponse result = professionService.createProfession(request);
 
-        assertThat(result.getName()).isEqualTo("Java");
+        assertThat(result.getName()).isEqualTo("Student");
     }
 
     @Test
     void createProfession_ThrowsDuplicate() {
-        CreateProfessionRequest request = new CreateProfessionRequest("Java");
+        CreateProfessionRequest request = new CreateProfessionRequest("Student");
 
-        when(professionRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(true);
+        when(professionRepository.existsByNameAndDeletedAtIsNull("Student")).thenReturn(true);
 
         assertThrows(DuplicateResourceException.class,
                 () -> professionService.createProfession(request));
@@ -67,23 +67,23 @@ class ProfessionServiceTest {
 
     @Test
     void updateProfession_Success() {
-        UpdateProfessionRequest request = new UpdateProfessionRequest("Python");
-        Profession profession = Profession.builder().id(1L).name("Java").build();
-        ProfessionResponse response = new ProfessionResponse(1L, "Python");
+        UpdateProfessionRequest request = new UpdateProfessionRequest("Web developer");
+        Profession profession = Profession.builder().id(1L).name("Student").build();
+        ProfessionResponse response = new ProfessionResponse(1L, "Web developer");
 
         when(professionRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(profession));
-        when(professionRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(false);
+        when(professionRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Web developer")).thenReturn(false);
         when(professionRepository.save(profession)).thenReturn(profession);
         when(professionMapper.toResponse(profession)).thenReturn(response);
 
         ProfessionResponse result = professionService.updateProfession(1L, request);
 
-        assertThat(result.getName()).isEqualTo("Python");
+        assertThat(result.getName()).isEqualTo("Web developer");
     }
 
     @Test
     void updateProfession_ThrowsNotFound() {
-        UpdateProfessionRequest request = new UpdateProfessionRequest("Python");
+        UpdateProfessionRequest request = new UpdateProfessionRequest("Web developer");
 
         when(professionRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
 
@@ -93,11 +93,11 @@ class ProfessionServiceTest {
 
     @Test
     void updateProfession_ThrowsDuplicate() {
-        UpdateProfessionRequest request = new UpdateProfessionRequest("Python");
-        Profession profession = Profession.builder().id(1L).name("Java").build();
+        UpdateProfessionRequest request = new UpdateProfessionRequest("Web developer");
+        Profession profession = Profession.builder().id(1L).name("Student").build();
 
         when(professionRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(profession));
-        when(professionRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(true);
+        when(professionRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Web developer")).thenReturn(true);
 
         assertThrows(DuplicateResourceException.class,
                 () -> professionService.updateProfession(1L, request));
@@ -107,8 +107,8 @@ class ProfessionServiceTest {
 
     @Test
     void findByIdAndDeletedAtIsNull_Success() {
-        Profession profession = Profession.builder().id(1L).name("Java").build();
-        ProfessionResponse response = new ProfessionResponse(1L, "Java");
+        Profession profession = Profession.builder().id(1L).name("Student").build();
+        ProfessionResponse response = new ProfessionResponse(1L, "Student");
 
         when(professionRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(profession));
         when(professionMapper.toResponse(profession)).thenReturn(response);
@@ -116,7 +116,7 @@ class ProfessionServiceTest {
         ProfessionResponse result = professionService.findByIdAndDeletedAtIsNull(1L);
 
         assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getName()).isEqualTo("Java");
+        assertThat(result.getName()).isEqualTo("Student");
     }
 
     @Test
@@ -129,8 +129,8 @@ class ProfessionServiceTest {
 
     @Test
     void findAllActive_Success() {
-        Profession profession = Profession.builder().id(1L).name("Java").build();
-        ProfessionResponse response = new ProfessionResponse(1L, "Java");
+        Profession profession = Profession.builder().id(1L).name("Student").build();
+        ProfessionResponse response = new ProfessionResponse(1L, "Student");
 
         when(professionRepository.findByDeletedAtIsNull()).thenReturn(List.of(profession));
         when(professionMapper.toResponse(profession)).thenReturn(response);
@@ -138,14 +138,14 @@ class ProfessionServiceTest {
         List<ProfessionResponse> result = professionService.findAllActive();
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Java");
+        assertThat(result.get(0).getName()).isEqualTo("Student");
     }
 
     // ─── Delete ────────────────────────────────────────────────
 
     @Test
     void deleteById_Success() {
-        Profession profession = Profession.builder().id(1L).name("Java").build();
+        Profession profession = Profession.builder().id(1L).name("Student").build();
 
         when(professionRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(profession));
 

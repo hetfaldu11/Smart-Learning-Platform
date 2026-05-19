@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class GenderServiceTest {
+public class GenderServiceTest {
 
     @Mock
     private GenderRepository genderRepository;
@@ -39,25 +39,25 @@ class GenderServiceTest {
 
     @Test
     void createGender_Success() {
-        CreateGenderRequest request = new CreateGenderRequest("Java");
-        Gender gender = Gender.builder().id(1L).name("Java").build();
-        GenderResponse response = new GenderResponse(1L, "Java");
+        CreateGenderRequest request = new CreateGenderRequest("Male");
+        Gender gender = Gender.builder().id(1L).name("Male").build();
+        GenderResponse response = new GenderResponse(1L, "Male");
 
-        when(genderRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(false);
+        when(genderRepository.existsByNameAndDeletedAtIsNull("Male")).thenReturn(false);
         when(genderMapper.toEntity(request)).thenReturn(gender);
         when(genderRepository.save(gender)).thenReturn(gender);
         when(genderMapper.toResponse(gender)).thenReturn(response);
 
         GenderResponse result = genderService.createGender(request);
 
-        assertThat(result.getName()).isEqualTo("Java");
+        assertThat(result.getName()).isEqualTo("Male");
     }
 
     @Test
     void createGender_ThrowsDuplicate() {
-        CreateGenderRequest request = new CreateGenderRequest("Java");
+        CreateGenderRequest request = new CreateGenderRequest("Male");
 
-        when(genderRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(true);
+        when(genderRepository.existsByNameAndDeletedAtIsNull("Male")).thenReturn(true);
 
         assertThrows(DuplicateResourceException.class,
                 () -> genderService.createGender(request));
@@ -67,23 +67,23 @@ class GenderServiceTest {
 
     @Test
     void updateGender_Success() {
-        UpdateGenderRequest request = new UpdateGenderRequest("Python");
-        Gender gender = Gender.builder().id(1L).name("Java").build();
-        GenderResponse response = new GenderResponse(1L, "Python");
+        UpdateGenderRequest request = new UpdateGenderRequest("Female");
+        Gender gender = Gender.builder().id(1L).name("Male").build();
+        GenderResponse response = new GenderResponse(1L, "Female");
 
         when(genderRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(gender));
-        when(genderRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(false);
+        when(genderRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Female")).thenReturn(false);
         when(genderRepository.save(gender)).thenReturn(gender);
         when(genderMapper.toResponse(gender)).thenReturn(response);
 
         GenderResponse result = genderService.updateGender(1L, request);
 
-        assertThat(result.getName()).isEqualTo("Python");
+        assertThat(result.getName()).isEqualTo("Female");
     }
 
     @Test
     void updateGender_ThrowsNotFound() {
-        UpdateGenderRequest request = new UpdateGenderRequest("Python");
+        UpdateGenderRequest request = new UpdateGenderRequest("Female");
 
         when(genderRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
 
@@ -93,11 +93,11 @@ class GenderServiceTest {
 
     @Test
     void updateGender_ThrowsDuplicate() {
-        UpdateGenderRequest request = new UpdateGenderRequest("Python");
-        Gender gender = Gender.builder().id(1L).name("Java").build();
+        UpdateGenderRequest request = new UpdateGenderRequest("Female");
+        Gender gender = Gender.builder().id(1L).name("Male").build();
 
         when(genderRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(gender));
-        when(genderRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(true);
+        when(genderRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Female")).thenReturn(true);
 
         assertThrows(DuplicateResourceException.class,
                 () -> genderService.updateGender(1L, request));
@@ -107,8 +107,8 @@ class GenderServiceTest {
 
     @Test
     void findByIdAndDeletedAtIsNull_Success() {
-        Gender gender = Gender.builder().id(1L).name("Java").build();
-        GenderResponse response = new GenderResponse(1L, "Java");
+        Gender gender = Gender.builder().id(1L).name("Male").build();
+        GenderResponse response = new GenderResponse(1L, "Male");
 
         when(genderRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(gender));
         when(genderMapper.toResponse(gender)).thenReturn(response);
@@ -116,7 +116,7 @@ class GenderServiceTest {
         GenderResponse result = genderService.findByIdAndDeletedAtIsNull(1L);
 
         assertThat(result.getId()).isEqualTo(1L);
-        assertThat(result.getName()).isEqualTo("Java");
+        assertThat(result.getName()).isEqualTo("Male");
     }
 
     @Test
@@ -129,8 +129,8 @@ class GenderServiceTest {
 
     @Test
     void findAllActive_Success() {
-        Gender gender = Gender.builder().id(1L).name("Java").build();
-        GenderResponse response = new GenderResponse(1L, "Java");
+        Gender gender = Gender.builder().id(1L).name("Male").build();
+        GenderResponse response = new GenderResponse(1L, "Male");
 
         when(genderRepository.findByDeletedAtIsNull()).thenReturn(List.of(gender));
         when(genderMapper.toResponse(gender)).thenReturn(response);
@@ -138,14 +138,14 @@ class GenderServiceTest {
         List<GenderResponse> result = genderService.findAllActive();
 
         assertThat(result).hasSize(1);
-        assertThat(result.get(0).getName()).isEqualTo("Java");
+        assertThat(result.get(0).getName()).isEqualTo("Male");
     }
 
     // ─── Delete ────────────────────────────────────────────────
 
     @Test
     void deleteById_Success() {
-        Gender gender = Gender.builder().id(1L).name("Java").build();
+        Gender gender = Gender.builder().id(1L).name("Male").build();
 
         when(genderRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(gender));
 

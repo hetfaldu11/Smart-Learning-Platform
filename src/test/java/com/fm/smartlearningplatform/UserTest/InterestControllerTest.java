@@ -39,8 +39,8 @@ class InterestControllerTest {
 
     @Test
     void createInterest_Returns201() throws Exception {
-        CreateInterestRequest request = new CreateInterestRequest("Java");
-        InterestResponse response = new InterestResponse(1L, "Java");
+        CreateInterestRequest request = new CreateInterestRequest("Web development");
+        InterestResponse response = new InterestResponse(1L, "Web development");
 
         when(interestService.createInterest(any())).thenReturn(response);
 
@@ -49,7 +49,7 @@ class InterestControllerTest {
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Java"));
+                .andExpect(jsonPath("$.name").value("Web development"));
     }
 
     @Test
@@ -64,7 +64,7 @@ class InterestControllerTest {
 
     @Test
     void createInterest_Returns409_WhenDuplicate() throws Exception {
-        CreateInterestRequest request = new CreateInterestRequest("Java");
+        CreateInterestRequest request = new CreateInterestRequest("Web development");
 
         when(interestService.createInterest(any()))
                 .thenThrow(new DuplicateResourceException("Interest already exists."));
@@ -80,8 +80,8 @@ class InterestControllerTest {
 
     @Test
     void updateInterest_Returns200() throws Exception {
-        UpdateInterestRequest request = new UpdateInterestRequest("Python");
-        InterestResponse response = new InterestResponse(1L, "Python");
+        UpdateInterestRequest request = new UpdateInterestRequest("Business");
+        InterestResponse response = new InterestResponse(1L, "Business");
 
         when(interestService.updateInterest(eq(1L), any())).thenReturn(response);
 
@@ -89,12 +89,12 @@ class InterestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(request)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.name").value("Python"));
+                .andExpect(jsonPath("$.name").value("Business"));
     }
 
     @Test
     void updateInterest_Returns404_WhenNotFound() throws Exception {
-        UpdateInterestRequest request = new UpdateInterestRequest("Python");
+        UpdateInterestRequest request = new UpdateInterestRequest("Business");
 
         when(interestService.updateInterest(eq(1L), any()))
                 .thenThrow(new ResourceNotFoundException("Interest not found."));
@@ -110,14 +110,14 @@ class InterestControllerTest {
 
     @Test
     void getInterest_Returns200() throws Exception {
-        InterestResponse response = new InterestResponse(1L, "Java");
+        InterestResponse response = new InterestResponse(1L, "Web development");
 
         when(interestService.findByIdAndDeletedAtIsNull(1L)).thenReturn(response);
 
         mockMvc.perform(get("/api/v1/interests/1"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(1L))
-                .andExpect(jsonPath("$.name").value("Java"));
+                .andExpect(jsonPath("$.name").value("Web development"));
     }
 
     @Test
@@ -133,8 +133,8 @@ class InterestControllerTest {
     @Test
     void getAllInterests_Returns200() throws Exception {
         List<InterestResponse> response = List.of(
-                new InterestResponse(1L, "Java"),
-                new InterestResponse(2L, "Python")
+                new InterestResponse(1L, "Web development"),
+                new InterestResponse(2L, "Business")
         );
 
         when(interestService.findAllActive()).thenReturn(response);
@@ -142,8 +142,8 @@ class InterestControllerTest {
         mockMvc.perform(get("/api/v1/interests"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(2))
-                .andExpect(jsonPath("$[0].name").value("Java"))
-                .andExpect(jsonPath("$[1].name").value("Python"));
+                .andExpect(jsonPath("$[0].name").value("Web development"))
+                .andExpect(jsonPath("$[1].name").value("Business"));
     }
 
     // ─── Delete ────────────────────────────────────────────────
