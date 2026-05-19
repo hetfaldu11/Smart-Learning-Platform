@@ -1,104 +1,96 @@
 package com.fm.smartlearningplatform.service.user;
-
+import com.fm.smartlearningplatform.dto.user.platform.request.CreatePlatformRequest;
+import com.fm.smartlearningplatform.dto.user.platform.request.UpdatePlatformRequest;
+import com.fm.smartlearningplatform.dto.user.platform.response.PlatformResponse;
+import com.fm.smartlearningplatform.exception.DuplicateResourceException;
+import com.fm.smartlearningplatform.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.mapper.user.PlatformMapper;
 import com.fm.smartlearningplatform.model.user.Platform;
 import com.fm.smartlearningplatform.repository.user.PlatformRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class PlatformService {
+
     private final PlatformRepository platformRepository;
 
-    @Autowired
-    public PlatformService (PlatformRepository platformRepository) {
-        this.platformRepository = platformRepository;
-    }
+    private final PlatformMapper platformMapper;
 
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    public Platform createPlatform(String name){
+    public PlatformResponse createPlatform(CreatePlatformRequest request) {
+        if (platformRepository.existsByNameAndDeletedAtIsNull(request.getName()))
+            throw new DuplicateResourceException("Platform already exists.");
 
-        if(name==null) {
-            throw new RuntimeException("Name is null.");
-        }
-
-
-        if(platformRepository.existsByName(name))
-            throw new RuntimeException("Platform is already exist.");
-
-        Platform platform = Platform.builder()
-                .name(name)
-                .build();
-
-        return platformRepository.save(platform);
+        return platformMapper.toResponse(
+                platformRepository.save(
+                        platformMapper.toEntity(request)
+                )
+        );
     }
 
     // ─── Update ────────────────────────────────────────────────
 
     @Transactional
-    public Platform updatePlatform(Long id, String newName) {
-
-        if(newName==null) {
-            throw new RuntimeException("Name is null.");
-        }
-
-        if(platformRepository.existsByName(newName))
-            throw new RuntimeException("Platform is already exist.");
-
+    public PlatformResponse updatePlatform(Long id, UpdatePlatformRequest request) {
         Platform platform = platformRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new RuntimeException("Platform is not exist."));
+                .orElseThrow(() -> new ResourceNotFoundException("Platform not found."));
 
-        platform.setName(newName);
+        if (platformRepository.existsByIdNotAndNameAndDeletedAtIsNull(id, request.getName()))
+            throw new DuplicateResourceException("Platform already exists.");
 
-        return platformRepository.save(platform);
+        platformMapper.updatePlatformFromRequest(request, platform);
+
+        return platformMapper.toResponse(platformRepository.save(platform));
     }
 
     // ─── Find ────────────────────────────────────────────────
 
+    @Transactional(readOnly = true)
     public boolean existsByIdAndDeletedAtIsNull(Long id) {
         return platformRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
-    public Platform findByIdAndDeletedAtIsNull(Long id){
-        Platform platform = platformRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Platform is not existed."));
-
-        if(platform.getDeletedAt() != null)
-            throw new RuntimeException("Platform is deleted.");
-        return platform;
+    @Transactional(readOnly = true)
+    public PlatformResponse findByIdAndDeletedAtIsNull(Long id){
+        return platformMapper.toResponse(
+                platformRepository.findByIdAndDeletedAtIsNull(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Platform not exists.")));
     }
 
-   public boolean existsByNameAndDeletedAtIsNull(String name){
+    @Transactional(readOnly = true)
+    public boolean existsByNameAndDeletedAtIsNull(String name){
         return platformRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    public Platform findByNameAndDeletedAtIsNull(String name){
-        Platform platform = platformRepository.findByName(name)
-                .orElseThrow(()->new RuntimeException("Platform is not existed."));
-
-        if(platform.getDeletedAt() != null)
-            throw new RuntimeException("Platform is deleted.");
-        return platform;
+    @Transactional(readOnly = true)
+    public PlatformResponse findByNameAndDeletedAtIsNull(String name){
+        return platformMapper.toResponse(
+                platformRepository.findByNameAndDeletedAtIsNull(name)
+                        .orElseThrow(()->new ResourceNotFoundException("Platform not exists."))
+        );
     }
 
-   public List<Platform> findByDeletedAtIsNull(){
-        return platformRepository.findByDeletedAtIsNull();
+    @Transactional(readOnly = true)
+    public List<PlatformResponse> findAllActive() {
+        return platformRepository.findByDeletedAtIsNull()
+                .stream()
+                .map(platformMapper::toResponse)
+                .toList();
     }
 
     // ─── Delete ────────────────────────────────────────────────
     @Transactional
     public void deleteById(Long id){
-        Platform platform = platformRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Platform is not exist."));
-
-        if(platform.getDeletedAt() != null){
-            throw  new RuntimeException("Platform is already deleted.");
-        }
+        Platform platform = platformRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Platform not exist."));
 
         platform.setDeletedAt(LocalDateTime.now());
 

@@ -1,119 +1,165 @@
 package com.fm.smartlearningplatform.UserTest;
 
+import com.fm.smartlearningplatform.dto.user.platform.request.CreatePlatformRequest;
+import com.fm.smartlearningplatform.dto.user.platform.request.UpdatePlatformRequest;
+import com.fm.smartlearningplatform.dto.user.platform.response.PlatformResponse;
+import com.fm.smartlearningplatform.exception.DuplicateResourceException;
+import com.fm.smartlearningplatform.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.mapper.user.PlatformMapper;
 import com.fm.smartlearningplatform.model.user.Platform;
+import com.fm.smartlearningplatform.repository.user.PlatformRepository;
 import com.fm.smartlearningplatform.service.user.PlatformService;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import java.util.List;
+import java.util.Optional;
 
-@SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class PlatformTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-    private final PlatformService platformService;
-    private final JdbcTemplate jdbcTemplate;
-    Platform platform1;
-    Platform platform2;
+@ExtendWith(MockitoExtension.class)
+class PlatformServiceTest {
 
+    @Mock
+    private PlatformRepository platformRepository;
 
-    @Autowired
-    public PlatformTest(PlatformService platformService, JdbcTemplate jdbcTemplate)
-    {
-        this.platformService= platformService;
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @Mock
+    private PlatformMapper platformMapper;
 
+    @InjectMocks
+    private PlatformService platformService;
 
-    @BeforeEach
-    void beforeEach(){
-        this.platform1= platformService.createPlatform("platform1");
-        this.platform2= platformService.createPlatform("platform2");
-    }
-
-
-    @AfterEach
-    void afterEach() {
-        jdbcTemplate.execute("TRUNCATE TABLE platforms RESTART IDENTITY CASCADE;");
-    }
-
-
-    // ─── Create ──────────────────────────────────────────────────────
-
+    // ─── Create ────────────────────────────────────────────────
 
     @Test
-    @Order(0)
-    public void createPlatform()
-    {
-        Long id = platform1.getId();
-        assertNotNull(platformService.findByIdAndDeletedAtIsNull(id));
+    void createPlatform_Success() {
+        CreatePlatformRequest request = new CreatePlatformRequest("Java");
+        Platform platform = Platform.builder().id(1L).name("Java").build();
+        PlatformResponse response = new PlatformResponse(1L, "Java");
 
-        assertThrows(RuntimeException.class,()->platformService.createPlatform(null));
+        when(platformRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(false);
+        when(platformMapper.toEntity(request)).thenReturn(platform);
+        when(platformRepository.save(platform)).thenReturn(platform);
+        when(platformMapper.toResponse(platform)).thenReturn(response);
 
-        assertThrows(RuntimeException.class,()->platformService.createPlatform("platform1"));
+        PlatformResponse result = platformService.createPlatform(request);
 
-        assertEquals(platform1.getName(),platformService.findByIdAndDeletedAtIsNull(id).getName());
+        assertThat(result.getName()).isEqualTo("Java");
     }
 
-    // ─── Find ──────────────────────────────────────────────────────
-
     @Test
-    @Order(1)
-    public void findPlatform()
-    {
-        Long id1 = platform1.getId();
-        Long id2 = platform2.getId();
+    void createPlatform_ThrowsDuplicate() {
+        CreatePlatformRequest request = new CreatePlatformRequest("Java");
 
-        assertTrue(platformService.existsByIdAndDeletedAtIsNull(id1));
+        when(platformRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(true);
 
-        assertFalse(platformService.existsByIdAndDeletedAtIsNull(4L));
-
-        assertEquals(platform1,platformService.findByIdAndDeletedAtIsNull(id1));
-
-        assertNotEquals(platform1,platformService.findByIdAndDeletedAtIsNull(id2));
-
-        assertTrue(platformService.existsByNameAndDeletedAtIsNull(("platform1")));
-
-        assertFalse(platformService.existsByNameAndDeletedAtIsNull("platform3"));
-
-        assertEquals(platform1,platformService.findByNameAndDeletedAtIsNull("platform1"));
-
-        assertNotEquals(platform1,platformService.findByNameAndDeletedAtIsNull("platform2"));
+        assertThrows(DuplicateResourceException.class,
+                () -> platformService.createPlatform(request));
     }
 
-    // ─── Update ──────────────────────────────────────────────────────
+    // ─── Update ────────────────────────────────────────────────
 
     @Test
-    @Order(2)
-    public void updatePlatform() {
-        Long id = platform1.getId();
+    void updatePlatform_Success() {
+        UpdatePlatformRequest request = new UpdatePlatformRequest("Python");
+        Platform platform = Platform.builder().id(1L).name("Java").build();
+        PlatformResponse response = new PlatformResponse(1L, "Python");
 
-        assertThrows(RuntimeException.class,()->platformService.updatePlatform(id,null));
+        when(platformRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(platform));
+        when(platformRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(false);
+        when(platformRepository.save(platform)).thenReturn(platform);
+        when(platformMapper.toResponse(platform)).thenReturn(response);
 
-        assertThrows(RuntimeException.class,()->platformService.updatePlatform(id,"platform2"));
+        PlatformResponse result = platformService.updatePlatform(1L, request);
 
-        assertDoesNotThrow(()->platformService.updatePlatform(id,"platform3"));
-
-        assertEquals("platform3",platformService.findByIdAndDeletedAtIsNull(id).getName());
+        assertThat(result.getName()).isEqualTo("Python");
     }
 
-    // ─── Delete ──────────────────────────────────────────────────────
+    @Test
+    void updatePlatform_ThrowsNotFound() {
+        UpdatePlatformRequest request = new UpdatePlatformRequest("Python");
+
+        when(platformRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> platformService.updatePlatform(1L, request));
+    }
 
     @Test
-    @Order(3)
-    public void deletePlatform(){
+    void updatePlatform_ThrowsDuplicate() {
+        UpdatePlatformRequest request = new UpdatePlatformRequest("Python");
+        Platform platform = Platform.builder().id(1L).name("Java").build();
 
-        Long id = platform1.getId();
+        when(platformRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(platform));
+        when(platformRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(true);
 
-        assertEquals(platform1,platformService.findByIdAndDeletedAtIsNull(id));
+        assertThrows(DuplicateResourceException.class,
+                () -> platformService.updatePlatform(1L, request));
+    }
 
-        platformService.deleteById(id);
+    // ─── Find ────────────────────────────────────────────────
 
-        assertThrows(RuntimeException.class,() -> platformService.deleteById(4L));
+    @Test
+    void findByIdAndDeletedAtIsNull_Success() {
+        Platform platform = Platform.builder().id(1L).name("Java").build();
+        PlatformResponse response = new PlatformResponse(1L, "Java");
 
-        assertThrows(RuntimeException.class,() -> platformService.findByIdAndDeletedAtIsNull(id));
+        when(platformRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(platform));
+        when(platformMapper.toResponse(platform)).thenReturn(response);
+
+        PlatformResponse result = platformService.findByIdAndDeletedAtIsNull(1L);
+
+        assertThat(result.getId()).isEqualTo(1L);
+        assertThat(result.getName()).isEqualTo("Java");
+    }
+
+    @Test
+    void findByIdAndDeletedAtIsNull_ThrowsNotFound() {
+        when(platformRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> platformService.findByIdAndDeletedAtIsNull(1L));
+    }
+
+    @Test
+    void findAllActive_Success() {
+        Platform platform = Platform.builder().id(1L).name("Java").build();
+        PlatformResponse response = new PlatformResponse(1L, "Java");
+
+        when(platformRepository.findByDeletedAtIsNull()).thenReturn(List.of(platform));
+        when(platformMapper.toResponse(platform)).thenReturn(response);
+
+        List<PlatformResponse> result = platformService.findAllActive();
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getName()).isEqualTo("Java");
+    }
+
+    // ─── Delete ────────────────────────────────────────────────
+
+    @Test
+    void deleteById_Success() {
+        Platform platform = Platform.builder().id(1L).name("Java").build();
+
+        when(platformRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(platform));
+
+        platformService.deleteById(1L);
+
+        assertThat(platform.getDeletedAt()).isNotNull();
+        verify(platformRepository).save(platform);
+    }
+
+    @Test
+    void deleteById_ThrowsNotFound() {
+        when(platformRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> platformService.deleteById(1L));
     }
 }
-

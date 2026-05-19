@@ -1,124 +1,99 @@
 package com.fm.smartlearningplatform.service.user;
+import com.fm.smartlearningplatform.dto.user.educationLevel.request.CreateEducationLevelRequest;
+import com.fm.smartlearningplatform.dto.user.educationLevel.request.UpdateEducationLevelRequest;
+import com.fm.smartlearningplatform.dto.user.educationLevel.response.EducationLevelResponse;
+import com.fm.smartlearningplatform.exception.DuplicateResourceException;
+import com.fm.smartlearningplatform.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.mapper.user.EducationLevelMapper;
 import com.fm.smartlearningplatform.model.user.EducationLevel;
 import com.fm.smartlearningplatform.repository.user.EducationLevelRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class EducationLevelService {
+
     private final EducationLevelRepository educationLevelRepository;
 
-    @Autowired
-    public EducationLevelService (EducationLevelRepository educationLevelRepository) {
-        this.educationLevelRepository = educationLevelRepository;
-    }
+    private final EducationLevelMapper educationLevelMapper;
 
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    public EducationLevel createEducationLevel(CreateEducationLevelRequest createEducationLevelRequest){
+    public EducationLevelResponse createEducationLevel(CreateEducationLevelRequest request) {
+        if (educationLevelRepository.existsByNameAndDeletedAtIsNull(request.getName()))
+            throw new DuplicateResourceException("EducationLevel already exists.");
 
-        String name = createEducationLevelRequest.getName();
-
-        EducationLevel educationLevel = EducationLevel.builder()
-                .name(name)
-                .build();
-        return educationLevelRepository.save(educationLevel);
+        return educationLevelMapper.toResponse(
+                educationLevelRepository.save(
+                        educationLevelMapper.toEntity(request)
+                )
+        );
     }
 
     // ─── Update ────────────────────────────────────────────────
 
     @Transactional
-    public EducationLevel updateEducationLevel(Long id, String newName) {
-        if(id == null){
-            throw new RuntimeException("Id is null");
-        }
-
-        if(newName==null) {
-            throw new RuntimeException("Name is null.");
-        }
-
-        if(educationLevelRepository.existsByName(newName))
-            throw new RuntimeException("Education level is already exist.");
-
+    public EducationLevelResponse updateEducationLevel(Long id, UpdateEducationLevelRequest request) {
         EducationLevel educationLevel = educationLevelRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new RuntimeException("EducationLevel is not exist."));
+                .orElseThrow(() -> new ResourceNotFoundException("EducationLevel not found."));
 
-        educationLevel.setName(newName);
+        if (educationLevelRepository.existsByIdNotAndNameAndDeletedAtIsNull(id, request.getName()))
+            throw new DuplicateResourceException("EducationLevel already exists.");
 
-        return educationLevelRepository.save(educationLevel);
+        educationLevelMapper.updateEducationLevelFromRequest(request, educationLevel);
+
+        return educationLevelMapper.toResponse(educationLevelRepository.save(educationLevel));
     }
 
     // ─── Find ────────────────────────────────────────────────
 
-   public  boolean existsByIdAndDeletedAtIsNull(Long id) {
-       if(id == null){
-           throw new RuntimeException("Id is null");
-       }
-
+    @Transactional(readOnly = true)
+    public boolean existsByIdAndDeletedAtIsNull(Long id) {
         return educationLevelRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
-    public EducationLevel findByIdAndDeletedAtIsNull(Long id){
-        EducationLevel educationLevel = educationLevelRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("EducationLevel is not existed."));
-
-        if(educationLevel.getDeletedAt() != null)
-            throw new RuntimeException("EducationLevel is deleted.");
-        return educationLevel;
+    @Transactional(readOnly = true)
+    public EducationLevelResponse findByIdAndDeletedAtIsNull(Long id){
+        return educationLevelMapper.toResponse(
+                educationLevelRepository.findByIdAndDeletedAtIsNull(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("EducationLevel not exists.")));
     }
 
-    public  boolean existsByNameAndDeletedAtIsNull(String name){
-
-        if(name == null){
-            throw new RuntimeException("Name is null");
-        }
-
+    @Transactional(readOnly = true)
+    public boolean existsByNameAndDeletedAtIsNull(String name){
         return educationLevelRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    public EducationLevel findByNameAndDeletedAtIsNull(String name){
-
-        if(name == null){
-            throw new RuntimeException("Name is null");
-        }
-
-        EducationLevel educationLevel = educationLevelRepository.findByName(name)
-
-                .orElseThrow(()->new RuntimeException("EducationLevel is not existed."));
-
-        if(educationLevel.getDeletedAt() != null)
-            throw new RuntimeException("EducationLevel is deleted.");
-        return educationLevel;
+    @Transactional(readOnly = true)
+    public EducationLevelResponse findByNameAndDeletedAtIsNull(String name){
+        return educationLevelMapper.toResponse(
+                educationLevelRepository.findByNameAndDeletedAtIsNull(name)
+                        .orElseThrow(()->new ResourceNotFoundException("EducationLevel not exists."))
+        );
     }
 
-    public List<EducationLevel> findByDeletedAtIsNull(){
-        return educationLevelRepository.findByDeletedAtIsNull();
+    @Transactional(readOnly = true)
+    public List<EducationLevelResponse> findAllActive() {
+        return educationLevelRepository.findByDeletedAtIsNull()
+                .stream()
+                .map(educationLevelMapper::toResponse)
+                .toList();
     }
 
     // ─── Delete ────────────────────────────────────────────────
     @Transactional
     public void deleteById(Long id){
-
-        if(id == null){
-            throw new RuntimeException("Id is null");
-        }
-
-        EducationLevel educationLevel = educationLevelRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("EducationLevel is not exist."));
-
-        if(educationLevel.getDeletedAt() != null){
-            throw  new RuntimeException("EducationLevel is already deleted.");
-        }
+        EducationLevel educationLevel = educationLevelRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResourceNotFoundException("EducationLevel not exist."));
 
         educationLevel.setDeletedAt(LocalDateTime.now());
 
         educationLevelRepository.save(educationLevel);
     }
 }
-
-

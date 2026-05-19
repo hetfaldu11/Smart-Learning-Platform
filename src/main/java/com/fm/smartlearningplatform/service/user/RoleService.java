@@ -1,110 +1,96 @@
 package com.fm.smartlearningplatform.service.user;
-
+import com.fm.smartlearningplatform.dto.user.role.request.CreateRoleRequest;
+import com.fm.smartlearningplatform.dto.user.role.request.UpdateRoleRequest;
+import com.fm.smartlearningplatform.dto.user.role.response.RoleResponse;
+import com.fm.smartlearningplatform.exception.DuplicateResourceException;
+import com.fm.smartlearningplatform.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.mapper.user.RoleMapper;
 import com.fm.smartlearningplatform.model.user.Role;
-import com.fm.smartlearningplatform.repository.user.*;
 import com.fm.smartlearningplatform.repository.user.RoleRepository;
-import com.fm.smartlearningplatform.repository.user.UserRoleRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+
 @Service
+@RequiredArgsConstructor
 public class RoleService {
 
     private final RoleRepository roleRepository;
-    private final UserRoleRepository userRoleRepository;
 
-    @Autowired
-    public RoleService (RoleRepository roleRepository, UserRoleRepository userRoleRepository) {
-        this.roleRepository = roleRepository;
-        this.userRoleRepository = userRoleRepository;
-    }
+    private final RoleMapper roleMapper;
 
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    public Role createRole(String name){
+    public RoleResponse createRole(CreateRoleRequest request) {
+        if (roleRepository.existsByNameAndDeletedAtIsNull(request.getName()))
+            throw new DuplicateResourceException("Role already exists.");
 
-        if(name==null) {
-            throw new RuntimeException("Name is null.");
-        }
-
-        if(roleRepository.existsByName(name))
-            throw new RuntimeException("Role is already exist.");
-
-        Role role = Role.builder()
-                .name(name)
-                .build();
-
-        return roleRepository.save(role);
+        return roleMapper.toResponse(
+                roleRepository.save(
+                        roleMapper.toEntity(request)
+                )
+        );
     }
 
     // ─── Update ────────────────────────────────────────────────
 
     @Transactional
-    public Role updateRole(Long id, String newName) {
-
-        if(newName==null) {
-            throw new RuntimeException("Name is null.");
-        }
-
-        if(roleRepository.existsByName(newName))
-            throw new RuntimeException("Role is already exist.");
-
+    public RoleResponse updateRole(Long id, UpdateRoleRequest request) {
         Role role = roleRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new RuntimeException("Role is not exist."));
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found."));
 
-        role.setName(newName);
+        if (roleRepository.existsByIdNotAndNameAndDeletedAtIsNull(id, request.getName()))
+            throw new DuplicateResourceException("Role already exists.");
 
-        return roleRepository.save(role);
+        roleMapper.updateRoleFromRequest(request, role);
+
+        return roleMapper.toResponse(roleRepository.save(role));
     }
 
     // ─── Find ────────────────────────────────────────────────
 
-    public  boolean existsByIdAndDeletedAtIsNull(Long id) {
+    @Transactional(readOnly = true)
+    public boolean existsByIdAndDeletedAtIsNull(Long id) {
         return roleRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
-    public Role findByIdAndDeletedAtIsNull(Long id){
-        Role role = roleRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Role is not existed."));
-
-        if(role.getDeletedAt() != null)
-            throw new RuntimeException("Role is deleted.");
-        return role;
+    @Transactional(readOnly = true)
+    public RoleResponse findByIdAndDeletedAtIsNull(Long id){
+        return roleMapper.toResponse(
+                roleRepository.findByIdAndDeletedAtIsNull(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Role not exists.")));
     }
 
-   public  boolean existsByNameAndDeletedAtIsNull(String name){
+    @Transactional(readOnly = true)
+    public boolean existsByNameAndDeletedAtIsNull(String name){
         return roleRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    public Role findByNameAndDeletedAtIsNull(String name){
-        Role role = roleRepository.findByName(name)
-
-                .orElseThrow(()->new RuntimeException("Role is not existed."));
-
-        if(role.getDeletedAt() != null)
-            throw new RuntimeException("Role is deleted.");
-        return role;
+    @Transactional(readOnly = true)
+    public RoleResponse findByNameAndDeletedAtIsNull(String name){
+        return roleMapper.toResponse(
+                roleRepository.findByNameAndDeletedAtIsNull(name)
+                        .orElseThrow(()->new ResourceNotFoundException("Role not exists."))
+        );
     }
 
-    public List<Role> findByDeletedAtIsNull(){
-        return roleRepository.findByDeletedAtIsNull();
+    @Transactional(readOnly = true)
+    public List<RoleResponse> findAllActive() {
+        return roleRepository.findByDeletedAtIsNull()
+                .stream()
+                .map(roleMapper::toResponse)
+                .toList();
     }
 
     // ─── Delete ────────────────────────────────────────────────
     @Transactional
     public void deleteById(Long id){
-        Role role = roleRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Role is not exist."));
-
-        if(role.getDeletedAt() != null){
-            throw  new RuntimeException("Role is already deleted.");
-        }
-
-        userRoleRepository.deleteByRoleId(id);
+        Role role = roleRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Role not exist."));
 
         role.setDeletedAt(LocalDateTime.now());
 

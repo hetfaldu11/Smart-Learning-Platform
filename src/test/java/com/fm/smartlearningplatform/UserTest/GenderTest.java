@@ -1,119 +1,165 @@
 package com.fm.smartlearningplatform.UserTest;
 
+import com.fm.smartlearningplatform.dto.user.gender.request.CreateGenderRequest;
+import com.fm.smartlearningplatform.dto.user.gender.request.UpdateGenderRequest;
+import com.fm.smartlearningplatform.dto.user.gender.response.GenderResponse;
+import com.fm.smartlearningplatform.exception.DuplicateResourceException;
+import com.fm.smartlearningplatform.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.mapper.user.GenderMapper;
 import com.fm.smartlearningplatform.model.user.Gender;
+import com.fm.smartlearningplatform.repository.user.GenderRepository;
 import com.fm.smartlearningplatform.service.user.GenderService;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import java.util.List;
+import java.util.Optional;
 
-@SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class GenderTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-    private final GenderService genderService;
-    private final JdbcTemplate jdbcTemplate;
-    Gender gender1;
-    Gender gender2;
+@ExtendWith(MockitoExtension.class)
+class GenderServiceTest {
 
+    @Mock
+    private GenderRepository genderRepository;
 
-    @Autowired
-    public GenderTest(GenderService genderService, JdbcTemplate jdbcTemplate)
-    {
-        this.genderService= genderService;
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @Mock
+    private GenderMapper genderMapper;
 
+    @InjectMocks
+    private GenderService genderService;
 
-    @BeforeEach
-    void beforeEach(){
-        this.gender1= genderService.createGender("gender1");
-        this.gender2= genderService.createGender("gender2");
-    }
-
-
-    @AfterEach
-    void afterEach() {
-        jdbcTemplate.execute("TRUNCATE TABLE genders RESTART IDENTITY CASCADE;");
-    }
-
-
-    // ─── Create ──────────────────────────────────────────────────────
-
+    // ─── Create ────────────────────────────────────────────────
 
     @Test
-    @Order(0)
-    public void createGender()
-    {
-        Long id = gender1.getId();
-        assertNotNull(genderService.findByIdAndDeletedAtIsNull(id));
+    void createGender_Success() {
+        CreateGenderRequest request = new CreateGenderRequest("Java");
+        Gender gender = Gender.builder().id(1L).name("Java").build();
+        GenderResponse response = new GenderResponse(1L, "Java");
 
-        assertThrows(RuntimeException.class,()->genderService.createGender(null));
+        when(genderRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(false);
+        when(genderMapper.toEntity(request)).thenReturn(gender);
+        when(genderRepository.save(gender)).thenReturn(gender);
+        when(genderMapper.toResponse(gender)).thenReturn(response);
 
-        assertThrows(RuntimeException.class,()->genderService.createGender("gender1"));
+        GenderResponse result = genderService.createGender(request);
 
-        assertEquals(gender1.getName(),genderService.findByIdAndDeletedAtIsNull(id).getName());
+        assertThat(result.getName()).isEqualTo("Java");
     }
 
-    // ─── Find ──────────────────────────────────────────────────────
-
     @Test
-    @Order(1)
-    public void findGender()
-    {
-        Long id1 = gender1.getId();
-        Long id2 = gender2.getId();
+    void createGender_ThrowsDuplicate() {
+        CreateGenderRequest request = new CreateGenderRequest("Java");
 
-        assertTrue(genderService.existsByIdAndDeletedAtIsNull(id1));
+        when(genderRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(true);
 
-        assertFalse(genderService.existsByIdAndDeletedAtIsNull(4L));
-
-        assertEquals(gender1,genderService.findByIdAndDeletedAtIsNull(id1));
-
-        assertNotEquals(gender1,genderService.findByIdAndDeletedAtIsNull(id2));
-
-        assertTrue(genderService.existsByNameAndDeletedAtIsNull(("gender1")));
-
-        assertFalse(genderService.existsByNameAndDeletedAtIsNull("gender3"));
-
-        assertEquals(gender1,genderService.findByNameAndDeletedAtIsNull("gender1"));
-
-        assertNotEquals(gender1,genderService.findByNameAndDeletedAtIsNull("gender2"));
+        assertThrows(DuplicateResourceException.class,
+                () -> genderService.createGender(request));
     }
 
-    // ─── Update ──────────────────────────────────────────────────────
+    // ─── Update ────────────────────────────────────────────────
 
     @Test
-    @Order(2)
-    public void updateGender() {
-        Long id = gender1.getId();
+    void updateGender_Success() {
+        UpdateGenderRequest request = new UpdateGenderRequest("Python");
+        Gender gender = Gender.builder().id(1L).name("Java").build();
+        GenderResponse response = new GenderResponse(1L, "Python");
 
-        assertThrows(RuntimeException.class,()->genderService.updateGender(id,null));
+        when(genderRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(gender));
+        when(genderRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(false);
+        when(genderRepository.save(gender)).thenReturn(gender);
+        when(genderMapper.toResponse(gender)).thenReturn(response);
 
-        assertThrows(RuntimeException.class,()->genderService.updateGender(id,"gender2"));
+        GenderResponse result = genderService.updateGender(1L, request);
 
-        assertDoesNotThrow(()->genderService.updateGender(id,"gender3"));
-
-        assertEquals("gender3",genderService.findByIdAndDeletedAtIsNull(id).getName());
+        assertThat(result.getName()).isEqualTo("Python");
     }
 
-    // ─── Delete ──────────────────────────────────────────────────────
+    @Test
+    void updateGender_ThrowsNotFound() {
+        UpdateGenderRequest request = new UpdateGenderRequest("Python");
+
+        when(genderRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> genderService.updateGender(1L, request));
+    }
 
     @Test
-    @Order(3)
-    public void deleteGender(){
+    void updateGender_ThrowsDuplicate() {
+        UpdateGenderRequest request = new UpdateGenderRequest("Python");
+        Gender gender = Gender.builder().id(1L).name("Java").build();
 
-        Long id = gender1.getId();
+        when(genderRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(gender));
+        when(genderRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(true);
 
-        assertEquals(gender1,genderService.findByIdAndDeletedAtIsNull(id));
+        assertThrows(DuplicateResourceException.class,
+                () -> genderService.updateGender(1L, request));
+    }
 
-        genderService.deleteById(id);
+    // ─── Find ────────────────────────────────────────────────
 
-        assertThrows(RuntimeException.class,() -> genderService.deleteById(4L));
+    @Test
+    void findByIdAndDeletedAtIsNull_Success() {
+        Gender gender = Gender.builder().id(1L).name("Java").build();
+        GenderResponse response = new GenderResponse(1L, "Java");
 
-        assertThrows(RuntimeException.class,() -> genderService.findByIdAndDeletedAtIsNull(id));
+        when(genderRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(gender));
+        when(genderMapper.toResponse(gender)).thenReturn(response);
+
+        GenderResponse result = genderService.findByIdAndDeletedAtIsNull(1L);
+
+        assertThat(result.getId()).isEqualTo(1L);
+        assertThat(result.getName()).isEqualTo("Java");
+    }
+
+    @Test
+    void findByIdAndDeletedAtIsNull_ThrowsNotFound() {
+        when(genderRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> genderService.findByIdAndDeletedAtIsNull(1L));
+    }
+
+    @Test
+    void findAllActive_Success() {
+        Gender gender = Gender.builder().id(1L).name("Java").build();
+        GenderResponse response = new GenderResponse(1L, "Java");
+
+        when(genderRepository.findByDeletedAtIsNull()).thenReturn(List.of(gender));
+        when(genderMapper.toResponse(gender)).thenReturn(response);
+
+        List<GenderResponse> result = genderService.findAllActive();
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getName()).isEqualTo("Java");
+    }
+
+    // ─── Delete ────────────────────────────────────────────────
+
+    @Test
+    void deleteById_Success() {
+        Gender gender = Gender.builder().id(1L).name("Java").build();
+
+        when(genderRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(gender));
+
+        genderService.deleteById(1L);
+
+        assertThat(gender.getDeletedAt()).isNotNull();
+        verify(genderRepository).save(gender);
+    }
+
+    @Test
+    void deleteById_ThrowsNotFound() {
+        when(genderRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> genderService.deleteById(1L));
     }
 }
-

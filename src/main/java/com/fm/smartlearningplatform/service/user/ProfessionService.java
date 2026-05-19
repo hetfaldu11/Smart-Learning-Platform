@@ -1,104 +1,96 @@
 package com.fm.smartlearningplatform.service.user;
-
+import com.fm.smartlearningplatform.dto.user.profession.request.CreateProfessionRequest;
+import com.fm.smartlearningplatform.dto.user.profession.request.UpdateProfessionRequest;
+import com.fm.smartlearningplatform.dto.user.profession.response.ProfessionResponse;
+import com.fm.smartlearningplatform.exception.DuplicateResourceException;
+import com.fm.smartlearningplatform.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.mapper.user.ProfessionMapper;
 import com.fm.smartlearningplatform.model.user.Profession;
 import com.fm.smartlearningplatform.repository.user.ProfessionRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProfessionService {
+
     private final ProfessionRepository professionRepository;
 
-    @Autowired
-    public ProfessionService (ProfessionRepository professionRepository) {
-        this.professionRepository = professionRepository;
-    }
+    private final ProfessionMapper professionMapper;
 
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    public Profession createProfession(String name){
+    public ProfessionResponse createProfession(CreateProfessionRequest request) {
+        if (professionRepository.existsByNameAndDeletedAtIsNull(request.getName()))
+            throw new DuplicateResourceException("Profession already exists.");
 
-        if(name==null) {
-            throw new RuntimeException("Name is null.");
-        }
-
-        if(professionRepository.existsByName(name))
-            throw new RuntimeException("Profession is already exist.");
-
-        Profession profession = Profession.builder()
-                .name(name)
-                .build();
-
-        return professionRepository.save(profession);
+        return professionMapper.toResponse(
+                professionRepository.save(
+                        professionMapper.toEntity(request)
+                )
+        );
     }
 
     // ─── Update ────────────────────────────────────────────────
 
     @Transactional
-    public Profession updateProfession(Long id, String newName) {
-
-        if(newName==null) {
-            throw new RuntimeException("Name is null.");
-        }
-
-        if(professionRepository.existsByName(newName))
-            throw new RuntimeException("Profession is already exist.");
-
+    public ProfessionResponse updateProfession(Long id, UpdateProfessionRequest request) {
         Profession profession = professionRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new RuntimeException("Profession is not exist."));
+                .orElseThrow(() -> new ResourceNotFoundException("Profession not found."));
 
-        profession.setName(newName);
+        if (professionRepository.existsByIdNotAndNameAndDeletedAtIsNull(id, request.getName()))
+            throw new DuplicateResourceException("Profession already exists.");
 
-        return professionRepository.save(profession);
+        professionMapper.updateProfessionFromRequest(request, profession);
+
+        return professionMapper.toResponse(professionRepository.save(profession));
     }
 
     // ─── Find ────────────────────────────────────────────────
 
+    @Transactional(readOnly = true)
     public boolean existsByIdAndDeletedAtIsNull(Long id) {
         return professionRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
-    public Profession findByIdAndDeletedAtIsNull(Long id){
-        Profession profession = professionRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Profession is not existed."));
-
-        if(profession.getDeletedAt() != null)
-            throw new RuntimeException("Profession is deleted.");
-        return profession;
+    @Transactional(readOnly = true)
+    public ProfessionResponse findByIdAndDeletedAtIsNull(Long id){
+        return professionMapper.toResponse(
+                professionRepository.findByIdAndDeletedAtIsNull(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Profession not exists.")));
     }
 
+    @Transactional(readOnly = true)
     public boolean existsByNameAndDeletedAtIsNull(String name){
         return professionRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    public Profession findByNameAndDeletedAtIsNull(String name){
-        Profession profession = professionRepository.findByName(name)
-
-                .orElseThrow(()->new RuntimeException("Profession is not existed."));
-
-        if(profession.getDeletedAt() != null)
-            throw new RuntimeException("Profession is deleted.");
-        return profession;
+    @Transactional(readOnly = true)
+    public ProfessionResponse findByNameAndDeletedAtIsNull(String name){
+        return professionMapper.toResponse(
+                professionRepository.findByNameAndDeletedAtIsNull(name)
+                        .orElseThrow(()->new ResourceNotFoundException("Profession not exists."))
+        );
     }
 
-    public List<Profession> findByDeletedAtIsNull(){
-        return professionRepository.findByDeletedAtIsNull();
+    @Transactional(readOnly = true)
+    public List<ProfessionResponse> findAllActive() {
+        return professionRepository.findByDeletedAtIsNull()
+                .stream()
+                .map(professionMapper::toResponse)
+                .toList();
     }
 
     // ─── Delete ────────────────────────────────────────────────
     @Transactional
     public void deleteById(Long id){
-        Profession profession = professionRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Profession is not exist."));
-
-        if(profession.getDeletedAt() != null){
-            throw  new RuntimeException("Profession is already deleted.");
-        }
+        Profession profession = professionRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Profession not exist."));
 
         profession.setDeletedAt(LocalDateTime.now());
 

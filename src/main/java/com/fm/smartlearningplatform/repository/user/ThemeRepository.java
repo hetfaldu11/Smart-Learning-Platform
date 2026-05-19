@@ -22,5 +22,7 @@ public interface ThemeRepository extends JpaRepository<Theme, Long> {
 
     Optional<Theme> findByName(String name);
 
+    boolean existsByIdNotAndNameAndDeletedAtIsNull(Long id, String name);
+
     List<Theme> findByDeletedAtIsNull();
 }

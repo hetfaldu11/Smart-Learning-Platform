@@ -1,119 +1,165 @@
 package com.fm.smartlearningplatform.UserTest;
 
+import com.fm.smartlearningplatform.dto.user.profession.request.CreateProfessionRequest;
+import com.fm.smartlearningplatform.dto.user.profession.request.UpdateProfessionRequest;
+import com.fm.smartlearningplatform.dto.user.profession.response.ProfessionResponse;
+import com.fm.smartlearningplatform.exception.DuplicateResourceException;
+import com.fm.smartlearningplatform.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.mapper.user.ProfessionMapper;
 import com.fm.smartlearningplatform.model.user.Profession;
+import com.fm.smartlearningplatform.repository.user.ProfessionRepository;
 import com.fm.smartlearningplatform.service.user.ProfessionService;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import org.junit.jupiter.api.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import java.util.List;
+import java.util.Optional;
 
-@SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ProfessionTest {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-    private final ProfessionService professionService;
-    private final JdbcTemplate jdbcTemplate;
-    Profession profession1;
-    Profession profession2;
+@ExtendWith(MockitoExtension.class)
+class ProfessionServiceTest {
 
+    @Mock
+    private ProfessionRepository professionRepository;
 
-    @Autowired
-    public ProfessionTest(ProfessionService professionService, JdbcTemplate jdbcTemplate)
-    {
-        this.professionService= professionService;
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @Mock
+    private ProfessionMapper professionMapper;
 
+    @InjectMocks
+    private ProfessionService professionService;
 
-    @BeforeEach
-    void beforeEach(){
-        this.profession1= professionService.createProfession("profession1");
-        this.profession2= professionService.createProfession("profession2");
-    }
-
-
-    @AfterEach
-    void afterEach() {
-        jdbcTemplate.execute("TRUNCATE TABLE professions RESTART IDENTITY CASCADE;");
-    }
-
-
-    // ─── Create ──────────────────────────────────────────────────────
-
+    // ─── Create ────────────────────────────────────────────────
 
     @Test
-    @Order(0)
-    public void createProfession()
-    {
-        Long id = profession1.getId();
-        assertNotNull(professionService.findByIdAndDeletedAtIsNull(id));
+    void createProfession_Success() {
+        CreateProfessionRequest request = new CreateProfessionRequest("Java");
+        Profession profession = Profession.builder().id(1L).name("Java").build();
+        ProfessionResponse response = new ProfessionResponse(1L, "Java");
 
-        assertThrows(RuntimeException.class,()->professionService.createProfession(null));
+        when(professionRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(false);
+        when(professionMapper.toEntity(request)).thenReturn(profession);
+        when(professionRepository.save(profession)).thenReturn(profession);
+        when(professionMapper.toResponse(profession)).thenReturn(response);
 
-        assertThrows(RuntimeException.class,()->professionService.createProfession("profession1"));
+        ProfessionResponse result = professionService.createProfession(request);
 
-        assertEquals(profession1.getName(),professionService.findByIdAndDeletedAtIsNull(id).getName());
+        assertThat(result.getName()).isEqualTo("Java");
     }
 
-    // ─── Find ──────────────────────────────────────────────────────
-
     @Test
-    @Order(1)
-    public void findProfession()
-    {
-        Long id1 = profession1.getId();
-        Long id2 = profession2.getId();
+    void createProfession_ThrowsDuplicate() {
+        CreateProfessionRequest request = new CreateProfessionRequest("Java");
 
-        assertTrue(professionService.existsByIdAndDeletedAtIsNull(id1));
+        when(professionRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(true);
 
-        assertFalse(professionService.existsByIdAndDeletedAtIsNull(4L));
-
-        assertEquals(profession1,professionService.findByIdAndDeletedAtIsNull(id1));
-
-        assertNotEquals(profession1,professionService.findByIdAndDeletedAtIsNull(id2));
-
-        assertTrue(professionService.existsByNameAndDeletedAtIsNull(("profession1")));
-
-        assertFalse(professionService.existsByNameAndDeletedAtIsNull("profession3"));
-
-        assertEquals(profession1,professionService.findByNameAndDeletedAtIsNull("profession1"));
-
-        assertNotEquals(profession1,professionService.findByNameAndDeletedAtIsNull("profession2"));
+        assertThrows(DuplicateResourceException.class,
+                () -> professionService.createProfession(request));
     }
 
-    // ─── Update ──────────────────────────────────────────────────────
+    // ─── Update ────────────────────────────────────────────────
 
     @Test
-    @Order(2)
-    public void updateProfession() {
-        Long id = profession1.getId();
+    void updateProfession_Success() {
+        UpdateProfessionRequest request = new UpdateProfessionRequest("Python");
+        Profession profession = Profession.builder().id(1L).name("Java").build();
+        ProfessionResponse response = new ProfessionResponse(1L, "Python");
 
-        assertThrows(RuntimeException.class,()->professionService.updateProfession(id,null));
+        when(professionRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(profession));
+        when(professionRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(false);
+        when(professionRepository.save(profession)).thenReturn(profession);
+        when(professionMapper.toResponse(profession)).thenReturn(response);
 
-        assertThrows(RuntimeException.class,()->professionService.updateProfession(id,"profession2"));
+        ProfessionResponse result = professionService.updateProfession(1L, request);
 
-        assertDoesNotThrow(()->professionService.updateProfession(id,"profession3"));
-
-        assertEquals("profession3",professionService.findByIdAndDeletedAtIsNull(id).getName());
+        assertThat(result.getName()).isEqualTo("Python");
     }
 
-    // ─── Delete ──────────────────────────────────────────────────────
+    @Test
+    void updateProfession_ThrowsNotFound() {
+        UpdateProfessionRequest request = new UpdateProfessionRequest("Python");
+
+        when(professionRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> professionService.updateProfession(1L, request));
+    }
 
     @Test
-    @Order(3)
-    public void deleteProfession(){
+    void updateProfession_ThrowsDuplicate() {
+        UpdateProfessionRequest request = new UpdateProfessionRequest("Python");
+        Profession profession = Profession.builder().id(1L).name("Java").build();
 
-        Long id = profession1.getId();
+        when(professionRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(profession));
+        when(professionRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(true);
 
-        assertEquals(profession1,professionService.findByIdAndDeletedAtIsNull(id));
+        assertThrows(DuplicateResourceException.class,
+                () -> professionService.updateProfession(1L, request));
+    }
 
-        professionService.deleteById(id);
+    // ─── Find ────────────────────────────────────────────────
 
-        assertThrows(RuntimeException.class,() -> professionService.deleteById(4L));
+    @Test
+    void findByIdAndDeletedAtIsNull_Success() {
+        Profession profession = Profession.builder().id(1L).name("Java").build();
+        ProfessionResponse response = new ProfessionResponse(1L, "Java");
 
-        assertThrows(RuntimeException.class,() -> professionService.findByIdAndDeletedAtIsNull(id));
+        when(professionRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(profession));
+        when(professionMapper.toResponse(profession)).thenReturn(response);
+
+        ProfessionResponse result = professionService.findByIdAndDeletedAtIsNull(1L);
+
+        assertThat(result.getId()).isEqualTo(1L);
+        assertThat(result.getName()).isEqualTo("Java");
+    }
+
+    @Test
+    void findByIdAndDeletedAtIsNull_ThrowsNotFound() {
+        when(professionRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> professionService.findByIdAndDeletedAtIsNull(1L));
+    }
+
+    @Test
+    void findAllActive_Success() {
+        Profession profession = Profession.builder().id(1L).name("Java").build();
+        ProfessionResponse response = new ProfessionResponse(1L, "Java");
+
+        when(professionRepository.findByDeletedAtIsNull()).thenReturn(List.of(profession));
+        when(professionMapper.toResponse(profession)).thenReturn(response);
+
+        List<ProfessionResponse> result = professionService.findAllActive();
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getName()).isEqualTo("Java");
+    }
+
+    // ─── Delete ────────────────────────────────────────────────
+
+    @Test
+    void deleteById_Success() {
+        Profession profession = Profession.builder().id(1L).name("Java").build();
+
+        when(professionRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(profession));
+
+        professionService.deleteById(1L);
+
+        assertThat(profession.getDeletedAt()).isNotNull();
+        verify(professionRepository).save(profession);
+    }
+
+    @Test
+    void deleteById_ThrowsNotFound() {
+        when(professionRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> professionService.deleteById(1L));
     }
 }
-

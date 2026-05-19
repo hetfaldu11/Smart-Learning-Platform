@@ -1,128 +1,165 @@
 package com.fm.smartlearningplatform.UserTest;
 
-
+import com.fm.smartlearningplatform.dto.user.interest.request.CreateInterestRequest;
+import com.fm.smartlearningplatform.dto.user.interest.request.UpdateInterestRequest;
+import com.fm.smartlearningplatform.dto.user.interest.response.InterestResponse;
+import com.fm.smartlearningplatform.exception.DuplicateResourceException;
+import com.fm.smartlearningplatform.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.mapper.user.InterestMapper;
 import com.fm.smartlearningplatform.model.user.Interest;
+import com.fm.smartlearningplatform.repository.user.InterestRepository;
 import com.fm.smartlearningplatform.service.user.InterestService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@SpringBootTest
-public class InterestTest {
+@ExtendWith(MockitoExtension.class)
+class InterestServiceTest {
 
-    private final InterestService interestService;
-    private final JdbcTemplate jdbcTemplate;
-    Interest interest1;
-    Interest interest2;
+    @Mock
+    private InterestRepository interestRepository;
 
+    @Mock
+    private InterestMapper interestMapper;
 
-    @Autowired
-    public InterestTest(InterestService interestService, JdbcTemplate jdbcTemplate)
-    {
-        this.interestService= interestService;
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @InjectMocks
+    private InterestService interestService;
 
-
-    @BeforeEach
-    void beforeEach(){
-        this.interest1= interestService.createInterest("interest1");
-        this.interest2= interestService.createInterest("interest2");
-    }
-
-
-    @AfterEach
-    void afterEach() {
-        jdbcTemplate.execute("TRUNCATE TABLE interests RESTART IDENTITY CASCADE;");
-    }
-
-
-    // ─── Create ──────────────────────────────────────────────────────
-
+    // ─── Create ────────────────────────────────────────────────
 
     @Test
-    @Order(0)
-    public void createInterest()
-    {
-        Long id = interest1.getId();
-        assertNotNull(interestService.findByIdAndDeletedAtIsNull(id));
+    void createInterest_Success() {
+        CreateInterestRequest request = new CreateInterestRequest("Java");
+        Interest interest = Interest.builder().id(1L).name("Java").build();
+        InterestResponse response = new InterestResponse(1L, "Java");
 
-        assertThrows(RuntimeException.class,()->interestService.createInterest(null));
+        when(interestRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(false);
+        when(interestMapper.toEntity(request)).thenReturn(interest);
+        when(interestRepository.save(interest)).thenReturn(interest);
+        when(interestMapper.toResponse(interest)).thenReturn(response);
 
-        assertThrows(RuntimeException.class,()->interestService.createInterest("interest1"));
+        InterestResponse result = interestService.createInterest(request);
 
-        assertEquals(interest1.getName(),interestService.findByIdAndDeletedAtIsNull(id).getName());
+        assertThat(result.getName()).isEqualTo("Java");
     }
 
-    // ─── Find ──────────────────────────────────────────────────────
-
     @Test
-    @Order(1)
-    public void findInterest()
-    {
-        Long id1 = interest1.getId();
-        Long id2 = interest2.getId();
+    void createInterest_ThrowsDuplicate() {
+        CreateInterestRequest request = new CreateInterestRequest("Java");
 
-        assertTrue(interestService.existsByIdAndDeletedAtIsNull(id1));
+        when(interestRepository.existsByNameAndDeletedAtIsNull("Java")).thenReturn(true);
 
-        assertFalse(interestService.existsByIdAndDeletedAtIsNull(4L));
-
-        assertEquals(interest1,interestService.findByIdAndDeletedAtIsNull(id1));
-
-        assertNotEquals(interest1,interestService.findByIdAndDeletedAtIsNull(id2));
-
-        assertTrue(interestService.existsByNameAndDeletedAtIsNull(("interest1")));
-
-        assertFalse(interestService.existsByNameAndDeletedAtIsNull("interest3"));
-
-        assertEquals(interest1,interestService.findByNameAndDeletedAtIsNull("interest1"));
-
-        assertNotEquals(interest1,interestService.findByNameAndDeletedAtIsNull("interest2"));
+        assertThrows(DuplicateResourceException.class,
+                () -> interestService.createInterest(request));
     }
 
-    // ─── Update ──────────────────────────────────────────────────────
+    // ─── Update ────────────────────────────────────────────────
 
     @Test
-    @Order(2)
-    public void updateInterest() {
-        Long id = interest1.getId();
+    void updateInterest_Success() {
+        UpdateInterestRequest request = new UpdateInterestRequest("Python");
+        Interest interest = Interest.builder().id(1L).name("Java").build();
+        InterestResponse response = new InterestResponse(1L, "Python");
 
-        assertThrows(RuntimeException.class,()->interestService.updateInterest(id,null));
+        when(interestRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(interest));
+        when(interestRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(false);
+        when(interestRepository.save(interest)).thenReturn(interest);
+        when(interestMapper.toResponse(interest)).thenReturn(response);
 
-        assertThrows(RuntimeException.class,()->interestService.updateInterest(id,"interest2"));
+        InterestResponse result = interestService.updateInterest(1L, request);
 
-        assertDoesNotThrow(()->interestService.updateInterest(id,"interest3"));
-
-        assertEquals("interest3",interestService.findByIdAndDeletedAtIsNull(id).getName());
+        assertThat(result.getName()).isEqualTo("Python");
     }
 
-    // ─── Delete ──────────────────────────────────────────────────────
+    @Test
+    void updateInterest_ThrowsNotFound() {
+        UpdateInterestRequest request = new UpdateInterestRequest("Python");
+
+        when(interestRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> interestService.updateInterest(1L, request));
+    }
 
     @Test
-    @Order(3)
-    public void deleteInterest(){
+    void updateInterest_ThrowsDuplicate() {
+        UpdateInterestRequest request = new UpdateInterestRequest("Python");
+        Interest interest = Interest.builder().id(1L).name("Java").build();
 
-        Long id = interest1.getId();
+        when(interestRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(interest));
+        when(interestRepository.existsByIdNotAndNameAndDeletedAtIsNull(1L, "Python")).thenReturn(true);
 
-        assertEquals(interest1,interestService.findByIdAndDeletedAtIsNull(id));
+        assertThrows(DuplicateResourceException.class,
+                () -> interestService.updateInterest(1L, request));
+    }
 
-        interestService.deleteById(id);
+    // ─── Find ────────────────────────────────────────────────
 
-        assertThrows(RuntimeException.class,() -> interestService.deleteById(4L));
+    @Test
+    void findByIdAndDeletedAtIsNull_Success() {
+        Interest interest = Interest.builder().id(1L).name("Java").build();
+        InterestResponse response = new InterestResponse(1L, "Java");
 
-        assertThrows(RuntimeException.class,() -> interestService.findByIdAndDeletedAtIsNull(id));
+        when(interestRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(interest));
+        when(interestMapper.toResponse(interest)).thenReturn(response);
+
+        InterestResponse result = interestService.findByIdAndDeletedAtIsNull(1L);
+
+        assertThat(result.getId()).isEqualTo(1L);
+        assertThat(result.getName()).isEqualTo("Java");
+    }
+
+    @Test
+    void findByIdAndDeletedAtIsNull_ThrowsNotFound() {
+        when(interestRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> interestService.findByIdAndDeletedAtIsNull(1L));
+    }
+
+    @Test
+    void findAllActive_Success() {
+        Interest interest = Interest.builder().id(1L).name("Java").build();
+        InterestResponse response = new InterestResponse(1L, "Java");
+
+        when(interestRepository.findByDeletedAtIsNull()).thenReturn(List.of(interest));
+        when(interestMapper.toResponse(interest)).thenReturn(response);
+
+        List<InterestResponse> result = interestService.findAllActive();
+
+        assertThat(result).hasSize(1);
+        assertThat(result.get(0).getName()).isEqualTo("Java");
+    }
+
+    // ─── Delete ────────────────────────────────────────────────
+
+    @Test
+    void deleteById_Success() {
+        Interest interest = Interest.builder().id(1L).name("Java").build();
+
+        when(interestRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.of(interest));
+
+        interestService.deleteById(1L);
+
+        assertThat(interest.getDeletedAt()).isNotNull();
+        verify(interestRepository).save(interest);
+    }
+
+    @Test
+    void deleteById_ThrowsNotFound() {
+        when(interestRepository.findByIdAndDeletedAtIsNull(1L)).thenReturn(Optional.empty());
+
+        assertThrows(ResourceNotFoundException.class,
+                () -> interestService.deleteById(1L));
     }
 }
-

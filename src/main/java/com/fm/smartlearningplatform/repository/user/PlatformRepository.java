@@ -25,5 +25,7 @@ public interface PlatformRepository extends JpaRepository<Platform, Long> {
 
     Optional<Platform> findByName(String name);
 
+    boolean existsByIdNotAndNameAndDeletedAtIsNull(Long id, String name);
+
     List<Platform> findByDeletedAtIsNull();
 }

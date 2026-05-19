@@ -1,138 +1,96 @@
 package com.fm.smartlearningplatform.service.user;
-
+import com.fm.smartlearningplatform.dto.user.interest.request.CreateInterestRequest;
+import com.fm.smartlearningplatform.dto.user.interest.request.UpdateInterestRequest;
+import com.fm.smartlearningplatform.dto.user.interest.response.InterestResponse;
+import com.fm.smartlearningplatform.exception.DuplicateResourceException;
+import com.fm.smartlearningplatform.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.mapper.user.InterestMapper;
 import com.fm.smartlearningplatform.model.user.Interest;
 import com.fm.smartlearningplatform.repository.user.InterestRepository;
-import com.fm.smartlearningplatform.repository.user.UserInterestRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 @Service
+@RequiredArgsConstructor
 public class InterestService {
 
     private final InterestRepository interestRepository;
-    private final UserInterestRepository userInterestRepository;
 
-    @Autowired
-    public InterestService (InterestRepository interestRepository, UserInterestRepository userInterestRepository) {
-        this.interestRepository = interestRepository;
-        this.userInterestRepository = userInterestRepository;
-    }
+    private final InterestMapper interestMapper;
 
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    public Interest createInterest(String name){
+    public InterestResponse createInterest(CreateInterestRequest request) {
+        if (interestRepository.existsByNameAndDeletedAtIsNull(request.getName()))
+            throw new DuplicateResourceException("Interest already exists.");
 
-        if(name==null) {
-            throw new RuntimeException("Name is null.");
-        }
-
-        if(interestRepository.existsByName(name))
-            throw new RuntimeException("Interest is already exist.");
-
-        Interest interest = Interest.builder()
-                .name(name)
-                .build();
-
-        return interestRepository.save(interest);
+        return interestMapper.toResponse(
+                interestRepository.save(
+                        interestMapper.toEntity(request)
+                )
+        );
     }
 
     // ─── Update ────────────────────────────────────────────────
 
     @Transactional
-    public Interest updateInterest(Long id, String newName) {
-
-        if(id == null){
-            throw new RuntimeException("Id is null");
-        }
-
-        if(newName==null) {
-            throw new RuntimeException("Name is null.");
-        }
-        if(interestRepository.existsByName(newName))
-            throw new RuntimeException("Interest is already exist.");
-
+    public InterestResponse updateInterest(Long id, UpdateInterestRequest request) {
         Interest interest = interestRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new RuntimeException("Interest is not exist."));
+                .orElseThrow(() -> new ResourceNotFoundException("Interest not found."));
 
-        interest.setName(newName);
+        if (interestRepository.existsByIdNotAndNameAndDeletedAtIsNull(id, request.getName()))
+            throw new DuplicateResourceException("Interest already exists.");
 
-        return interestRepository.save(interest);
+        interestMapper.updateInterestFromRequest(request, interest);
+
+        return interestMapper.toResponse(interestRepository.save(interest));
     }
 
     // ─── Find ────────────────────────────────────────────────
 
-   public  boolean existsByIdAndDeletedAtIsNull(Long id) {
-
-       if(id == null){
-           throw new RuntimeException("Id is null");
-       }
-
+    @Transactional(readOnly = true)
+    public boolean existsByIdAndDeletedAtIsNull(Long id) {
         return interestRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
-    public Interest findByIdAndDeletedAtIsNull(Long id){
-
-        if(id == null){
-            throw new RuntimeException("Id is null");
-        }
-
-        Interest interest = interestRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("Interest is not existed."));
-
-        if(interest.getDeletedAt() != null)
-            throw new RuntimeException("Interest is deleted.");
-        return interest;
+    @Transactional(readOnly = true)
+    public InterestResponse findByIdAndDeletedAtIsNull(Long id){
+        return interestMapper.toResponse(
+                interestRepository.findByIdAndDeletedAtIsNull(id)
+                        .orElseThrow(() -> new ResourceNotFoundException("Interest not exists.")));
     }
 
-   public  boolean existsByNameAndDeletedAtIsNull(String name){
-
-       if(name == null){
-           throw new RuntimeException("Name is null");
-       }
-
+    @Transactional(readOnly = true)
+    public boolean existsByNameAndDeletedAtIsNull(String name){
         return interestRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    public Interest findByNameAndDeletedAtIsNull(String name){
-
-        if(name == null){
-            throw new RuntimeException("Name is null");
-        }
-
-        Interest interest = interestRepository.findByName(name)
-
-                .orElseThrow(()->new RuntimeException("Interest is not existed."));
-
-        if(interest.getDeletedAt() != null)
-            throw new RuntimeException("Interest is deleted.");
-        return interest;
+    @Transactional(readOnly = true)
+    public InterestResponse findByNameAndDeletedAtIsNull(String name){
+        return interestMapper.toResponse(
+                interestRepository.findByNameAndDeletedAtIsNull(name)
+                        .orElseThrow(()->new ResourceNotFoundException("Interest not exists."))
+        );
     }
 
-     public List<Interest> findByDeletedAtIsNull(){
-        return interestRepository.findByDeletedAtIsNull();
+    @Transactional(readOnly = true)
+    public List<InterestResponse> findAllActive() {
+        return interestRepository.findByDeletedAtIsNull()
+                .stream()
+                .map(interestMapper::toResponse)
+                .toList();
     }
 
     // ─── Delete ────────────────────────────────────────────────
     @Transactional
     public void deleteById(Long id){
-
-        if(id == null){
-            throw new RuntimeException("Id is null");
-        }
-
-        Interest interest = interestRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Interest is not exist."));
-
-        if(interest.getDeletedAt() != null){
-            throw  new RuntimeException("Interest is already deleted.");
-        }
-
-        userInterestRepository.deleteByInterestId(id);
+        Interest interest = interestRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Interest not exist."));
 
         interest.setDeletedAt(LocalDateTime.now());
 
