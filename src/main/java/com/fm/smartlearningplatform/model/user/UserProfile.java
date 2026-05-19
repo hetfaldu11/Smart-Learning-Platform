@@ -9,16 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user_profiles",
-        indexes =
-        {
-                @Index
-                (
-                        name = "idx_user_profile_phone_number",
-                        columnList = "phone_number"
-                )
-        }
-)
+@Table(name = "user_profiles")
 @Getter
 @Setter
 @NoArgsConstructor

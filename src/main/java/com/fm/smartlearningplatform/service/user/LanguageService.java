@@ -21,7 +21,7 @@ public class LanguageService {
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    Language createLanguage(String name, String code){
+    public Language createLanguage(String name, String code){
 
         if(name==null) {
             throw new RuntimeException("Name is null.");
@@ -32,7 +32,10 @@ public class LanguageService {
         }
 
         if(languageRepository.existsByName(name))
-            throw new RuntimeException("Language is already exist.");
+            throw new RuntimeException("Language name is already exist.");
+
+        if(languageRepository.existsByCode(code))
+            throw new RuntimeException("Language code is already exist.");
 
         Language language = Language.builder()
                 .name(name)
@@ -51,6 +54,9 @@ public class LanguageService {
             throw new RuntimeException("Name is null.");
         }
 
+        if(languageRepository.existsByName(newName))
+            throw new RuntimeException("Language name is already exist.");
+
         Language language = languageRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new RuntimeException("Language is not exist."));
 
@@ -66,6 +72,9 @@ public class LanguageService {
             throw new RuntimeException("Code is null.");
         }
 
+        if(languageRepository.existsByCode(newCode))
+            throw new RuntimeException("Language code is already exist.");
+
         Language language = languageRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new RuntimeException("Language is not exist."));
 
@@ -76,7 +85,7 @@ public class LanguageService {
 
     // ─── Find ────────────────────────────────────────────────
 
-    boolean existsByIdAndDeletedAtIsNull(Long id) {
+    public boolean existsByIdAndDeletedAtIsNull(Long id) {
         return languageRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
@@ -89,11 +98,11 @@ public class LanguageService {
         return language;
     }
 
-    boolean existsByNameAndDeletedAtIsNull(String name){
+    public boolean existsByNameAndDeletedAtIsNull(String name){
         return languageRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    Language findByNameAndDeletedAtIsNull(String name){
+    public Language findByNameAndDeletedAtIsNull(String name){
         Language language = languageRepository.findByName(name)
 
                 .orElseThrow(()->new RuntimeException("Language is not existed."));
@@ -103,11 +112,11 @@ public class LanguageService {
         return language;
     }
 
-    boolean existsByCodeAndDeletedAtIsNull(String code){
+    public boolean existsByCodeAndDeletedAtIsNull(String code){
         return languageRepository.existsByCodeAndDeletedAtIsNull(code);
     }
 
-    Language findByCodeAndDeletedAtIsNull(String code){
+    public Language findByCodeAndDeletedAtIsNull(String code){
         Language language = languageRepository.findByCode(code)
                 .orElseThrow(()->new RuntimeException("Language is not existed."));
 
@@ -116,13 +125,13 @@ public class LanguageService {
         return language;
     }
 
-    List<Language> findByDeletedAtIsNull(){
+    public List<Language> findByDeletedAtIsNull(){
         return languageRepository.findByDeletedAtIsNull();
     }
 
     // ─── Delete ────────────────────────────────────────────────
-
-    void deleteById(Long id){
+    @Transactional
+    public void deleteById(Long id){
         Language language = languageRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Language is not exist."));
 

@@ -25,7 +25,7 @@ public class RoleService {
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    Role createRole(String name){
+    public Role createRole(String name){
 
         if(name==null) {
             throw new RuntimeException("Name is null.");
@@ -50,6 +50,9 @@ public class RoleService {
             throw new RuntimeException("Name is null.");
         }
 
+        if(roleRepository.existsByName(newName))
+            throw new RuntimeException("Role is already exist.");
+
         Role role = roleRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new RuntimeException("Role is not exist."));
 
@@ -60,7 +63,7 @@ public class RoleService {
 
     // ─── Find ────────────────────────────────────────────────
 
-    boolean existsByIdAndDeletedAtIsNull(Long id) {
+    public  boolean existsByIdAndDeletedAtIsNull(Long id) {
         return roleRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
@@ -73,11 +76,11 @@ public class RoleService {
         return role;
     }
 
-    boolean existsByNameAndDeletedAtIsNull(String name){
+   public  boolean existsByNameAndDeletedAtIsNull(String name){
         return roleRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    Role findByNameAndDeletedAtIsNull(String name){
+    public Role findByNameAndDeletedAtIsNull(String name){
         Role role = roleRepository.findByName(name)
 
                 .orElseThrow(()->new RuntimeException("Role is not existed."));
@@ -87,13 +90,13 @@ public class RoleService {
         return role;
     }
 
-    List<Role> findByDeletedAtIsNull(){
+    public List<Role> findByDeletedAtIsNull(){
         return roleRepository.findByDeletedAtIsNull();
     }
 
     // ─── Delete ────────────────────────────────────────────────
-
-    void deleteById(Long id){
+    @Transactional
+    public void deleteById(Long id){
         Role role = roleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Role is not exist."));
 

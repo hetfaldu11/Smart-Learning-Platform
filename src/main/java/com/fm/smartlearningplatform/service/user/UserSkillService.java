@@ -29,7 +29,7 @@ public class UserSkillService {
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    UserSkill createUserSkill(User user, Skill skill){
+    public UserSkill createUserSkill(User user, Skill skill){
 
         if(userRepository.existsById(user.getId()) == false)
             throw new RuntimeException("User is not existed.");
@@ -114,7 +114,7 @@ public class UserSkillService {
     }
 
     // ─── Delete ────────────────────────────────────────────────
-
+    @Transactional
     public void deleteById(Long id){
         if(userSkillRepository.existsById(id) == false)
             throw new RuntimeException("UserSkill is not existed.");

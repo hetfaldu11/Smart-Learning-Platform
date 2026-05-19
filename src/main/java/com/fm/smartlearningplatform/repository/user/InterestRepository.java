@@ -20,6 +20,8 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
 
     boolean existsByName(String name);
 
+    boolean existsByIdNotAndName(Long id, String name);
+
     Optional<Interest> findByName(String name);
 
     List<Interest> findByDeletedAtIsNull();

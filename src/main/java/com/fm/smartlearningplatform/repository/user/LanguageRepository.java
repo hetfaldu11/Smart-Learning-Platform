@@ -25,9 +25,13 @@ public interface LanguageRepository extends JpaRepository<Language,Long> {
 
     boolean existsByName(String name);
 
+    boolean existsByIdNotAndName(Long id, String name);
+
     Optional<Language> findByName(String name);
 
     boolean existsByCode(String name);
+
+    boolean existsByIdNotAndCode(Long id, String code);
 
     Optional<Language> findByCode(String name);
 

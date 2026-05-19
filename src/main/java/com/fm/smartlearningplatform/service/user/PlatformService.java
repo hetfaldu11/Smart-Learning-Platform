@@ -21,11 +21,12 @@ public class PlatformService {
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    Platform createPlatform(String name){
+    public Platform createPlatform(String name){
 
         if(name==null) {
             throw new RuntimeException("Name is null.");
         }
+
 
         if(platformRepository.existsByName(name))
             throw new RuntimeException("Platform is already exist.");
@@ -46,6 +47,9 @@ public class PlatformService {
             throw new RuntimeException("Name is null.");
         }
 
+        if(platformRepository.existsByName(newName))
+            throw new RuntimeException("Platform is already exist.");
+
         Platform platform = platformRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new RuntimeException("Platform is not exist."));
 
@@ -56,7 +60,7 @@ public class PlatformService {
 
     // ─── Find ────────────────────────────────────────────────
 
-    boolean existsByIdAndDeletedAtIsNull(Long id) {
+    public boolean existsByIdAndDeletedAtIsNull(Long id) {
         return platformRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
@@ -69,11 +73,11 @@ public class PlatformService {
         return platform;
     }
 
-    boolean existsByNameAndDeletedAtIsNull(String name){
+   public boolean existsByNameAndDeletedAtIsNull(String name){
         return platformRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    Platform findByNameAndDeletedAtIsNull(String name){
+    public Platform findByNameAndDeletedAtIsNull(String name){
         Platform platform = platformRepository.findByName(name)
                 .orElseThrow(()->new RuntimeException("Platform is not existed."));
 
@@ -82,13 +86,13 @@ public class PlatformService {
         return platform;
     }
 
-    List<Platform> findByDeletedAtIsNull(){
+   public List<Platform> findByDeletedAtIsNull(){
         return platformRepository.findByDeletedAtIsNull();
     }
 
     // ─── Delete ────────────────────────────────────────────────
-
-    void deleteById(Long id){
+    @Transactional
+    public void deleteById(Long id){
         Platform platform = platformRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Platform is not exist."));
 

@@ -25,7 +25,7 @@ public class UserSocialLinkService {
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    UserSocialLink createUserSocialLink(User user, Platform platform, String url){
+    public UserSocialLink createUserSocialLink(User user, Platform platform, String url){
 
         if(userRepository.existsById(user.getId()) == false)
             throw new RuntimeException("User is not existed.");

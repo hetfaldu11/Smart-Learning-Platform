@@ -20,6 +20,8 @@ public interface EducationLevelRepository extends JpaRepository<EducationLevel, 
 
     boolean existsByName(String name);
 
+    boolean existsByIdNotAndName(Long id, String name);
+
     Optional<EducationLevel> findByName(String name);
 
     List<EducationLevel> findByDeletedAtIsNull();

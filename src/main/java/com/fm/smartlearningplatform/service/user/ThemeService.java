@@ -25,7 +25,7 @@ public class ThemeService {
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    Theme createTheme(String name){
+    public Theme createTheme(String name){
 
         if(name==null) {
             throw new RuntimeException("Name is null.");
@@ -50,6 +50,9 @@ public class ThemeService {
             throw new RuntimeException("Name is null.");
         }
 
+        if(themeRepository.existsByName(newName))
+            throw new RuntimeException("Theme is already exist.");
+
         Theme theme = themeRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new RuntimeException("Theme is not exist."));
 
@@ -60,7 +63,7 @@ public class ThemeService {
 
     // ─── Find ────────────────────────────────────────────────
 
-    boolean existsByIdAndDeletedAtIsNull(Long id) {
+    public boolean existsByIdAndDeletedAtIsNull(Long id) {
         return themeRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
@@ -73,11 +76,11 @@ public class ThemeService {
         return theme;
     }
 
-    boolean existsByNameAndDeletedAtIsNull(String name){
+    public boolean existsByNameAndDeletedAtIsNull(String name){
         return themeRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    Theme findByNameAndDeletedAtIsNull(String name){
+    public Theme findByNameAndDeletedAtIsNull(String name){
         Theme theme = themeRepository.findByName(name)
 
                 .orElseThrow(()->new RuntimeException("Theme is not existed."));
@@ -87,13 +90,13 @@ public class ThemeService {
         return theme;
     }
 
-    List<Theme> findByDeletedAtIsNull(){
+    public List<Theme> findByDeletedAtIsNull(){
         return themeRepository.findByDeletedAtIsNull();
     }
 
     // ─── Delete ────────────────────────────────────────────────
-
-    void deleteById(Long id){
+    @Transactional
+    public void deleteById(Long id){
         Theme theme = themeRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Theme is not exist."));
 

@@ -21,7 +21,7 @@ public class ProfessionService {
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    Profession createProfession(String name){
+    public Profession createProfession(String name){
 
         if(name==null) {
             throw new RuntimeException("Name is null.");
@@ -46,6 +46,9 @@ public class ProfessionService {
             throw new RuntimeException("Name is null.");
         }
 
+        if(professionRepository.existsByName(newName))
+            throw new RuntimeException("Profession is already exist.");
+
         Profession profession = professionRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new RuntimeException("Profession is not exist."));
 
@@ -56,7 +59,7 @@ public class ProfessionService {
 
     // ─── Find ────────────────────────────────────────────────
 
-    boolean existsByIdAndDeletedAtIsNull(Long id) {
+    public boolean existsByIdAndDeletedAtIsNull(Long id) {
         return professionRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
@@ -69,11 +72,11 @@ public class ProfessionService {
         return profession;
     }
 
-    boolean existsByNameAndDeletedAtIsNull(String name){
+    public boolean existsByNameAndDeletedAtIsNull(String name){
         return professionRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    Profession findByNameAndDeletedAtIsNull(String name){
+    public Profession findByNameAndDeletedAtIsNull(String name){
         Profession profession = professionRepository.findByName(name)
 
                 .orElseThrow(()->new RuntimeException("Profession is not existed."));
@@ -83,13 +86,13 @@ public class ProfessionService {
         return profession;
     }
 
-    List<Profession> findByDeletedAtIsNull(){
+    public List<Profession> findByDeletedAtIsNull(){
         return professionRepository.findByDeletedAtIsNull();
     }
 
     // ─── Delete ────────────────────────────────────────────────
-
-    void deleteById(Long id){
+    @Transactional
+    public void deleteById(Long id){
         Profession profession = professionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Profession is not exist."));
 

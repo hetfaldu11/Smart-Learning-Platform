@@ -29,7 +29,7 @@ public class UserRoleService {
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    UserRole createUserRole(User user, Role role){
+    public UserRole createUserRole(User user, Role role){
 
         if(userRepository.existsById(user.getId()) == false)
             throw new RuntimeException("User is not existed.");
@@ -114,7 +114,7 @@ public class UserRoleService {
     }
 
     // ─── Delete ────────────────────────────────────────────────
-
+    @Transactional
     public void deleteById(Long id){
         if(userRoleRepository.existsById(id) == false)
             throw new RuntimeException("UserRole is not existed.");

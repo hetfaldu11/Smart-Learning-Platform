@@ -20,6 +20,8 @@ public interface GenderRepository extends JpaRepository<Gender, Long> {
 
     boolean existsByName(String name);
 
+    boolean existsByIdNotAndName(Long id, String name);
+
     Optional<Gender> findByName(String name);
 
     List<Gender> findByDeletedAtIsNull();

@@ -1,5 +1,4 @@
 package com.fm.smartlearningplatform.service.user;
-
 import com.fm.smartlearningplatform.model.user.EducationLevel;
 import com.fm.smartlearningplatform.repository.user.EducationLevelRepository;
 import jakarta.transaction.Transactional;
@@ -21,18 +20,13 @@ public class EducationLevelService {
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    EducationLevel createEducationLevel(String name){
+    public EducationLevel createEducationLevel(CreateEducationLevelRequest createEducationLevelRequest){
 
-        if(name==null) {
-            throw new RuntimeException("Name is null.");
-        }
-        if(educationLevelRepository.existsByName(name))
-            throw new RuntimeException("EducationLevel is already exist.");
+        String name = createEducationLevelRequest.getName();
 
         EducationLevel educationLevel = EducationLevel.builder()
                 .name(name)
                 .build();
-
         return educationLevelRepository.save(educationLevel);
     }
 
@@ -40,9 +34,17 @@ public class EducationLevelService {
 
     @Transactional
     public EducationLevel updateEducationLevel(Long id, String newName) {
+        if(id == null){
+            throw new RuntimeException("Id is null");
+        }
+
         if(newName==null) {
             throw new RuntimeException("Name is null.");
         }
+
+        if(educationLevelRepository.existsByName(newName))
+            throw new RuntimeException("Education level is already exist.");
+
         EducationLevel educationLevel = educationLevelRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new RuntimeException("EducationLevel is not exist."));
 
@@ -53,7 +55,11 @@ public class EducationLevelService {
 
     // ─── Find ────────────────────────────────────────────────
 
-    boolean existsByIdAndDeletedAtIsNull(Long id) {
+   public  boolean existsByIdAndDeletedAtIsNull(Long id) {
+       if(id == null){
+           throw new RuntimeException("Id is null");
+       }
+
         return educationLevelRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
@@ -66,11 +72,21 @@ public class EducationLevelService {
         return educationLevel;
     }
 
-    boolean existsByNameAndDeletedAtIsNull(String name){
+    public  boolean existsByNameAndDeletedAtIsNull(String name){
+
+        if(name == null){
+            throw new RuntimeException("Name is null");
+        }
+
         return educationLevelRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    EducationLevel findByNameAndDeletedAtIsNull(String name){
+    public EducationLevel findByNameAndDeletedAtIsNull(String name){
+
+        if(name == null){
+            throw new RuntimeException("Name is null");
+        }
+
         EducationLevel educationLevel = educationLevelRepository.findByName(name)
 
                 .orElseThrow(()->new RuntimeException("EducationLevel is not existed."));
@@ -80,13 +96,18 @@ public class EducationLevelService {
         return educationLevel;
     }
 
-    List<EducationLevel> findByDeletedAtIsNull(){
+    public List<EducationLevel> findByDeletedAtIsNull(){
         return educationLevelRepository.findByDeletedAtIsNull();
     }
 
     // ─── Delete ────────────────────────────────────────────────
+    @Transactional
+    public void deleteById(Long id){
 
-    void deleteById(Long id){
+        if(id == null){
+            throw new RuntimeException("Id is null");
+        }
+
         EducationLevel educationLevel = educationLevelRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("EducationLevel is not exist."));
 
@@ -99,3 +120,5 @@ public class EducationLevelService {
         educationLevelRepository.save(educationLevel);
     }
 }
+
+

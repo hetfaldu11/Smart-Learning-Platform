@@ -21,7 +21,7 @@ public class GenderService {
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    Gender createGender(String name){
+    public Gender createGender(String name){
 
         if(name==null) {
             throw new RuntimeException("Name is null.");
@@ -42,9 +42,15 @@ public class GenderService {
     @Transactional
     public Gender updateGender(Long id, String newName) {
 
+        if(id == null){
+            throw new RuntimeException("Id is null");
+        }
+
         if(newName==null) {
             throw new RuntimeException("Name is null.");
         }
+        if(genderRepository.existsByName(newName))
+            throw new RuntimeException("Gender is already exist.");
 
         Gender gender = genderRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new RuntimeException("Gender is not exist."));
@@ -56,11 +62,20 @@ public class GenderService {
 
     // ─── Find ────────────────────────────────────────────────
 
-    boolean existsByIdAndDeletedAtIsNull(Long id) {
+    public boolean existsByIdAndDeletedAtIsNull(Long id) {
+        if(id == null){
+            throw new RuntimeException("Id is null");
+        }
+
         return genderRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
     public Gender findByIdAndDeletedAtIsNull(Long id){
+
+        if(id == null){
+            throw new RuntimeException("Id is null");
+        }
+
         Gender gender = genderRepository.findById(id)
                 .orElseThrow(()->new RuntimeException("Gender is not existed."));
 
@@ -69,11 +84,21 @@ public class GenderService {
         return gender;
     }
 
-    boolean existsByNameAndDeletedAtIsNull(String name){
+    public boolean existsByNameAndDeletedAtIsNull(String name){
+
+        if(name == null){
+            throw new RuntimeException("Name is null");
+        }
+
         return genderRepository.existsByNameAndDeletedAtIsNull(name);
     }
 
-    Gender findByNameAndDeletedAtIsNull(String name){
+    public Gender findByNameAndDeletedAtIsNull(String name){
+
+        if(name == null){
+            throw new RuntimeException("Name is null");
+        }
+
         Gender gender = genderRepository.findByName(name)
 
                 .orElseThrow(()->new RuntimeException("Gender is not existed."));
@@ -83,13 +108,18 @@ public class GenderService {
         return gender;
     }
 
-    List<Gender> findByDeletedAtIsNull(){
+    public List<Gender> findByDeletedAtIsNull(){
         return genderRepository.findByDeletedAtIsNull();
     }
 
     // ─── Delete ────────────────────────────────────────────────
+    @Transactional
+    public void deleteById(Long id){
 
-    void deleteById(Long id){
+        if(id == null){
+            throw new RuntimeException("Id is null");
+        }
+
         Gender gender = genderRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Gender is not exist."));
 

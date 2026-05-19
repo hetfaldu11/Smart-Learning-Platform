@@ -29,7 +29,7 @@ public class UserInterestService {
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    UserInterest createUserInterest(User user, Interest interest){
+    public UserInterest createUserInterest(User user, Interest interest){
 
         if(userRepository.existsById(user.getId()) == false)
             throw new RuntimeException("User is not existed.");
@@ -114,7 +114,7 @@ public class UserInterestService {
     }
 
     // ─── Delete ────────────────────────────────────────────────
-
+    @Transactional
     public void deleteById(Long id){
         if(userInterestRepository.existsById(id) == false)
             throw new RuntimeException("UserInterest is not existed.");

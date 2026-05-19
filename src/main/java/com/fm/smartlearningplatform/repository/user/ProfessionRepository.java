@@ -17,6 +17,8 @@ public interface ProfessionRepository extends JpaRepository<Profession,Long> {
 
     boolean existsByName(String name);
 
+    boolean existsByIdNotAndName(Long id, String name);
+
     Optional<Profession> findByName(String name);
 
     List<Profession> findByDeletedAtIsNull();
