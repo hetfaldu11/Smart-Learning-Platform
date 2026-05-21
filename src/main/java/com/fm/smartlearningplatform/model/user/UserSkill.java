@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @ToString
 @Builder
+@EqualsAndHashCode(of = {"user", "skill"})
 public class UserSkill {
 
     @Id

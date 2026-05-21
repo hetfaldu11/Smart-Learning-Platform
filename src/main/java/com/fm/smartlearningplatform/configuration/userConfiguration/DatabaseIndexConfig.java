@@ -21,6 +21,11 @@ public class DatabaseIndexConfig {
                 ON users(email)
                 WHERE deleted_at IS NULL
             """);
+            jdbcTemplate.execute("""
+                CREATE UNIQUE INDEX IF NOT EXISTS uk_users_phone_email
+                ON users(phone)
+                WHERE deleted_at IS NULL
+            """);
             log.info("Partial index created successfully.");
         } catch (Exception e) {
             log.warn("Could not create partial index: {}", e.getMessage());

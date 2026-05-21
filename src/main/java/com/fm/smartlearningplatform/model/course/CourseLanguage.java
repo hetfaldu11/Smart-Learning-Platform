@@ -7,7 +7,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.Set;
 
 @Entity
 @Table(
@@ -32,14 +31,15 @@ public class CourseLanguage {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_id")
+    @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "language_id")
+    @JoinColumn(name = "language_id", nullable = false)
     private Language language;
 
     @Column(name = "is_primary")
+    @Builder.Default
     private boolean isPrimary = false;
 
     @CreationTimestamp
@@ -50,4 +50,3 @@ public class CourseLanguage {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 }
-

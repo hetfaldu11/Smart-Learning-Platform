@@ -13,7 +13,6 @@ import com.fm.smartlearningplatform.repository.user.UserRepository;
 import com.fm.smartlearningplatform.repository.user.UserSkillRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,19 +29,18 @@ public class UserSkillService {
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    public UserSkillResponse createUserSkill(CreateUserSkillRequest request){
+    public UserSkillResponse createUserSkill(CreateUserSkillRequest request) {
 
-        User user= userRepository.findByIdAndDeletedAtIsNull(request.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException("User not exists."));
+        if (userSkillRepository.existsByUserIdAndSkillId(request.getUserId(), request.getSkillId()))
+            throw new DuplicateResourceException("UserSkill already found.");
 
-        Skill skill= skillRepository.findByIdAndDeletedAtIsNull(request.getSkillId())
-                .orElseThrow(() -> new ResourceNotFoundException("Skill not exists."));
+        User user = userRepository.findByIdAndDeletedAtIsNull(request.getUserId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
 
-        if(userSkillRepository.existsByUserAndSkill(user,skill))
-            throw new DuplicateResourceException("UserSkill already exists.");
+        Skill skill = skillRepository.findByIdAndDeletedAtIsNull(request.getSkillId())
+                .orElseThrow(() -> new ResourceNotFoundException("Skill not found."));
 
-        UserSkill userSkill= user.addSkill(skill);
-
+        UserSkill userSkill = user.addSkill(skill);
         userRepository.save(user);
 
         return userSkillMapper.toResponse(userSkill);
@@ -53,7 +51,7 @@ public class UserSkillService {
     @Transactional(readOnly = true)
     public List<UserSkillResponse> findByUserId(Long id){
         if(!userRepository.existsByIdAndDeletedAtIsNull(id))
-            throw new ResourceNotFoundException("User not exists.");
+            throw new ResourceNotFoundException("User not found.");
 
         return userSkillRepository.findByUserId(id)
                 .stream()
@@ -64,7 +62,7 @@ public class UserSkillService {
     @Transactional(readOnly = true)
     public List<UserSkillResponse> findBySkillId(Long id){
         if(!skillRepository.existsByIdAndDeletedAtIsNull(id))
-            throw new ResourceNotFoundException("Skill not exists.");
+            throw new ResourceNotFoundException("Skill not found.");
 
         return userSkillRepository.findBySkillId(id)
                 .stream()
@@ -73,22 +71,17 @@ public class UserSkillService {
     }
 
     @Transactional(readOnly = true)
-    public boolean existsByUserIdAndSkillId(Long userId,Long skillId){
-        return userSkillRepository.existsByUserIdAndSkillId(userId,skillId);
-    }
-
-    @Transactional(readOnly = true)
     public UserSkillResponse findByUserIdAndSkillId(Long userId,Long skillId){
         if(!userRepository.existsByIdAndDeletedAtIsNull(userId)) {
-            throw new ResourceNotFoundException("User not exists.");
+            throw new ResourceNotFoundException("User not found.");
         }
 
         if(!skillRepository.existsByIdAndDeletedAtIsNull(skillId)) {
-            throw new ResourceNotFoundException("Skill not exists.");
+            throw new ResourceNotFoundException("Skill not found.");
         }
 
         return userSkillMapper.toResponse(userSkillRepository.findByUserIdAndSkillId(userId,skillId).
-                orElseThrow(() -> new ResourceNotFoundException("UserSkill not exists.")));
+                orElseThrow(() -> new ResourceNotFoundException("UserSkill not found.")));
     }
 
     // ─── Delete ────────────────────────────────────────────────

@@ -1,5 +1,4 @@
-package com.fm.smartlearningplatform.model.course;
-
+package com.fm.smartlearningplatform.model.lesson;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -7,23 +6,21 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-
 @Entity
-@Table(name = "course_levels")
+@Table(name = "caption_types")
 @Getter
 @Setter
-@NoArgsConstructor
-@RequiredArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class CourseLevel {
+public class CaptionType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
 
-    @Column(name="name",nullable = false,unique = true)
+    @Column(name="name",unique = true)
     private String name;
 
     @CreationTimestamp
@@ -34,6 +31,6 @@ public class CourseLevel {
     @Column(name= "updated_at")
     private LocalDateTime updatedAt;
 
-    @Column(name= "deleted_at")
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 }

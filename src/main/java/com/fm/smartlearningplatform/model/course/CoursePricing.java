@@ -5,7 +5,6 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -31,10 +30,11 @@ public class CoursePricing {
     private double price = 0.0;
 
     @Column(name = "discount_price")
-    private double discountPrice;
+    @Builder.Default
+    private double discountPrice = 0.0;
 
-    @Column(name="currency")
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "currency_id", nullable = false)
     private Currency currency;
 
     @CreationTimestamp

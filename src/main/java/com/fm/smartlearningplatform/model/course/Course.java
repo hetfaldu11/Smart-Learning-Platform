@@ -8,8 +8,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "courses")
@@ -29,20 +29,19 @@ public class Course {
     @JoinColumn(name = "instructor_id", nullable = false)
     private User instructor;
 
-    @Column(name = "title", nullable = false)
+    @Column(name = "title", nullable = false, unique = true)
     private String title;
 
-    @Column(name = "subtitle")
+    @Column(name = "subtitle", nullable = false)
     private String subtitle;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "courseLevel", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "course_level_id", nullable = false)
     private CourseLevel courseLevel;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "courseStatus", nullable = false)
-    @Builder.Default
-    private CourseStatus courseStatus = CourseStatus.DRAFT;
+    @ManyToOne
+    @JoinColumn(name = "course_status_id", nullable = false)
+    private CourseStatus courseStatus;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -57,45 +56,44 @@ public class Course {
 
     @OneToOne(
             mappedBy = "course",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true)
     private CourseDetail courseDetail;
 
     @OneToOne(
             mappedBy = "course",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true
     )
     private CourseMedia courseMedia;
 
     @OneToOne(
             mappedBy = "course",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true
     )
     private CourseSupport courseSupport;
 
     @OneToOne(
             mappedBy = "course",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true
     )
     private CoursePricing coursePricing;
 
     @OneToMany(
             mappedBy = "course",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     @Builder.Default
-    private Set<CourseMessage> courseMessages = new HashSet<>();
+    private List<CourseMessage> courseMessages = new ArrayList<>();
 
-    public void addMessage(MessageType messageType, String message){
+    public void addMessage(CourseMessageType courseMessageType, String message){
         CourseMessage courseMessage = CourseMessage.builder()
-                .messageType(messageType)
+                .courseMessageType(courseMessageType)
                 .message(message)
                 .build();
-
         this.courseMessages.add(courseMessage);
     }
 
@@ -105,11 +103,11 @@ public class Course {
 
     @OneToMany(
             mappedBy = "course",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     @Builder.Default
-    private Set<CourseRequirement> courseRequirements = new HashSet<>();
+    private List<CourseRequirement> courseRequirements = new ArrayList<>();
 
     public void addRequirement(String requirement){
         CourseRequirement courseRequirement = CourseRequirement.builder()
@@ -125,11 +123,11 @@ public class Course {
 
     @OneToMany(
             mappedBy = "course",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     @Builder.Default
-    private Set<CourseLearningOutcome> courseLearningOutcomes= new HashSet<>();
+    private List<CourseLearningOutcome> courseLearningOutcomes= new ArrayList<>();
 
     public void addLearningOutcome(String outcome){
         CourseLearningOutcome courseLearningOutcome = CourseLearningOutcome.builder()
@@ -145,11 +143,11 @@ public class Course {
 
     @OneToMany(
             mappedBy = "course",
-            cascade = CascadeType.ALL,
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     @Builder.Default
-    private Set<CourseLanguage> courseLanguages = new HashSet<>();
+    private List<CourseLanguage> courseLanguages = new ArrayList<>();
 
     public void addLanguage(Language language){
         CourseLanguage courseLanguage = CourseLanguage.builder()
@@ -162,23 +160,23 @@ public class Course {
         this.courseLanguages.add(courseLanguage);
     }
 
-//    @OneToMany(
-//            mappedBy = "course",
-//            cascade = CascadeType.ALL,
-//            orphanRemoval = true,
-//            fetch = FetchType.LAZY)
-//    @Builder.Default
-//    private Set<CourseAssistantInstructor> courseAssistantInstructors= new HashSet<>();
+    @OneToMany(
+            mappedBy = "course",
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<CourseAssistantInstructor> courseAssistantInstructors= new ArrayList<>();
 
-//    public void addAssistantInstructor(User user, InstructorRole instructorRole){
-//        CourseAssistantInstructor courseAssistantInstructor = CourseAssistantInstructor.builder()
-//                .role(instructorRole)
-//                .build();
-//
-//        this.courseAssistantInstructors.add(courseAssistantInstructor);
-//    }
-//
-//    public void addAssistantInstructor(CourseAssistantInstructor courseAssistantInstructor){
-//        this.courseAssistantInstructors.add(courseAssistantInstructor);
-//    }
+    public void addAssistantInstructor(User user, AssistantInstructorRole assistantInstructorRole){
+        CourseAssistantInstructor courseAssistantInstructor = CourseAssistantInstructor.builder()
+                .role(assistantInstructorRole)
+                .build();
+
+        this.courseAssistantInstructors.add(courseAssistantInstructor);
+    }
+
+    public void addAssistantInstructor(CourseAssistantInstructor courseAssistantInstructor){
+        this.courseAssistantInstructors.add(courseAssistantInstructor);
+    }
 }

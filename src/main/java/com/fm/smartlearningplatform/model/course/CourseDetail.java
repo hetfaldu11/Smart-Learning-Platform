@@ -29,19 +29,23 @@ public class CourseDetail {
     private String description;
 
     @Column(name = "certification_available")
+    @Builder.Default
     private boolean certificationAvailable = false;
 
     @Column(name = "has_assignments")
+    @Builder.Default
     private boolean hasAssignment = false;
 
     @Column(name = "has_project")
+    @Builder.Default
     private boolean hasProject = false;
 
     @Column(name = "has_quiz")
+    @Builder.Default
     private boolean hasQuiz = false;
 
     @CreationTimestamp
-    @Column(name = "created_at")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp

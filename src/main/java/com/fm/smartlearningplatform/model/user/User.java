@@ -5,10 +5,11 @@ import jakarta.validation.constraints.Email;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.hibernate.annotations.processing.Find;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -77,7 +78,7 @@ public class User {
             fetch = FetchType.LAZY
     )
     @Builder.Default
-    private Set<UserSocialLink> userSocialLinks = new HashSet<>();
+    private List<UserSocialLink> userSocialLinks = new ArrayList<>();
 
     public UserSocialLink addLink(Platform platform,String url){
 
@@ -123,14 +124,9 @@ public class User {
 
     @OneToMany(mappedBy = "user",cascade = {CascadeType.PERSIST,CascadeType.MERGE},fetch = FetchType.LAZY,orphanRemoval = true)
     @Builder.Default
-    private Set<UserSkill> userSkills = new HashSet<>();
+    private List<UserSkill> userSkills = new ArrayList<>();
 
     public UserSkill addSkill(Skill skill){
-        for(UserSkill userSkill : userSkills){
-            if(userSkill.getSkill().equals(skill))
-                throw new RuntimeException("Skill is already attached.");
-        }
-
         UserSkill userSkill = UserSkill.builder()
                                 .user(this)
                                 .skill(skill)
@@ -141,30 +137,13 @@ public class User {
         return userSkill;
     }
 
-    public void removeSkill(Skill skill) {
-
-        for(UserSkill userSkill : userSkills){
-            if(userSkill.getSkill().equals(skill)){
-                this.userSkills.removeIf(us -> us.getSkill().equals(skill));
-                return;
-            }
-        }
-
-        throw new RuntimeException("Skill is already detached.");
-    }
-
     // ─── User Interest ────────────────────────────────────────────────
 
     @OneToMany(mappedBy = "user",cascade = {CascadeType.PERSIST,CascadeType.MERGE},fetch = FetchType.LAZY,orphanRemoval = true)
     @Builder.Default
-    private Set<UserInterest> userInterests = new HashSet<>();
+    private List<UserInterest> userInterests = new ArrayList<>();
 
     public UserInterest addInterest(Interest interest){
-        for(UserInterest userInterest : userInterests){
-            if(userInterest.getInterest().equals(interest))
-                throw new RuntimeException("Interest is already attached.");
-        }
-
         UserInterest userInterest = UserInterest.builder()
                 .user(this)
                 .interest(interest)
@@ -175,30 +154,13 @@ public class User {
         return userInterest;
     }
 
-    public void removeInterest(Interest interest) {
-
-        for(UserInterest userInterest : userInterests){
-            if(userInterest.getInterest().equals(interest)){
-                this.userInterests.removeIf(us -> us.getInterest().equals(interest));
-                return;
-            }
-        }
-
-        throw new RuntimeException("Interest is already detached.");
-    }
-
     // ─── User Role ────────────────────────────────────────────────
 
     @OneToMany(mappedBy = "user",cascade = {CascadeType.PERSIST,CascadeType.MERGE},fetch = FetchType.LAZY,orphanRemoval = true)
     @Builder.Default
-    private Set<UserRole> userRoles = new HashSet<>();
+    private List<UserRole> userRoles = new ArrayList<>();
 
     public UserRole addRole(Role role){
-        for(UserRole userRole : userRoles){
-            if(userRole.getRole().equals(role))
-                throw new RuntimeException("Role is already attached.");
-        }
-
         UserRole userRole = UserRole.builder()
                 .user(this)
                 .role(role)
@@ -207,17 +169,5 @@ public class User {
         this.userRoles.add(userRole);
 
         return userRole;
-    }
-
-    public void removeRole(Role role) {
-
-        for(UserRole userRole : userRoles){
-            if(userRole.getRole().equals(role)){
-                this.userRoles.removeIf(us -> us.getRole().equals(role));
-                return;
-            }
-        }
-
-        throw new RuntimeException("Role is already detached.");
     }
 }

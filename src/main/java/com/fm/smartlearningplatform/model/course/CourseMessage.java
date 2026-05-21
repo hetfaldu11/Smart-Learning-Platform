@@ -12,8 +12,8 @@ import java.time.LocalDateTime;
         name = "course_messages",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "uk_course_message",
-                        columnNames = {"course_id", "message"}
+                        name = "uk_course_message_type",
+                        columnNames = {"course_id", "message_type"}
                 )
         })
 @Getter
@@ -30,8 +30,9 @@ public class CourseMessage {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(name= "messageType", nullable = false)
-    private MessageType messageType;
+    @ManyToOne
+    @JoinColumn(name= "message_type", nullable = false)
+    private CourseMessageType courseMessageType;
 
     @Column(name = "message", nullable = false,columnDefinition = "TEXT")
     private String message;
