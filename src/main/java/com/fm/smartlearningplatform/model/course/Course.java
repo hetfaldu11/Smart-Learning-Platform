@@ -112,14 +112,22 @@ public class Course {
     public void addRequirement(String requirement){
         CourseRequirement courseRequirement = CourseRequirement.builder()
                 .requirement(requirement)
+//                .course(this)
                 .build();
 
         this.courseRequirements.add(courseRequirement);
     }
 
     public void addRequirement(CourseRequirement courseRequirement){
+
+//        courseRequirement.setCourse(this);
         this.courseRequirements.add(courseRequirement);
     }
+
+//    public void removeRequirement(CourseRequirement requirement){
+//        requirement.setCourse(null);
+//        this.courseRequirements.remove(requirement);
+//    }
 
     @OneToMany(
             mappedBy = "course",
@@ -132,14 +140,17 @@ public class Course {
     public void addLearningOutcome(String outcome){
         CourseLearningOutcome courseLearningOutcome = CourseLearningOutcome.builder()
                 .outcome(outcome)
+                .course(this)
                 .build();
 
         this.courseLearningOutcomes.add(courseLearningOutcome);
     }
 
     public void addLearningOutcome(CourseLearningOutcome courseLearningOutcome){
+        courseLearningOutcome.setCourse(this);
         this.courseLearningOutcomes.add(courseLearningOutcome);
     }
+
 
     @OneToMany(
             mappedBy = "course",

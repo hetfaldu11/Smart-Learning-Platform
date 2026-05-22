@@ -33,7 +33,7 @@ public class CoursePricing {
     @Builder.Default
     private double discountPrice = 0.0;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "currency_id", nullable = false)
     private Currency currency;
 
