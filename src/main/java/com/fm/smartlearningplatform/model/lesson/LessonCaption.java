@@ -52,5 +52,4 @@ public class LessonCaption {
     @UpdateTimestamp
     @Column(name="updated_at")
     private LocalDateTime updatedAt;
-
 }

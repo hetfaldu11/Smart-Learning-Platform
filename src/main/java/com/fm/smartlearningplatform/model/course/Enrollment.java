@@ -1,6 +1,5 @@
 package com.fm.smartlearningplatform.model.course;
 
-import com.fm.smartlearningplatform.model.course.Course;
 import com.fm.smartlearningplatform.model.user.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(
-        name = "enrollments",
+        name = "enrollment",
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_user_course",
@@ -29,9 +28,6 @@ public class Enrollment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "completed_at")
-    private LocalDateTime completedAt;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -39,6 +35,9 @@ public class Enrollment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
+
+    @Column(name = "completed_at")
+    private LocalDateTime completedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "status_id", nullable = false)

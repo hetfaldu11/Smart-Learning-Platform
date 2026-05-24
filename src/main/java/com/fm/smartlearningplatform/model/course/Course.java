@@ -1,5 +1,6 @@
 package com.fm.smartlearningplatform.model.course;
 
+import com.fm.smartlearningplatform.model.lesson.Section;
 import com.fm.smartlearningplatform.model.user.Language;
 import com.fm.smartlearningplatform.model.user.User;
 import jakarta.persistence.*;
@@ -9,7 +10,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "courses")
@@ -112,7 +115,7 @@ public class Course {
     public void addRequirement(String requirement){
         CourseRequirement courseRequirement = CourseRequirement.builder()
                 .requirement(requirement)
-//                .course(this)
+                .course(this)
                 .build();
 
         this.courseRequirements.add(courseRequirement);
@@ -120,14 +123,10 @@ public class Course {
 
     public void addRequirement(CourseRequirement courseRequirement){
 
-//        courseRequirement.setCourse(this);
+        courseRequirement.setCourse(this);
         this.courseRequirements.add(courseRequirement);
     }
 
-//    public void removeRequirement(CourseRequirement requirement){
-//        requirement.setCourse(null);
-//        this.courseRequirements.remove(requirement);
-//    }
 
     @OneToMany(
             mappedBy = "course",
@@ -190,4 +189,17 @@ public class Course {
     public void addAssistantInstructor(CourseAssistantInstructor courseAssistantInstructor){
         this.courseAssistantInstructors.add(courseAssistantInstructor);
     }
+
+    @OneToMany(
+            mappedBy = "course",
+            cascade =  {CascadeType.PERSIST,CascadeType.MERGE},
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
+    private Set<Section>sections = new HashSet<>();
+
+    public void addSection(Section section) {
+        this.sections.add(section);
+        section.setCourse(this);
+    }
+
 }

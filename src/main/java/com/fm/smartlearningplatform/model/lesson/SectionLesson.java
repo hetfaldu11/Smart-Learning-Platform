@@ -2,6 +2,9 @@ package com.fm.smartlearningplatform.model.lesson;
 import com.fm.smartlearningplatform.model.lesson.Lesson;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(
@@ -42,4 +45,8 @@ public class SectionLesson {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
+
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 }

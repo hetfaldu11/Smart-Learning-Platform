@@ -87,7 +87,7 @@ public class Lesson {
         }
     }
 
-    // ─── lesson captionn ────────────────────────────────────────────────
+    // ─── lesson caption ────────────────────────────────────────────────
 
     @OneToMany(
             mappedBy = "lesson",
@@ -102,10 +102,7 @@ public class Lesson {
         caption.setLesson(this);
     }
 
-    public void removeCaption(LessonCaption caption) {
-        lessonCaptions.remove(caption);
-        caption.setLesson(null);
-    }
+
 
     // ─── lesson resourse ────────────────────────────────────────────────
 
@@ -121,10 +118,5 @@ public class Lesson {
 
         this.lessonResources.add(lessonResource);
         lessonResource.setLesson(this);
-    }
-    public void removeResource(LessonResource lessonResource)
-    {
-        this.lessonResources.remove(lessonResource);
-        lessonResource.setLesson(null);
     }
 }
