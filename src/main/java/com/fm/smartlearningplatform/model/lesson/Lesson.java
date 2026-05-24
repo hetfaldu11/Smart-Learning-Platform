@@ -61,6 +61,14 @@ public class Lesson {
             orphanRemoval = true)
     private LessonDetail lessonDetail;
 
+    public void setLessonDetail(LessonDetail detail) {
+        this.lessonDetail = detail;
+
+        if (detail != null) {
+            detail.setLesson(this);
+        }
+    }
+
     @OneToOne(
             mappedBy = "lesson",
             cascade = {CascadeType.PERSIST,CascadeType.MERGE},

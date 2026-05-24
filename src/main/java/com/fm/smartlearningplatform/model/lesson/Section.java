@@ -1,36 +1,40 @@
 package com.fm.smartlearningplatform.model.lesson;
-
+import com.fm.smartlearningplatform.model.course.Course;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
-@Table(name = "lesson_resource_types")
+@Table(name = "section")
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Builder
-public class LessonResourceType {
+public class Section {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="id")
     private Long id;
 
-    @Column(name="name")
-    private String name;
+    @Column(nullable = false)
+    private String title;
 
-    @OneToMany(mappedBy = "lesslessonResourceType")
-    private Set<LessonResource> lessonResources = new HashSet<>();
+    @Column(name = "section_order", nullable = false)
+    private Integer sectionOrder;
+
+    @Column(columnDefinition = "TEXT")
+    private String description;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
 
     @CreationTimestamp
-    @Column(name= "created_at")
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
