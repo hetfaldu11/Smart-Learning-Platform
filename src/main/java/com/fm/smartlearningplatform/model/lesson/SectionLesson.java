@@ -36,12 +36,10 @@ public class SectionLesson {
     private Boolean needRevision = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "section_id", nullable = false
-    )
+    @JoinColumn(name = "section_id", nullable = false)
     private Section section;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lesson_id", nullable = false
-    )
+    @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
 }

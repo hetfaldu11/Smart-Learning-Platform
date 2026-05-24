@@ -55,6 +55,8 @@ public class Lesson {
     @Column(name= "deleted_at")
     private LocalDateTime deletedAt;
 
+    // ─── lesson detail ────────────────────────────────────────────────
+
     @OneToOne(
             mappedBy = "lesson",
             cascade = {CascadeType.PERSIST,CascadeType.MERGE},
@@ -69,11 +71,23 @@ public class Lesson {
         }
     }
 
+    // ─── lesson media ────────────────────────────────────────────────
+
     @OneToOne(
             mappedBy = "lesson",
             cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true)
     private LessonMedia lessonMedia;
+
+    public void setLessonMedia(LessonMedia media) {
+        this.lessonMedia = media;
+
+        if (media != null) {
+            media.setLesson(this);
+        }
+    }
+
+    // ─── lesson captionn ────────────────────────────────────────────────
 
     @OneToMany(
             mappedBy = "lesson",
@@ -83,9 +97,17 @@ public class Lesson {
     @Builder.Default
     private List<LessonCaption> lessonCaptions = new ArrayList<>();
 
-    public void addCaption(LessonCaption lessonCaption){
-        this.lessonCaptions.add(lessonCaption);
+    public void addCaption(LessonCaption caption) {
+        lessonCaptions.add(caption);
+        caption.setLesson(this);
     }
+
+    public void removeCaption(LessonCaption caption) {
+        lessonCaptions.remove(caption);
+        caption.setLesson(null);
+    }
+
+    // ─── lesson resourse ────────────────────────────────────────────────
 
     @OneToMany(
             mappedBy = "lesson",
@@ -96,6 +118,13 @@ public class Lesson {
     private List<LessonResource> lessonResources = new ArrayList<>();
 
     public void addResource(LessonResource lessonResource){
+
         this.lessonResources.add(lessonResource);
+        lessonResource.setLesson(this);
+    }
+    public void removeResource(LessonResource lessonResource)
+    {
+        this.lessonResources.remove(lessonResource);
+        lessonResource.setLesson(null);
     }
 }

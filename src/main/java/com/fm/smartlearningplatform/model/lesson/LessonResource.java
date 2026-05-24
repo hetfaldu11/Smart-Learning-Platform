@@ -24,7 +24,7 @@ public class LessonResource{
     @JoinColumn(name = "lesson_id", nullable = false)
     private Lesson lesson;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "resource_type_id", nullable = false)
     private LessonResourceType lessonResourceType;
 

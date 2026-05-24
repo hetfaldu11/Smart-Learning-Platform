@@ -112,7 +112,8 @@ public class LanguageService {
                 .orElseThrow(() -> new ResourceNotFoundException("Language not exist."));
 
         language.setDeletedAt(LocalDateTime.now());
-
         languageRepository.save(language);
+        // need to check in caption used language then cannot delete that language
     }
+
 }

@@ -26,8 +26,6 @@ public class LessonResourceType {
     @Column(name="name")
     private String name;
 
-    @OneToMany(mappedBy = "lesslessonResourceType")
-    private Set<LessonResource> lessonResources = new HashSet<>();
 
     @CreationTimestamp
     @Column(name= "created_at")
