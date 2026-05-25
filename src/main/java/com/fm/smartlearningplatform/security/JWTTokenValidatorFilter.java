@@ -22,8 +22,8 @@ import java.nio.charset.StandardCharsets;
 public class JWTTokenValidatorFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String jwt = request.getHeader("Authorization");
-        if(null != jwt){
+        String jwt = request.getHeader(ApplicationConstants.JWT_HEADER);
+        if (null != jwt && !jwt.startsWith("Basic ")) {
             try{
                 SecretKey secretKey = Keys.hmacShaKeyFor(ApplicationConstants.SECRET_KEY.getBytes(StandardCharsets.UTF_8));
                 Claims claims = Jwts.parser().verifyWith(secretKey).build().parseSignedClaims(jwt).getPayload();
@@ -34,12 +34,17 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
             }catch (Exception e){
-                throw new BadCredentialsException("Invalid token received.");
+                throw new BadCredentialsException("Token is invalid.");
             }
         }
+        filterChain.doFilter(request,response);
     }
 
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return request.getServletPath().equals("/secure");
+        String path =  request.getServletPath();
+        return (path.equals("/login")
+                || path.startsWith("/oauth2")
+                || path.startsWith("/secure")
+        );
     }
 }

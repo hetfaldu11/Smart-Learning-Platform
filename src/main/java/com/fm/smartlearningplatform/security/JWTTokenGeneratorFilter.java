@@ -26,15 +26,15 @@ public class JWTTokenGeneratorFilter extends OncePerRequestFilter {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if(null != authentication){
             SecretKey secretKey = Keys.hmacShaKeyFor(ApplicationConstants.SECRET_KEY.getBytes(StandardCharsets.UTF_8));
-            String jwt = Jwts.builder().
-                    issuer("Smart Learning Platform")
+            String jwt = Jwts.builder()
+                    .issuer("Smart Learning Platform")
                     .subject("JWT Token")
                     .claim("email",authentication.getName())
                     .claim("authorities",authentication.getAuthorities()
                             .stream().map(GrantedAuthority::getAuthority)
                             .collect(Collectors.joining(",")))
                     .issuedAt(new Date())
-                    .expiration(new Date(new Date().getTime() + 3600))
+                    .expiration(new Date(new Date().getTime() + 3000000))
                     .signWith(secretKey)
                     .compact();
             response.setHeader(ApplicationConstants.JWT_HEADER,jwt);
@@ -42,8 +42,11 @@ public class JWTTokenGeneratorFilter extends OncePerRequestFilter {
         filterChain.doFilter(request,response);
     }
 
-    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return !request.getServletPath().equals("/secure");
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        String path = request.getServletPath();
+        return !(path.equals("/login")
+                || path.startsWith("/oauth2")
+                || path.startsWith("/secure")
+        );
     }
-
 }

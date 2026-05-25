@@ -1,5 +1,6 @@
 package com.fm.smartlearningplatform.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
@@ -15,24 +16,63 @@ import org.springframework.security.oauth2.client.registration.InMemoryClientReg
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
 @Configuration
+@RequiredArgsConstructor
 public class SecurityConfig {
+
+    private final JWTAuthenticationSuccessHandler successHandler;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
         return http
+
+                .csrf(csrf -> csrf.disable())
+
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/login").permitAll()
                         .anyRequest().authenticated()
                 )
-                .sessionManagement(smc -> smc
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class)
-//                .addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
-                .oauth2Login(Customizer.withDefaults())
-                .formLogin(Customizer.withDefaults())
+
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS
+                        )
+                )
+
+                .oauth2Login(olc -> olc
+                        .successHandler(successHandler))
+
+                .addFilterBefore(
+                        new JWTTokenValidatorFormFilter(),
+                        UsernamePasswordAuthenticationFilter.class
+                )
+
+                .addFilterBefore(
+                        new JWTTokenValidatorFilter(),
+                        BasicAuthenticationFilter.class
+                )
+
+                .addFilterAfter(
+                        new JWTTokenGeneratorFilter(),
+                        BasicAuthenticationFilter.class
+                )
+
+                .formLogin(form -> form
+                        .successHandler(successHandler)
+                )
+
                 .httpBasic(Customizer.withDefaults())
+
+                .logout(logout -> logout
+                        .deleteCookies("jwt","JSESSIONID")
+                        .invalidateHttpSession(true)
+                        .clearAuthentication(true)
+                )
+
                 .build();
     }
 
@@ -79,70 +119,3 @@ public class SecurityConfig {
                 .build();
     }
 }
-//
-//
-//import com.fm.smartlearningplatform.security.jwt.JwtAuthenticationFilter;
-//import lombok.RequiredArgsConstructor;
-//
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//
-//import org.springframework.security.authentication.AuthenticationManager;
-//import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-//
-//import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
-//
-//import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-//
-//import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-//
-//import org.springframework.security.config.http.SessionCreationPolicy;
-//
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//
-//import org.springframework.security.web.SecurityFilterChain;
-//
-//import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-//
-//@Configuration
-//@EnableWebSecurity
-//@EnableMethodSecurity
-//@RequiredArgsConstructor
-//public class SecurityConfig {
-//
-//    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-//
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//
-//    @Bean
-//    public AuthenticationManager
-//    authenticationManager(AuthenticationConfiguration config) throws Exception {
-//        return config.getAuthenticationManager();
-//    }
-//
-//    @Bean
-//    public SecurityFilterChain
-//    securityFilterChain(HttpSecurity http
-//    ) throws Exception {
-//        http
-//                .csrf(csrf -> csrf.disable())
-//                .sessionManagement(session ->
-//                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .authorizeHttpRequests(auth ->
-//                        auth.requestMatchers("/auth/**")
-//                                .permitAll()
-//                                .anyRequest()
-//                                .authenticated()
-//                )
-//                .addFilterBefore(jwtAuthenticationFilter,
-//                        UsernamePasswordAuthenticationFilter.class
-//                );
-//
-//        return http.build();
-//    }
-//}
