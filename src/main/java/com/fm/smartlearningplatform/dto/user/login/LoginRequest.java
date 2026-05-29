@@ -1,4 +1,4 @@
-package com.fm.smartlearningplatform.dto.request;
+package com.fm.smartlearningplatform.dto.user.login;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
