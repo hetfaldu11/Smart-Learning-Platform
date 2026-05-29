@@ -1,14 +1,15 @@
 package com.fm.smartlearningplatform.dto.user.skill.request;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.*;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class CreateSkillRequest {
-
-    @NotBlank(message = "Name is empty.")
-    private String name;
+public record CreateSkillRequest(
+        @NotBlank(message = "Skill name is required")
+        String name
+)
+{
+        public CreateSkillRequest {
+                if (name != null) {
+                        name = name.trim().toLowerCase();
+                }
+        }
 }

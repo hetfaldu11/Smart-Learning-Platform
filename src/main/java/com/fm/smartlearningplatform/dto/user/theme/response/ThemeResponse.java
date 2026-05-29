@@ -1,16 +1,9 @@
 package com.fm.smartlearningplatform.dto.user.theme.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public record ThemeResponse(
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ThemeResponse {
+        Long id,
+        String name
 
-    private Long id;
-    private String name;
+) {
 }

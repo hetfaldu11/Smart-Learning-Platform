@@ -1,13 +1,9 @@
 package com.fm.smartlearningplatform.dto.user.skill.response;
 
-import lombok.*;
+public record SkillResponse(
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class SkillResponse {
+        Long id,
+        String name
 
-    private Long id;
-    private String name;
+) {
 }

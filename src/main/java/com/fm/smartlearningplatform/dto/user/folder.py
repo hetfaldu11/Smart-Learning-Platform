@@ -1,61 +1,137 @@
-import os
+from pathlib import Path
 
-def create_java_file(path: str, filename: str, package: str, class_type: str):
-    file_path = os.path.join(path, filename)
-    class_name = filename.replace(".java", "")
+BASE_PATH = Path(
+    ""
+)
 
-    content = f"""package {package};
+entities = [
+    "Authority",
+    "EducationLevel",
+    "Gender",
+    "Interest",
+    "Language",
+    "Platform",
+    "Profession",
+    "Role",
+    "Skill",
+    "Theme"
+]
 
-public {class_type} {class_name} {{
+for entity in entities:
+    package_name = entity[0].lower() + entity[1:]
 
+    request_dir = BASE_PATH / package_name / "request"
+    response_dir = BASE_PATH / package_name / "response"
+
+    request_dir.mkdir(parents=True, exist_ok=True)
+    response_dir.mkdir(parents=True, exist_ok=True)
+
+    # Create Request
+    create_request = f"""package com.fm.smartlearningplatform.dto.user.{package_name}.request;
+
+import jakarta.validation.constraints.NotBlank;
+
+public record Create{entity}Request(
+
+        @NotBlank(message = "{entity} name is required")
+        String name
+
+) {{
 }}
 """
-    with open(file_path, "w") as f:
-        f.write(content)
-    print(f"   📄 {filename}")
 
-def capitalize_name(name: str) -> str:
-    return name.strip().capitalize()
+    # Update Request
+    update_request = f"""package com.fm.smartlearningplatform.dto.user.{package_name}.request;
 
-def create_dto_structure(base_path: str, base_package: str, folders: list[str]):
-    for folder in folders:
-        name = capitalize_name(folder)
+import jakarta.validation.constraints.NotBlank;
 
-        request_path = os.path.join(base_path, folder, "request")
-        response_path = os.path.join(base_path, folder, "response")
+public record Update{entity}Request(
 
-        os.makedirs(request_path, exist_ok=True)
-        os.makedirs(response_path, exist_ok=True)
+        @NotBlank(message = "{entity} name is required")
+        String name
 
-        request_package = f"{base_package}.{folder}.request"
-        response_package = f"{base_package}.{folder}.response"
+) {{
+}}
+"""
 
-        print(f"\n✅ {folder}/")
-        print(f"  request/")
-        create_java_file(request_path, f"Create{name}Request.java", request_package, "class")
-        create_java_file(request_path, f"Update{name}Request.java", request_package, "class")
-        print(f"  response/")
-        create_java_file(response_path, f"{name}Response.java", response_package, "class")
+    # Response
+    response = f"""package com.fm.smartlearningplatform.dto.user.{package_name}.response;
 
-def main():
-    base_path = input("Enter base path (e.g. src/main/java/com/fm/dto): ").strip()
-    base_package = input("Enter base package (e.g. com.fm.smartlearningplatform.dto): ").strip()
+public record {entity}Response(
 
-    print("\nEnter folder names one by one. Type 'done' when finished:")
-    folders = []
-    while True:
-        folder = input("Folder name: ").strip()
-        if folder.lower() == "done":
-            break
-        if folder:
-            folders.append(folder)
+        Long id,
+        String name
 
-    if not folders:
-        print("No folders entered.")
-        return
+) {{
+}}
+"""
 
-    create_dto_structure(base_path, base_package, folders)
-    print(f"\n🎉 Done! Created {len(folders)} folder(s) in '{base_path}'")
+    # Delete Response
+    delete_response = f"""package com.fm.smartlearningplatform.dto.user.{package_name}.response;
 
-if __name__ == "__main__":
-    main()
+public record Delete{entity}Response(
+
+        String message
+
+) {{
+}}
+"""
+
+    (request_dir / f"Create{entity}Request.java").write_text(create_request)
+    (request_dir / f"Update{entity}Request.java").write_text(update_request)
+
+    (response_dir / f"{entity}Response.java").write_text(response)
+    (response_dir / f"Delete{entity}Response.java").write_text(delete_response)
+
+print("DTO generation completed successfully.")
+
+other_entities = [
+    "User"
+    "UserDevice",
+    "UserInterest",
+    "UserPreference",
+    "UserProfile",
+    "UserRole",
+    "UserSkill",
+    "UserSocialLink",
+    "UserVerification",
+    "RoleAuthority"
+]
+
+for entity in other_entities:
+    package_name = entity[0].lower() + entity[1:]
+
+    request_dir = BASE_PATH / package_name / "request"
+    response_dir = BASE_PATH / package_name / "response"
+
+    request_dir.mkdir(parents=True, exist_ok=True)
+    response_dir.mkdir(parents=True, exist_ok=True)
+
+    create_request = f"""package com.fm.smartlearningplatform.dto.user.{package_name}.request;
+
+public record Create{entity}Request() {{
+}}
+"""
+
+    update_request = f"""package com.fm.smartlearningplatform.dto.user.{package_name}.request;
+
+public record Update{entity}Request() {{
+}}
+"""
+
+    response = f"""package com.fm.smartlearningplatform.dto.user.{package_name}.response;
+
+public record {entity}Response() {{
+}}
+"""
+
+    delete_response = f"""package com.fm.smartlearningplatform.dto.user.{package_name}.response;
+
+public record Delete{entity}Response() {{
+}}
+"""
+
+    (request_dir / f"Create{entity}Request.java").write_text(create_request)
+    (request_dir / f"Update{entity}Request.java").write_text(update_request)
+    (response_dir / f"{entity}Response.java").write_text(response)
+    (response_dir / f"Delete{entity}Response.java").write_text(delete_response)

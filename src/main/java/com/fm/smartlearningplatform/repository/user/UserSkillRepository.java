@@ -1,7 +1,5 @@
 package com.fm.smartlearningplatform.repository.user;
 
-import com.fm.smartlearningplatform.model.user.Skill;
-import com.fm.smartlearningplatform.model.user.User;
 import com.fm.smartlearningplatform.model.user.UserSkill;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface UserSkillRepository extends JpaRepository<UserSkill,Long> {
 
@@ -23,15 +22,17 @@ public interface UserSkillRepository extends JpaRepository<UserSkill,Long> {
 
     Optional<UserSkill> findByUserIdAndSkillId(Long userId, Long skillId);
 
-    boolean existsByUserAndSkill(User user, Skill skill);
-
-    Optional<UserSkill> findByUserAndSkill(User user, Skill skill);
-
+    @Query("""
+       SELECT us.skill.id
+       FROM UserSkill us
+       WHERE us.user.id = :userId
+       """)
+    Set<Long> findSkillIdsByUserId(@Param("userId") Long userId);
 
     // ─── Delete ────────────────────────────────────────────────
 
     // Hard delete all user_skills for a skill (used when skill is deleted)
     @Modifying
-    @Query("DELETE FROM UserSkill us WHERE us.skill.id = :skillId")
-    void deleteBySkillId(@Param("skillId") Long skillId);
+//    @Query("DELETE FROM UserSkill us WHERE us.skill.id = :skillId")
+     int deleteBySkillId( Long skillId);
 }

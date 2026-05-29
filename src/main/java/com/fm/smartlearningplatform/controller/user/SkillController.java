@@ -2,8 +2,8 @@ package com.fm.smartlearningplatform.controller.user;
 
 import com.fm.smartlearningplatform.dto.user.skill.request.CreateSkillRequest;
 import com.fm.smartlearningplatform.dto.user.skill.request.UpdateSkillRequest;
+import com.fm.smartlearningplatform.dto.user.skill.response.DeleteSkillResponse;
 import com.fm.smartlearningplatform.dto.user.skill.response.SkillResponse;
-import com.fm.smartlearningplatform.model.user.Skill;
 import com.fm.smartlearningplatform.service.user.SkillService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -22,27 +22,26 @@ public class SkillController {
 
     @PostMapping
     public ResponseEntity<SkillResponse> createSkill(@Valid @RequestBody CreateSkillRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(skillService.createSkill(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(skillService.create(request));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SkillResponse> getSkill(@PathVariable Long id) {
-        return ResponseEntity.ok(skillService.findByIdAndDeletedAtIsNull(id));
+    public ResponseEntity<SkillResponse> getSkillById(@PathVariable Long id) {
+        return ResponseEntity.ok(skillService.findById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<SkillResponse>> getAllSkills() {
-        return ResponseEntity.ok(skillService.findAllActive());
+    public ResponseEntity<List<SkillResponse>> getSkills(@RequestParam(value = "q",required = false) String keyword) {
+        return ResponseEntity.ok(skillService.searchByKeyword(keyword));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SkillResponse> updateSkill(@PathVariable Long id, @Valid @RequestBody UpdateSkillRequest request) {
-        return ResponseEntity.ok(skillService.updateSkill(id, request));
+    public ResponseEntity<SkillResponse> updateSkillById(@PathVariable Long id, @Valid @RequestBody UpdateSkillRequest request) {
+        return ResponseEntity.ok(skillService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteSkill(@PathVariable Long id) {
-        skillService.deleteById(id);
-        return ResponseEntity.noContent().build(); // 204
+    public ResponseEntity<DeleteSkillResponse> deleteSkillById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(skillService.deleteById(id));
     }
 }

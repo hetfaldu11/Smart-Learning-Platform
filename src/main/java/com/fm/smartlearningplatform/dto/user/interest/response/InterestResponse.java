@@ -1,16 +1,9 @@
 package com.fm.smartlearningplatform.dto.user.interest.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public record InterestResponse(
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class InterestResponse {
+        Long id,
+        String name
 
-    private Long id;
-    private String name;
+) {
 }

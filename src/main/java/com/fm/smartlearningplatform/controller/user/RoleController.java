@@ -3,7 +3,6 @@ package com.fm.smartlearningplatform.controller.user;
 import com.fm.smartlearningplatform.dto.user.role.request.CreateRoleRequest;
 import com.fm.smartlearningplatform.dto.user.role.request.UpdateRoleRequest;
 import com.fm.smartlearningplatform.dto.user.role.response.RoleResponse;
-import com.fm.smartlearningplatform.model.user.Role;
 import com.fm.smartlearningplatform.service.user.RoleService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,8 +40,8 @@ public class RoleController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteRole(@PathVariable Long id) {
+    public ResponseEntity<String> deleteRole(@PathVariable Long id) {
         roleService.deleteById(id);
-        return ResponseEntity.noContent().build(); // 204
+        return ResponseEntity.ok().body("Skill is deleted.");
     }
 }

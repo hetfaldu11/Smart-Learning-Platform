@@ -1,19 +1,9 @@
 package com.fm.smartlearningplatform.dto.user.language.response;
 
-import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public record LanguageResponse(
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class LanguageResponse {
+        Long id,
+        String name
 
-    private Long id;
-    private String name;
-    private String code;
-
+) {
 }

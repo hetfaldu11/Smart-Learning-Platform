@@ -2,8 +2,6 @@ package com.fm.smartlearningplatform.repository.user;
 
 import com.fm.smartlearningplatform.model.user.Skill;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,11 +17,11 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
 
     Optional<Skill> findByNameAndDeletedAtIsNull(String name);
 
-    boolean existsByName(String name);
-
     boolean existsByIdNotAndNameAndDeletedAtIsNull(Long id, String name);
 
-    Optional<Skill> findByName(String name);
+    List<Skill> findByDeletedAtIsNullOrderByNameAsc();
 
-    List<Skill> findByDeletedAtIsNull();
+    List<Skill> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword);
+
+    List<Skill> findByIdInAndDeletedAtIsNull(List<Long> ids);
 }

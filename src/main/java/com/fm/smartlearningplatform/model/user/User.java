@@ -8,9 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -38,7 +36,7 @@ public class User {
 
     @Column(name= "enabled", nullable = false)
     @Builder.Default
-    private int enabled = 1;
+    private boolean enabled = true;
 
     @Column(name = "last_login_at")
     private LocalDateTime lastLoginAt;

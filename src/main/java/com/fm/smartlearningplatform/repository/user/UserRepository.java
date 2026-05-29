@@ -1,14 +1,14 @@
 package com.fm.smartlearningplatform.repository.user;
 
 
+import com.fm.smartlearningplatform.model.user.Authority;
 import com.fm.smartlearningplatform.model.user.User;
-import com.fm.smartlearningplatform.model.user.UserProfile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface UserRepository extends JpaRepository<User,Long> {
 
@@ -67,4 +67,14 @@ public interface UserRepository extends JpaRepository<User,Long> {
             WHERE u.id = :id
             """)
     Optional<User> findFullUser(Long id);
+
+    @Query("""
+        SELECT DISTINCT a
+        FROM UserRole ur
+        JOIN ur.role r
+        JOIN RoleAuthority ra ON ra.role = r
+        JOIN ra.authority a
+        WHERE ur.user.id = :userId
+    """)
+    Set<Authority> findAuthoritiesByUserId(Long userId);
 }

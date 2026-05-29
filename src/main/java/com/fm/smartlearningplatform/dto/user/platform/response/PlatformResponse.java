@@ -1,16 +1,9 @@
 package com.fm.smartlearningplatform.dto.user.platform.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public record PlatformResponse(
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class PlatformResponse {
+        Long id,
+        String name
 
-    private Long id;
-    private String name;
+) {
 }

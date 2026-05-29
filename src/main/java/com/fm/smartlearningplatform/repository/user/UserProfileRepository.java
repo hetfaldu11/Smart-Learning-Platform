@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.Optional;
 
-public interface UserProfileRepository extends JpaRepository<UserProfile,Long> {
+public interface UserProfileRepository extends JpaRepository<UserProfile, Long> {
 
+    boolean existsById(Long id);
 }

@@ -1,16 +1,9 @@
 package com.fm.smartlearningplatform.dto.user.role.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public record RoleResponse(
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class RoleResponse {
+        Long id,
+        String name
 
-    private Long id;
-    private String name;
+) {
 }

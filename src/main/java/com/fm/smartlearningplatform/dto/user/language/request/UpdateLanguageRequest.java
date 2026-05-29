@@ -1,18 +1,11 @@
 package com.fm.smartlearningplatform.dto.user.language.request;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class UpdateLanguageRequest {
+public record UpdateLanguageRequest(
 
-    private String name;
+        @NotBlank(message = "Language name is required")
+        String name
 
-    private String code;
+) {
 }

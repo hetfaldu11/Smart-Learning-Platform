@@ -9,6 +9,10 @@ import java.time.LocalDateTime;
 @Entity
 @Table(
         name = "user_skills",
+        indexes = {
+                @Index(name = "idx_user_skill_user", columnList = "user_id"),
+                @Index(name = "idx_user_skill_skill", columnList = "skill_id")
+        },
         uniqueConstraints = {
                 @UniqueConstraint(
                         name = "uk_user_skill",
@@ -20,9 +24,7 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
-@EqualsAndHashCode(of = {"user", "skill"})
 public class UserSkill {
 
     @Id
@@ -30,12 +32,12 @@ public class UserSkill {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id",nullable = false)
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "skill_id")
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "skill_id",nullable = false)
     private Skill skill;
 
     @CreationTimestamp

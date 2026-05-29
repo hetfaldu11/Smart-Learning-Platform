@@ -1,16 +1,9 @@
 package com.fm.smartlearningplatform.dto.user.profession.response;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+public record ProfessionResponse(
 
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
-public class ProfessionResponse {
+        Long id,
+        String name
 
-    private Long id;
-    private String name;
+) {
 }
