@@ -2,124 +2,171 @@ package com.fm.smartlearningplatform.user.service;
 
 import com.fm.smartlearningplatform.exceptionhandler.exception.DuplicateResourceException;
 import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.user.dto.userInterest.request.CreateUserInterestRequest;
+import com.fm.smartlearningplatform.user.dto.userInterest.request.CreateUserInterestsRequest;
+import com.fm.smartlearningplatform.user.dto.userInterest.response.DeleteUserInterestResponse;
+import com.fm.smartlearningplatform.user.dto.userInterest.response.UserInterestResponse;
+import com.fm.smartlearningplatform.user.mapper.UserInterestMapper;
 import com.fm.smartlearningplatform.user.model.Interest;
 import com.fm.smartlearningplatform.user.model.User;
 import com.fm.smartlearningplatform.user.model.UserInterest;
 import com.fm.smartlearningplatform.user.repository.InterestRepository;
 import com.fm.smartlearningplatform.user.repository.UserInterestRepository;
 import com.fm.smartlearningplatform.user.repository.UserRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class UserInterestService {
 
     private final UserInterestRepository userInterestRepository;
     private final UserRepository userRepository;
     private final InterestRepository interestRepository;
-
-    @Autowired
-    public UserInterestService(UserInterestRepository userInterestRepository, UserRepository userRepository, InterestRepository interestRepository) {
-        this.userInterestRepository = userInterestRepository;
-        this.userRepository = userRepository;
-        this.interestRepository = interestRepository;
-    }
+    private final UserInterestMapper userInterestMapper;
 
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    public UserInterest createUserInterest(User user, Interest interest) {
-        if (!userRepository.existsByIdAndDeletedAtIsNull(user.getId()))
-            throw new ResourceNotFoundException("User not found.");
+    public UserInterestResponse create(Long userId, CreateUserInterestRequest request) {
+        User user = getUser(userId);
 
-        if (!interestRepository.existsByIdAndDeletedAtIsNull(interest.getId()))
-            throw new ResourceNotFoundException("Interest not found.");
+        Interest interest = getInterest(request.interestId());
 
-        if (userInterestRepository.existsByUserAndInterest(user, interest))
-            throw new DuplicateResourceException("UserInterest already exists.");
+        validateUserInterestNotExist(userId, request.interestId());
 
-        return userInterestRepository.save(UserInterest.builder()
+        UserInterest userInterest = UserInterest.builder()
                 .user(user)
                 .interest(interest)
-                .build());
+                .build();
+
+        return userInterestMapper.toResponse(userInterestRepository.save(userInterest));
     }
 
     @Transactional
-    public UserInterest addInterest(Long userId, Long interestId) {
+    public List<UserInterestResponse> create(Long userId, CreateUserInterestsRequest request) {
 
-        User user = userRepository.findByIdAndDeletedAtIsNull(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+        Set<Long> uniqueInterestIds = new HashSet<>(request.interestIds());
 
-        Interest interest = interestRepository.findByIdAndDeletedAtIsNull(interestId)
-                .orElseThrow(() -> new ResourceNotFoundException("Interest not found."));
+        if (uniqueInterestIds.size() != request.interestIds().size()) {
+            throw new DuplicateResourceException("Duplicate interest ids are not allowed.");
+        }
 
-        if (userInterestRepository.existsByUserAndInterest(user, interest))
-            throw new DuplicateResourceException("UserInterest already exists.");
+        User user = getUser(userId);
 
-        return userInterestRepository.save(UserInterest.builder()
-                .user(user)
-                .interest(interest)
-                .build());
+        List<Interest> interests = interestRepository.findByIdInAndDeletedAtIsNull(new ArrayList<>(uniqueInterestIds));
+
+        if (interests.size() != uniqueInterestIds.size()) {
+            throw new ResourceNotFoundException("Some interest ids do not exist.");
+        }
+
+        Set<Long> existingInterestIds = userInterestRepository.findInterestIdsByUserId(userId);
+
+        List<UserInterest> userInterests = new ArrayList<>(interests.size());
+
+        for (Interest interest : interests) {
+            if (existingInterestIds.contains(interest.getId())) {
+                throw new DuplicateResourceException(
+                        "UserInterest already exists."
+                );
+            }
+
+            UserInterest userInterest = UserInterest.builder()
+                    .user(user)
+                    .interest(interest)
+                    .build();
+
+            userInterests.add(userInterest);
+        }
+
+        return userInterestRepository.saveAll(userInterests)
+                .stream()
+                .map(userInterestMapper::toResponse)
+                .toList();
     }
+
 
     // ─── Find ────────────────────────────────────────────────
 
-    public List<UserInterest> findByUserId(Long id) {
-        if (!userRepository.existsByIdAndDeletedAtIsNull(id))
-            throw new ResourceNotFoundException("User not found.");
+    @Transactional(readOnly = true)
+    public List<UserInterestResponse> findByUserId(Long userId) {
+        validateUserExist(userId);
 
-        return userInterestRepository.findByUserId(id);
+        return userInterestRepository.findByUserId(userId)
+                .stream()
+                .map(userInterestMapper::toResponse)
+                .toList();
     }
 
-    public List<UserInterest> findByInterestId(Long id) {
-        if (!interestRepository.existsByIdAndDeletedAtIsNull(id))
-            throw new ResourceNotFoundException("Interest not found.");
+    @Transactional(readOnly = true)
+    public List<UserInterestResponse> findByInterestId(Long interestId) {
+        validateInterestExist(interestId);
 
-        return userInterestRepository.findByInterestId(id);
+        return userInterestRepository.findByInterestId(interestId)
+                .stream()
+                .map(userInterestMapper::toResponse)
+                .toList();
     }
 
-    public boolean existByUserIdAndInterestId(Long userId, Long interestId) {
-        return userInterestRepository.existsByUserIdAndInterestId(userId, interestId);
-    }
+    @Transactional(readOnly = true)
+    public UserInterestResponse findByUserIdAndInterestId(Long userId, Long interestId) {
+        validateUserExist(userId);
 
-    public UserInterest findByUserIdAndInterestId(Long userId, Long interestId) {
-        if (!userRepository.existsByIdAndDeletedAtIsNull(userId)) {
-            throw new ResourceNotFoundException("User not found.");
-        }
+        validateInterestExist(interestId);
 
-        if (!interestRepository.existsByIdAndDeletedAtIsNull(interestId)) {
-            throw new ResourceNotFoundException("Interest not found.");
-        }
-
-        return userInterestRepository.findByUserIdAndInterestId(userId, interestId)
-                .orElseThrow(() -> new ResourceNotFoundException("UserInterest not found."));
-    }
-
-    public boolean existByUserAndInterest(User user, Interest interest) {
-        return userInterestRepository.existsByUserAndInterest(user, interest);
-    }
-
-    public UserInterest findByUserAndInterest(User user, Interest interest) {
-        if (!userRepository.existsByIdAndDeletedAtIsNull(user.getId())) {
-            throw new ResourceNotFoundException("User not found.");
-        }
-
-        if (!interestRepository.existsByIdAndDeletedAtIsNull(interest.getId())) {
-            throw new ResourceNotFoundException("Interest not found.");
-        }
-        return userInterestRepository.findByUserAndInterest(user, interest)
-                .orElseThrow(() -> new ResourceNotFoundException("UserInterest not found."));
+        return userInterestMapper.toResponse(getUserInterest(userId, interestId));
     }
 
     // ─── Delete ────────────────────────────────────────────────
     @Transactional
-    public void deleteById(Long id) {
-        if (!userInterestRepository.existsById(id))
-            throw new ResourceNotFoundException("UserInterest not found.");
+    public DeleteUserInterestResponse deleteById(Long userId, Long interestId) {
+        validateUserInterestExist(userId,interestId);
+        UserInterest userInterest = getUserInterest(userId, interestId);
+        userInterestRepository.delete(userInterest);
+        return new DeleteUserInterestResponse("User interest association deleted successfully.");
+    }
+    // ─── Helper ────────────────────────────────────────────────
 
-        userInterestRepository.deleteById(id);
+    private void validateUserInterestNotExist(Long userId, Long interestId) {
+        if (userInterestRepository.existsByUserIdAndInterestId(userId, interestId))
+            throw new DuplicateResourceException("UserInterest already exists.");
+    }
+
+    private void validateUserInterestExist(Long userId, Long interestId) {
+        if (!userInterestRepository.existsByUserIdAndInterestId(userId, interestId))
+            throw new ResourceNotFoundException("UserInterest not found.");
+    }
+
+    private UserInterest getUserInterest(Long userId, Long interestId) {
+        return userInterestRepository.findByUserIdAndInterestId(userId, interestId)
+                .orElseThrow(() -> new ResourceNotFoundException("User interest not found."));
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findByIdAndDeletedAtIsNull(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found."));
+    }
+
+    private void validateUserExist(Long id) {
+        if (!userRepository.existsByIdAndDeletedAtIsNull(id)) {
+            throw new DuplicateResourceException("User not found.");
+        }
+    }
+
+    private Interest getInterest(Long id) {
+        return interestRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Interest not found."));
+    }
+
+    private void validateInterestExist(Long id) {
+        if (!interestRepository.existsByIdAndDeletedAtIsNull(id))
+            throw new DuplicateResourceException("Interest not found.");
     }
 }

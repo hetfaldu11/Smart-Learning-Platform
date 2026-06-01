@@ -2,6 +2,7 @@ package com.fm.smartlearningplatform.user.controller;
 
 import com.fm.smartlearningplatform.user.dto.theme.request.CreateThemeRequest;
 import com.fm.smartlearningplatform.user.dto.theme.request.UpdateThemeRequest;
+import com.fm.smartlearningplatform.user.dto.theme.response.DeleteThemeResponse;
 import com.fm.smartlearningplatform.user.dto.theme.response.ThemeResponse;
 import com.fm.smartlearningplatform.user.service.ThemeService;
 import jakarta.validation.Valid;
@@ -21,27 +22,26 @@ public class ThemeController {
 
     @PostMapping
     public ResponseEntity<ThemeResponse> createTheme(@Valid @RequestBody CreateThemeRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(themeService.createTheme(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(themeService.create(request));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ThemeResponse> getTheme(@PathVariable Long id) {
-        return ResponseEntity.ok(themeService.findByIdAndDeletedAtIsNull(id));
+    public ResponseEntity<ThemeResponse> getThemeById(@PathVariable Long id) {
+        return ResponseEntity.ok(themeService.findById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<ThemeResponse>> getAllThemes() {
-        return ResponseEntity.ok(themeService.findAllActive());
+    public ResponseEntity<List<ThemeResponse>> getThemes(@RequestParam(value = "q", required = false) String keyword) {
+        return ResponseEntity.ok(themeService.searchByKeyword(keyword));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ThemeResponse> updateTheme(@PathVariable Long id, @Valid @RequestBody UpdateThemeRequest request) {
-        return ResponseEntity.ok(themeService.updateTheme(id, request));
+    public ResponseEntity<ThemeResponse> updateThemeById(@PathVariable Long id, @Valid @RequestBody UpdateThemeRequest request) {
+        return ResponseEntity.ok(themeService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTheme(@PathVariable Long id) {
-        themeService.deleteById(id);
-        return ResponseEntity.noContent().build(); // 204
+    public ResponseEntity<DeleteThemeResponse> deleteThemeById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(themeService.deleteById(id));
     }
 }

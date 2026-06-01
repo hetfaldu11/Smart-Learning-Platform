@@ -1,4 +1,9 @@
 package com.fm.smartlearningplatform.user.dto.userRole.request;
 
-public record CreateUserRoleRequest() {
+import jakarta.validation.constraints.NotNull;
+
+public record CreateUserRoleRequest(
+        @NotNull(message = "Role id is required.")
+        Long roleId
+) {
 }

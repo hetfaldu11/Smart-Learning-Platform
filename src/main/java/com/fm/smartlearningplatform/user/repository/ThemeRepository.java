@@ -1,6 +1,5 @@
 package com.fm.smartlearningplatform.user.repository;
 
-
 import com.fm.smartlearningplatform.user.model.Theme;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -8,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ThemeRepository extends JpaRepository<Theme, Long> {
+
+    // ─── Find ────────────────────────────────────────────────
+
     boolean existsByIdAndDeletedAtIsNull(Long id);
 
     Optional<Theme> findByIdAndDeletedAtIsNull(Long id);
@@ -16,13 +18,11 @@ public interface ThemeRepository extends JpaRepository<Theme, Long> {
 
     Optional<Theme> findByNameAndDeletedAtIsNull(String name);
 
-    boolean existsByName(String name);
-
-    boolean existsByIdNotAndName(Long id, String name);
-
-    Optional<Theme> findByName(String name);
-
     boolean existsByIdNotAndNameAndDeletedAtIsNull(Long id, String name);
 
-    List<Theme> findByDeletedAtIsNull();
+    List<Theme> findByDeletedAtIsNullOrderByNameAsc();
+
+    List<Theme> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword);
+
+    List<Theme> findByIdInAndDeletedAtIsNull(List<Long> ids);
 }
