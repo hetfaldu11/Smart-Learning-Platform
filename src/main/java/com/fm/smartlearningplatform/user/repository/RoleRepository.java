@@ -18,13 +18,11 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
 
     Optional<Role> findByNameAndDeletedAtIsNull(String name);
 
-    boolean existsByName(String name);
-
-    boolean existsByIdNotAndName(Long id, String name);
-
-    Optional<Role> findByName(String name);
-
     boolean existsByIdNotAndNameAndDeletedAtIsNull(Long id, String name);
 
-    List<Role> findByDeletedAtIsNull();
+    List<Role> findByDeletedAtIsNullOrderByNameAsc();
+
+    List<Role> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword);
+
+    List<Role> findByIdInAndDeletedAtIsNull(List<Long> ids);
 }

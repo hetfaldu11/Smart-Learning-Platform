@@ -35,6 +35,6 @@ public interface UserSkillRepository extends JpaRepository<UserSkill, Long> {
 
     // Hard delete all user_skills for a skill (used when skill is deleted)
     @Modifying
-//    @Query("DELETE FROM UserSkill us WHERE us.skill.id = :skillId")
-    int deleteBySkillId(Long skillId);
+    @Query("DELETE FROM UserSkill us WHERE us.skill.id = :skillId")
+    void deleteBySkillId(Long skillId);
 }

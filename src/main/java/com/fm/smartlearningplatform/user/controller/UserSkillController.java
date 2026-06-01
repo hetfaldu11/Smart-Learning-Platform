@@ -2,6 +2,7 @@ package com.fm.smartlearningplatform.user.controller;
 
 import com.fm.smartlearningplatform.security.principal.UserPrincipal;
 import com.fm.smartlearningplatform.user.dto.userSkill.request.CreateUserSkillRequest;
+import com.fm.smartlearningplatform.user.dto.userSkill.response.DeleteUserSkillResponse;
 import com.fm.smartlearningplatform.user.dto.userSkill.response.UserSkillResponse;
 import com.fm.smartlearningplatform.user.service.UserSkillService;
 import jakarta.validation.Valid;
@@ -31,8 +32,7 @@ public class UserSkillController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteById(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long id) {
-        userSkillService.deleteById(principal.id(), id);
-        return ResponseEntity.ok().body("User skill deleted.");
+    public ResponseEntity<DeleteUserSkillResponse> deleteById(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long id) {
+        return ResponseEntity.ok().body( userSkillService.deleteById(principal.id(), id));
     }
 }

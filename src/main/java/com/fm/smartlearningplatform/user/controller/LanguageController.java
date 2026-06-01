@@ -2,6 +2,7 @@ package com.fm.smartlearningplatform.user.controller;
 
 import com.fm.smartlearningplatform.user.dto.language.request.CreateLanguageRequest;
 import com.fm.smartlearningplatform.user.dto.language.request.UpdateLanguageRequest;
+import com.fm.smartlearningplatform.user.dto.language.response.DeleteLanguageResponse;
 import com.fm.smartlearningplatform.user.dto.language.response.LanguageResponse;
 import com.fm.smartlearningplatform.user.service.LanguageService;
 import jakarta.validation.Valid;
@@ -21,27 +22,26 @@ public class LanguageController {
 
     @PostMapping
     public ResponseEntity<LanguageResponse> createLanguage(@Valid @RequestBody CreateLanguageRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(languageService.createLanguage(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(languageService.create(request));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LanguageResponse> getLanguage(@PathVariable Long id) {
-        return ResponseEntity.ok(languageService.findByIdAndDeletedAtIsNull(id));
+    public ResponseEntity<LanguageResponse> getLanguageById(@PathVariable Long id) {
+        return ResponseEntity.ok(languageService.findById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<LanguageResponse>> getAllLanguages() {
-        return ResponseEntity.ok(languageService.findAllActive());
+    public ResponseEntity<List<LanguageResponse>> getLanguages(@RequestParam(value = "q", required = false) String keyword) {
+        return ResponseEntity.ok(languageService.searchByKeyword(keyword));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<LanguageResponse> updateLanguage(@PathVariable Long id, @Valid @RequestBody UpdateLanguageRequest request) {
-        return ResponseEntity.ok(languageService.updateLanguage(id, request));
+    public ResponseEntity<LanguageResponse> updateLanguageById(@PathVariable Long id, @Valid @RequestBody UpdateLanguageRequest request) {
+        return ResponseEntity.ok(languageService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteLanguage(@PathVariable Long id) {
-        languageService.deleteById(id);
-        return ResponseEntity.noContent().build(); // 204
+    public ResponseEntity<DeleteLanguageResponse> deleteLanguageById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(languageService.deleteById(id));
     }
 }

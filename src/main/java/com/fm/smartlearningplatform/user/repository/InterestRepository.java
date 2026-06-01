@@ -18,13 +18,11 @@ public interface InterestRepository extends JpaRepository<Interest, Long> {
 
     Optional<Interest> findByNameAndDeletedAtIsNull(String name);
 
-    boolean existsByName(String name);
-
-    boolean existsByIdNotAndName(Long id, String name);
-
-    Optional<Interest> findByName(String name);
-
     boolean existsByIdNotAndNameAndDeletedAtIsNull(Long id, String name);
 
-    List<Interest> findByDeletedAtIsNull();
+    List<Interest> findByDeletedAtIsNullOrderByNameAsc();
+
+    List<Interest> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword);
+
+    List<Interest> findByIdInAndDeletedAtIsNull(List<Long> ids);
 }

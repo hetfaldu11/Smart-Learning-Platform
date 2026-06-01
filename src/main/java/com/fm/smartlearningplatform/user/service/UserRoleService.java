@@ -2,124 +2,171 @@ package com.fm.smartlearningplatform.user.service;
 
 import com.fm.smartlearningplatform.exceptionhandler.exception.DuplicateResourceException;
 import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.user.dto.userRole.request.CreateUserRoleRequest;
+import com.fm.smartlearningplatform.user.dto.userRole.request.CreateUserRolesRequest;
+import com.fm.smartlearningplatform.user.dto.userRole.response.DeleteUserRoleResponse;
+import com.fm.smartlearningplatform.user.dto.userRole.response.UserRoleResponse;
+import com.fm.smartlearningplatform.user.mapper.UserRoleMapper;
 import com.fm.smartlearningplatform.user.model.Role;
 import com.fm.smartlearningplatform.user.model.User;
 import com.fm.smartlearningplatform.user.model.UserRole;
 import com.fm.smartlearningplatform.user.repository.RoleRepository;
 import com.fm.smartlearningplatform.user.repository.UserRepository;
 import com.fm.smartlearningplatform.user.repository.UserRoleRepository;
-import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class UserRoleService {
 
     private final UserRoleRepository userRoleRepository;
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-
-    @Autowired
-    public UserRoleService(UserRoleRepository userRoleRepository, UserRepository userRepository, RoleRepository roleRepository) {
-        this.userRoleRepository = userRoleRepository;
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-    }
+    private final UserRoleMapper userRoleMapper;
 
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    public UserRole createUserRole(User user, Role role) {
-        if (!userRepository.existsByIdAndDeletedAtIsNull(user.getId()))
-            throw new ResourceNotFoundException("User not found.");
+    public UserRoleResponse create(Long userId, CreateUserRoleRequest request) {
+        User user = getUser(userId);
 
-        if (!roleRepository.existsByIdAndDeletedAtIsNull(role.getId()))
-            throw new ResourceNotFoundException("Role not found.");
+        Role role = getRole(request.roleId());
 
-        if (userRoleRepository.existsByUserAndRole(user, role))
-            throw new DuplicateResourceException("UserRole already exists.");
+        validateUserRoleNotExist(userId, request.roleId());
 
-        return userRoleRepository.save(UserRole.builder()
+        UserRole userRole = UserRole.builder()
                 .user(user)
                 .role(role)
-                .build());
+                .build();
+
+        return userRoleMapper.toResponse(userRoleRepository.save(userRole));
     }
 
     @Transactional
-    public UserRole addRole(Long userId, Long roleId) {
+    public List<UserRoleResponse> create(Long userId, CreateUserRolesRequest request) {
 
-        User user = userRepository.findByIdAndDeletedAtIsNull(userId)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
+        Set<Long> uniqueRoleIds = new HashSet<>(request.roleIds());
 
-        Role role = roleRepository.findByIdAndDeletedAtIsNull(roleId)
-                .orElseThrow(() -> new ResourceNotFoundException("Role not found."));
+        if (uniqueRoleIds.size() != request.roleIds().size()) {
+            throw new DuplicateResourceException("Duplicate role ids are not allowed.");
+        }
 
-        if (userRoleRepository.existsByUserAndRole(user, role))
-            throw new DuplicateResourceException("UserRole already exists.");
+        User user = getUser(userId);
 
-        return userRoleRepository.save(UserRole.builder()
-                .user(user)
-                .role(role)
-                .build());
+        List<Role> roles = roleRepository.findByIdInAndDeletedAtIsNull(new ArrayList<>(uniqueRoleIds));
+
+        if (roles.size() != uniqueRoleIds.size()) {
+            throw new ResourceNotFoundException("Some role ids do not exist.");
+        }
+
+        Set<Long> existingRoleIds = userRoleRepository.findRoleIdsByUserId(userId);
+
+        List<UserRole> userRoles = new ArrayList<>(roles.size());
+
+        for (Role role : roles) {
+            if (existingRoleIds.contains(role.getId())) {
+                throw new DuplicateResourceException(
+                        "UserRole already exists."
+                );
+            }
+
+            UserRole userRole = UserRole.builder()
+                    .user(user)
+                    .role(role)
+                    .build();
+
+            userRoles.add(userRole);
+        }
+
+        return userRoleRepository.saveAll(userRoles)
+                .stream()
+                .map(userRoleMapper::toResponse)
+                .toList();
     }
+
 
     // ─── Find ────────────────────────────────────────────────
 
-    public List<UserRole> findByUserId(Long id) {
-        if (!userRepository.existsByIdAndDeletedAtIsNull(id))
-            throw new ResourceNotFoundException("User not found.");
+    @Transactional(readOnly = true)
+    public List<UserRoleResponse> findByUserId(Long userId) {
+        validateUserExist(userId);
 
-        return userRoleRepository.findByUserId(id);
+        return userRoleRepository.findByUserId(userId)
+                .stream()
+                .map(userRoleMapper::toResponse)
+                .toList();
     }
 
-    public List<UserRole> findByRoleId(Long id) {
-        if (!roleRepository.existsByIdAndDeletedAtIsNull(id))
-            throw new ResourceNotFoundException("Role not found.");
+    @Transactional(readOnly = true)
+    public List<UserRoleResponse> findByRoleId(Long roleId) {
+        validateRoleExist(roleId);
 
-        return userRoleRepository.findByRoleId(id);
+        return userRoleRepository.findByRoleId(roleId)
+                .stream()
+                .map(userRoleMapper::toResponse)
+                .toList();
     }
 
-    public boolean existByUserIdAndRoleId(Long userId, Long roleId) {
-        return userRoleRepository.existsByUserIdAndRoleId(userId, roleId);
-    }
+    @Transactional(readOnly = true)
+    public UserRoleResponse findByUserIdAndRoleId(Long userId, Long roleId) {
+        validateUserExist(userId);
 
-    public UserRole findByUserIdAndRoleId(Long userId, Long roleId) {
-        if (!userRepository.existsByIdAndDeletedAtIsNull(userId)) {
-            throw new ResourceNotFoundException("User not found.");
-        }
+        validateRoleExist(roleId);
 
-        if (!roleRepository.existsByIdAndDeletedAtIsNull(roleId)) {
-            throw new ResourceNotFoundException("Role not found.");
-        }
-
-        return userRoleRepository.findByUserIdAndRoleId(userId, roleId)
-                .orElseThrow(() -> new ResourceNotFoundException("UserRole not found."));
-    }
-
-    public boolean existByUserAndRole(User user, Role role) {
-        return userRoleRepository.existsByUserAndRole(user, role);
-    }
-
-    public UserRole findByUserAndRole(User user, Role role) {
-        if (!userRepository.existsByIdAndDeletedAtIsNull(user.getId())) {
-            throw new ResourceNotFoundException("User not found.");
-        }
-
-        if (!roleRepository.existsByIdAndDeletedAtIsNull(role.getId())) {
-            throw new ResourceNotFoundException("Role not found.");
-        }
-        return userRoleRepository.findByUserAndRole(user, role)
-                .orElseThrow(() -> new ResourceNotFoundException("UserRole not found."));
+        return userRoleMapper.toResponse(getUserRole(userId, roleId));
     }
 
     // ─── Delete ────────────────────────────────────────────────
     @Transactional
-    public void deleteById(Long id) {
-        if (!userRoleRepository.existsById(id))
-            throw new ResourceNotFoundException("UserRole not found.");
+    public DeleteUserRoleResponse deleteById(Long userId, Long roleId) {
+        validateUserRoleExist(userId,roleId);
+        UserRole userRole = getUserRole(userId, roleId);
+        userRoleRepository.delete(userRole);
+        return new DeleteUserRoleResponse("User role association deleted successfully.");
+    }
+    // ─── Helper ────────────────────────────────────────────────
 
-        userRoleRepository.deleteById(id);
+    private void validateUserRoleNotExist(Long userId, Long roleId) {
+        if (userRoleRepository.existsByUserIdAndRoleId(userId, roleId))
+            throw new DuplicateResourceException("UserRole already exists.");
+    }
+
+    private void validateUserRoleExist(Long userId, Long roleId) {
+        if (!userRoleRepository.existsByUserIdAndRoleId(userId, roleId))
+            throw new ResourceNotFoundException("UserRole not found.");
+    }
+
+    private UserRole getUserRole(Long userId, Long roleId) {
+        return userRoleRepository.findByUserIdAndRoleId(userId, roleId)
+                .orElseThrow(() -> new ResourceNotFoundException("User role not found."));
+    }
+
+    private User getUser(Long userId) {
+        return userRepository.findByIdAndDeletedAtIsNull(userId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("User not found."));
+    }
+
+    private void validateUserExist(Long id) {
+        if (!userRepository.existsByIdAndDeletedAtIsNull(id)) {
+            throw new DuplicateResourceException("User not found.");
+        }
+    }
+
+    private Role getRole(Long id) {
+        return roleRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Role not found."));
+    }
+
+    private void validateRoleExist(Long id) {
+        if (!roleRepository.existsByIdAndDeletedAtIsNull(id))
+            throw new DuplicateResourceException("Role not found.");
     }
 }

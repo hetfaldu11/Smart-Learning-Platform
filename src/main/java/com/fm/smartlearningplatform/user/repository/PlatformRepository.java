@@ -18,13 +18,11 @@ public interface PlatformRepository extends JpaRepository<Platform, Long> {
 
     Optional<Platform> findByNameAndDeletedAtIsNull(String name);
 
-    boolean existsByName(String name);
-
-    boolean existsByIdNotAndName(Long id, String name);
-
-    Optional<Platform> findByName(String name);
-
     boolean existsByIdNotAndNameAndDeletedAtIsNull(Long id, String name);
 
-    List<Platform> findByDeletedAtIsNull();
+    List<Platform> findByDeletedAtIsNullOrderByNameAsc();
+
+    List<Platform> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword);
+
+    List<Platform> findByIdInAndDeletedAtIsNull(List<Long> ids);
 }

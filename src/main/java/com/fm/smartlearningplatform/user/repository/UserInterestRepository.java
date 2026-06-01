@@ -1,7 +1,5 @@
 package com.fm.smartlearningplatform.user.repository;
 
-import com.fm.smartlearningplatform.user.model.Interest;
-import com.fm.smartlearningplatform.user.model.User;
 import com.fm.smartlearningplatform.user.model.UserInterest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface UserInterestRepository extends JpaRepository<UserInterest, Long> {
 
@@ -23,15 +22,19 @@ public interface UserInterestRepository extends JpaRepository<UserInterest, Long
 
     Optional<UserInterest> findByUserIdAndInterestId(Long userId, Long interestId);
 
-    boolean existsByUserAndInterest(User user, Interest interest);
+    Optional<UserInterest> findByIdAndUserId(Long id, Long userId);
 
-    Optional<UserInterest> findByUserAndInterest(User user, Interest interest);
-
+    @Query("""
+            SELECT us.interest.id
+            FROM UserInterest us
+            WHERE us.user.id = :userId
+            """)
+    Set<Long> findInterestIdsByUserId(@Param("userId") Long userId);
 
     // ─── Delete ────────────────────────────────────────────────
 
     // Hard delete all user_interests for a interest (used when interest is deleted)
     @Modifying
     @Query("DELETE FROM UserInterest us WHERE us.interest.id = :interestId")
-    void deleteByInterestId(@Param("interestId") Long interestId);
+    void deleteByInterestId(Long interestId);
 }

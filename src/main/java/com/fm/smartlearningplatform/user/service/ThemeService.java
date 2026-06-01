@@ -4,6 +4,7 @@ import com.fm.smartlearningplatform.exceptionhandler.exception.DuplicateResource
 import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundException;
 import com.fm.smartlearningplatform.user.dto.theme.request.CreateThemeRequest;
 import com.fm.smartlearningplatform.user.dto.theme.request.UpdateThemeRequest;
+import com.fm.smartlearningplatform.user.dto.theme.response.DeleteThemeResponse;
 import com.fm.smartlearningplatform.user.dto.theme.response.ThemeResponse;
 import com.fm.smartlearningplatform.user.mapper.ThemeMapper;
 import com.fm.smartlearningplatform.user.model.Theme;
@@ -20,81 +21,84 @@ import java.util.List;
 public class ThemeService {
 
     private final ThemeRepository themeRepository;
-
     private final ThemeMapper themeMapper;
 
     // ─── Create ────────────────────────────────────────────────
 
     @Transactional
-    public ThemeResponse createTheme(CreateThemeRequest request) {
-        if (themeRepository.existsByNameAndDeletedAtIsNull(request.name()))
-            throw new DuplicateResourceException("Theme already exists.");
-
-        return themeMapper.toResponse(
-                themeRepository.save(
-                        themeMapper.toEntity(request)
-                )
-        );
+    public ThemeResponse create(CreateThemeRequest request) {
+        validateThemeNotExist(request.name());
+        return themeMapper.toResponse(themeRepository.save(themeMapper.toEntity(request)));
     }
 
     // ─── Update ────────────────────────────────────────────────
 
     @Transactional
-    public ThemeResponse updateTheme(Long id, UpdateThemeRequest request) {
-        Theme theme = themeRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Theme not found."));
+    public ThemeResponse update(Long id, UpdateThemeRequest request) {
+
+        Theme theme = getTheme(id);
 
         if (themeRepository.existsByIdNotAndNameAndDeletedAtIsNull(id, request.name()))
-            throw new DuplicateResourceException("Theme already exists.");
+            throw new DuplicateResourceException("Theme already exist.");
 
         themeMapper.updateThemeFromRequest(request, theme);
-
         return themeMapper.toResponse(themeRepository.save(theme));
     }
 
     // ─── Find ────────────────────────────────────────────────
 
     @Transactional(readOnly = true)
-    public boolean existsByIdAndDeletedAtIsNull(Long id) {
+    public boolean foundById(Long id) {
         return themeRepository.existsByIdAndDeletedAtIsNull(id);
     }
 
     @Transactional(readOnly = true)
-    public ThemeResponse findByIdAndDeletedAtIsNull(Long id) {
-        return themeMapper.toResponse(
-                themeRepository.findByIdAndDeletedAtIsNull(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("Theme not exists.")));
+    public ThemeResponse findById(Long id) {
+        return themeMapper.toResponse(getTheme(id));
     }
 
     @Transactional(readOnly = true)
-    public boolean existsByNameAndDeletedAtIsNull(String name) {
-        return themeRepository.existsByNameAndDeletedAtIsNull(name);
+    public List<ThemeResponse> searchByKeyword(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return findAll();
+        }
+
+        keyword = keyword.trim();
+        return themeRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword)
+                .stream()
+                .map(themeMapper::toResponse)
+                .toList();
     }
 
-    @Transactional(readOnly = true)
-    public ThemeResponse findByNameAndDeletedAtIsNull(String name) {
-        return themeMapper.toResponse(
-                themeRepository.findByNameAndDeletedAtIsNull(name)
-                        .orElseThrow(() -> new ResourceNotFoundException("Theme not exists."))
-        );
-    }
-
-    @Transactional(readOnly = true)
-    public List<ThemeResponse> findAllActive() {
-        return themeRepository.findByDeletedAtIsNull()
+    private List<ThemeResponse> findAll() {
+        return themeRepository.findByDeletedAtIsNullOrderByNameAsc()
                 .stream()
                 .map(themeMapper::toResponse)
                 .toList();
     }
 
     // ─── Delete ────────────────────────────────────────────────
+
     @Transactional
-    public void deleteById(Long id) {
-        Theme theme = themeRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Theme not exist."));
+    public DeleteThemeResponse deleteById(Long id) {
+        Theme theme = getTheme(id);
 
         theme.setDeletedAt(LocalDateTime.now());
 
         themeRepository.save(theme);
+
+        return new DeleteThemeResponse("Theme is deleted successfully.");
+    }
+
+    // ─── Helper ────────────────────────────────────────────────
+
+    private void validateThemeNotExist(String name) {
+        if (themeRepository.existsByNameAndDeletedAtIsNull(name))
+            throw new DuplicateResourceException("Theme already exist.");
+    }
+
+    private Theme getTheme(Long id) {
+        return themeRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Theme not found."));
     }
 }

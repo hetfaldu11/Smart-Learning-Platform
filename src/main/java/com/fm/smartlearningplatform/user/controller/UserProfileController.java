@@ -13,7 +13,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/users/profile")
+@RequestMapping("/api/v1/users/profiles")
 @RequiredArgsConstructor
 public class UserProfileController {
 

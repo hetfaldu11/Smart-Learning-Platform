@@ -2,6 +2,7 @@ package com.fm.smartlearningplatform.user.controller;
 
 import com.fm.smartlearningplatform.user.dto.interest.request.CreateInterestRequest;
 import com.fm.smartlearningplatform.user.dto.interest.request.UpdateInterestRequest;
+import com.fm.smartlearningplatform.user.dto.interest.response.DeleteInterestResponse;
 import com.fm.smartlearningplatform.user.dto.interest.response.InterestResponse;
 import com.fm.smartlearningplatform.user.service.InterestService;
 import jakarta.validation.Valid;
@@ -21,27 +22,26 @@ public class InterestController {
 
     @PostMapping
     public ResponseEntity<InterestResponse> createInterest(@Valid @RequestBody CreateInterestRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(interestService.createInterest(request));
+        return ResponseEntity.status(HttpStatus.CREATED).body(interestService.create(request));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<InterestResponse> getInterest(@PathVariable Long id) {
-        return ResponseEntity.ok(interestService.findByIdAndDeletedAtIsNull(id));
+    public ResponseEntity<InterestResponse> getInterestById(@PathVariable Long id) {
+        return ResponseEntity.ok(interestService.findById(id));
     }
 
     @GetMapping
-    public ResponseEntity<List<InterestResponse>> getAllInterests() {
-        return ResponseEntity.ok(interestService.findAllActive());
+    public ResponseEntity<List<InterestResponse>> getInterests(@RequestParam(value = "q", required = false) String keyword) {
+        return ResponseEntity.ok(interestService.searchByKeyword(keyword));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<InterestResponse> updateInterest(@PathVariable Long id, @Valid @RequestBody UpdateInterestRequest request) {
-        return ResponseEntity.ok(interestService.updateInterest(id, request));
+    public ResponseEntity<InterestResponse> updateInterestById(@PathVariable Long id, @Valid @RequestBody UpdateInterestRequest request) {
+        return ResponseEntity.ok(interestService.update(id, request));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteInterest(@PathVariable Long id) {
-        interestService.deleteById(id);
-        return ResponseEntity.noContent().build(); // 204
+    public ResponseEntity<DeleteInterestResponse> deleteInterestById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(interestService.deleteById(id));
     }
 }

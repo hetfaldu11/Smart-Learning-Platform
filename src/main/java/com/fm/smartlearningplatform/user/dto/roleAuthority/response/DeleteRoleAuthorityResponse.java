@@ -1,4 +1,6 @@
 package com.fm.smartlearningplatform.user.dto.roleAuthority.response;
 
-public record DeleteRoleAuthorityResponse() {
+public record DeleteRoleAuthorityResponse(
+        String message
+) {
 }

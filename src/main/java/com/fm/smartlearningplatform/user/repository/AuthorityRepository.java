@@ -18,13 +18,11 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long> {
 
     Optional<Authority> findByNameAndDeletedAtIsNull(String name);
 
-    boolean existsByName(String name);
-
-    boolean existsByIdNotAndName(Long id, String name);
-
-    Optional<Authority> findByName(String name);
-
     boolean existsByIdNotAndNameAndDeletedAtIsNull(Long id, String name);
 
-    List<Authority> findByDeletedAtIsNull();
+    List<Authority> findByDeletedAtIsNullOrderByNameAsc();
+
+    List<Authority> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword);
+
+    List<Authority> findByIdInAndDeletedAtIsNull(List<Long> ids);
 }
