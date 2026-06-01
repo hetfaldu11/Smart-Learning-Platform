@@ -27,7 +27,7 @@ public class PhoneVerificationController {
     public ResponseEntity<String> requestPhoneVerification(@AuthenticationPrincipal UserPrincipal principal, @RequestBody CreatePhoneRequest request) {
         Long userId = principal.id();
         phoneVerificationService.validatePhoneNumberNotVerified(userId);
-        otpService.sendPhoneVerificationOtp(userId, request.expiryMinute());
+        otpService.sendPhoneVerificationOtp(userId, request.expirySeconds(),request.resendOtpSeconds());
         return ResponseEntity.ok().body("Otp sent successfully.");
     }
 

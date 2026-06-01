@@ -8,4 +8,9 @@ public record UpdatePlatformRequest(
         String name
 
 ) {
+        public  UpdatePlatformRequest{
+                if (name != null) {
+                        name = name.trim().replaceAll("\\s+", " ").toLowerCase();
+                }
+        }
 }

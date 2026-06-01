@@ -8,4 +8,9 @@ public record UpdateRoleRequest(
         String name
 
 ) {
+        public  UpdateRoleRequest{
+                if (name != null) {
+                        name = name.trim().replaceAll("\\s+", " ").toLowerCase();
+                }
+        }
 }

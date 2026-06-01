@@ -4,7 +4,6 @@ import com.fm.smartlearningplatform.otp.dto.request.CreateEmailRequest;
 import com.fm.smartlearningplatform.otp.dto.request.VerifyEmailRequest;
 import com.fm.smartlearningplatform.otp.service.OtpService;
 import com.fm.smartlearningplatform.security.principal.UserPrincipal;
-import com.fm.smartlearningplatform.verification.dto.response.UserVerificationResponse;
 import com.fm.smartlearningplatform.verification.service.EmailVerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +25,7 @@ public class EmailVerificationController {
     public ResponseEntity<String> requestEmailVerification(@AuthenticationPrincipal UserPrincipal principal, @RequestBody CreateEmailRequest request) {
         Long userId = principal.id();
         emailVerificationService.validateEmailNotVerified(userId);
-        otpService.sendEmailVerificationOtp(userId, request.expiryMinute());
+        otpService.sendEmailVerificationOtp(userId, request.expirySeconds(), request.resendOtpSeconds());
         return ResponseEntity.ok().body("Otp sent successfully.");
     }
 

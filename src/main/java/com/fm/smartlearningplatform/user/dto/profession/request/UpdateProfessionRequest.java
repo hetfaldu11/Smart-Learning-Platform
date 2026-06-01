@@ -8,4 +8,9 @@ public record UpdateProfessionRequest(
         String name
 
 ) {
+        public  UpdateProfessionRequest{
+                if (name != null) {
+                        name = name.trim().replaceAll("\\s+", " ").toLowerCase();
+                }
+        }
 }

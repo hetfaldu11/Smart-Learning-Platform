@@ -45,7 +45,7 @@ public class PhoneVerificationService {
     public UserVerificationResponse unverifyPhone(Long userId) {
         UserVerification verification = getVerification(userId);
         if (!verification.isPhoneVerified()) {
-            throw new IllegalStateException("Phone is already unverified.");
+            throw new DuplicateResourceException("Phone is already unverified.");
         }
         verification.setPhoneVerified(false);
         verification.setPhoneVerifiedAt(null);
