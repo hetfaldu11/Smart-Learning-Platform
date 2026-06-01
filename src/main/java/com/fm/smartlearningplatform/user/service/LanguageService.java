@@ -1,0 +1,113 @@
+package com.fm.smartlearningplatform.user.service;
+
+import com.fm.smartlearningplatform.exceptionhandler.exception.DuplicateResourceException;
+import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.user.dto.language.request.CreateLanguageRequest;
+import com.fm.smartlearningplatform.user.dto.language.request.UpdateLanguageRequest;
+import com.fm.smartlearningplatform.user.dto.language.response.DeleteLanguageResponse;
+import com.fm.smartlearningplatform.user.dto.language.response.LanguageResponse;
+import com.fm.smartlearningplatform.user.mapper.LanguageMapper;
+import com.fm.smartlearningplatform.user.model.Language;
+import com.fm.smartlearningplatform.user.repository.LanguageRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+@Service
+@RequiredArgsConstructor
+public class LanguageService {
+
+    private final LanguageRepository languageRepository;
+    private final LanguageMapper languageMapper;
+
+    // ─── Create ────────────────────────────────────────────────
+
+    @Transactional
+    public LanguageResponse create(CreateLanguageRequest request) {
+        validateLanguageNotExist(request.name());
+        validateCodeNotExist(request.code());
+        return languageMapper.toResponse(languageRepository.save(languageMapper.toEntity(request)));
+    }
+
+    // ─── Update ────────────────────────────────────────────────
+
+    @Transactional
+    public LanguageResponse update(Long id, UpdateLanguageRequest request) {
+
+        Language language = getLanguage(id);
+
+        if (languageRepository.existsByIdNotAndNameAndDeletedAtIsNull(id, request.name()))
+            throw new DuplicateResourceException("Language already exist.");
+
+        if (languageRepository.existsByIdNotAndCodeAndDeletedAtIsNull(id, request.code()))
+            throw new DuplicateResourceException("Code already exist.");
+
+        languageMapper.updateLanguageFromRequest(request, language);
+        return languageMapper.toResponse(languageRepository.save(language));
+    }
+
+    // ─── Find ────────────────────────────────────────────────
+
+    @Transactional(readOnly = true)
+    public boolean foundById(Long id) {
+        return languageRepository.existsByIdAndDeletedAtIsNull(id);
+    }
+
+    @Transactional(readOnly = true)
+    public LanguageResponse findById(Long id) {
+        return languageMapper.toResponse(getLanguage(id));
+    }
+
+    @Transactional(readOnly = true)
+    public List<LanguageResponse> searchByKeyword(String keyword) {
+        if (keyword == null || keyword.isBlank()) {
+            return findAll();
+        }
+
+        keyword = keyword.trim().replaceAll("\\s+", " ").toLowerCase();
+        return languageRepository.search(keyword)
+                .stream()
+                .map(languageMapper::toResponse)
+                .toList();
+    }
+
+    private List<LanguageResponse> findAll() {
+        return languageRepository.findByDeletedAtIsNullOrderByNameAsc()
+                .stream()
+                .map(languageMapper::toResponse)
+                .toList();
+    }
+
+    // ─── Delete ────────────────────────────────────────────────
+
+    @Transactional
+    public DeleteLanguageResponse deleteById(Long id) {
+        Language language = getLanguage(id);
+
+        language.setDeletedAt(LocalDateTime.now());
+
+        languageRepository.save(language);
+
+        return new DeleteLanguageResponse("Language is deleted successfully.");
+    }
+
+    // ─── Helper ────────────────────────────────────────────────
+
+    private void validateLanguageNotExist(String name) {
+        if (languageRepository.existsByNameAndDeletedAtIsNull(name))
+            throw new DuplicateResourceException("Language already exist.");
+    }
+
+    private void validateCodeNotExist(String code) {
+        if (languageRepository.existsByCodeAndDeletedAtIsNull(code))
+            throw new DuplicateResourceException("Code already exist.");
+    }
+
+    private Language getLanguage(Long id) {
+        return languageRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Language not found."));
+    }
+}

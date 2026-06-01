@@ -1,8 +1,8 @@
 package com.fm.smartlearningplatform.security.authenticationprovider;
 
-import com.fm.smartlearningplatform.model.user.User;
-import com.fm.smartlearningplatform.repository.user.UserRepository;
 import com.fm.smartlearningplatform.security.principal.UserPrincipal;
+import com.fm.smartlearningplatform.user.model.User;
+import com.fm.smartlearningplatform.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -41,8 +41,8 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
                 .collect(Collectors.toUnmodifiableList());
 
 
-        if(passwordEncoder.matches(pwd,user.getPasswordHash())){
-            return new UsernamePasswordAuthenticationToken(new UserPrincipal(user.getId(),email),null,
+        if (passwordEncoder.matches(pwd, user.getPasswordHash())) {
+            return new UsernamePasswordAuthenticationToken(new UserPrincipal(user.getId(), email), null,
                     authorities);
         }
 

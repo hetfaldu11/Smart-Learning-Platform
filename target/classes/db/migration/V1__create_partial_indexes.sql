@@ -1,0 +1,11 @@
+CREATE UNIQUE INDEX IF NOT EXISTS uk_users_active_email
+    ON users(email)
+    WHERE deleted_at IS NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_users_active_phone
+    ON users(phone_number)
+    WHERE deleted_at IS NULL;
+
+CREATE UNIQUE INDEX IF NOT EXISTS uk_user_platform_active
+    ON user_social_links(user_id, platform_id)
+    WHERE deleted_at IS NULL;
