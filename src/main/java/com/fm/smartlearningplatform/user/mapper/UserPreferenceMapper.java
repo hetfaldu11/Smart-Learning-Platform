@@ -12,7 +12,7 @@ import org.mapstruct.*;
 @Mapper(componentModel = "spring")
 public interface UserPreferenceMapper {
 
-    @Mapping(target = "id", source = "user.id")
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", source = "user")
     @Mapping(target = "language", source = "language")
     @Mapping(target = "theme", source = "theme")

@@ -30,7 +30,7 @@ public class RoleAuthorityController {
         return ResponseEntity.ok(roleAuthorityService.findByRoleId(id));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping()
     public ResponseEntity<DeleteRoleAuthorityResponse> deleteById(@Valid @RequestBody DeleteRoleAuthorityRequest request) {
         return ResponseEntity.ok().body(roleAuthorityService.deleteById(request));
     }

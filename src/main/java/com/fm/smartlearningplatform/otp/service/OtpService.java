@@ -2,6 +2,7 @@ package com.fm.smartlearningplatform.otp.service;
 
 import com.fm.smartlearningplatform.exceptionhandler.exception.InvalidOtpException;
 import com.fm.smartlearningplatform.exceptionhandler.exception.OtpExpiryException;
+import com.fm.smartlearningplatform.exceptionhandler.exception.OtpWaitException;
 import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundException;
 import com.fm.smartlearningplatform.otp.model.OtpType;
 import com.fm.smartlearningplatform.otp.model.UserOtp;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 @Service
@@ -30,9 +32,12 @@ public class OtpService {
     private final EmailService emailService;
 
     @Transactional
-    public void sendEmailVerificationOtp(Long userId, int expiryMinute) {
+
+    public void sendEmailVerificationOtp(Long userId, int expirySeconds, int resendOtpSeconds) {
 
         User user = getUser(userId);
+
+        validateLastEmailOtp(userId, expirySeconds,resendOtpSeconds);
 
         String otp = OtpGenerator.generate();
 
@@ -40,7 +45,7 @@ public class OtpService {
                 .user(user)
                 .type(OtpType.EMAIL_VERIFICATION)
                 .otpHash(passwordEncoder.encode(otp))
-                .expiresAt(LocalDateTime.now().plusMinutes(expiryMinute))
+                .expiresAt(LocalDateTime.now().plusSeconds(expirySeconds))
                 .build();
 
         userOtpRepository.save(userOtp);
@@ -65,8 +70,10 @@ public class OtpService {
     }
 
     @Transactional
-    public void sendPhoneVerificationOtp(Long userId, int expiryMinute) {
+    public void sendPhoneVerificationOtp(Long userId, int expirySeconds, int resendOtpSeconds) {
         User user = getUser(userId);
+
+        validateLastPhoneOtp(userId,expirySeconds, resendOtpSeconds);
 
         String otp = OtpGenerator.generate();
 
@@ -74,7 +81,7 @@ public class OtpService {
                 .user(user)
                 .type(OtpType.PHONE_VERIFICATION)
                 .otpHash(passwordEncoder.encode(otp))
-                .expiresAt(LocalDateTime.now().plusMinutes(expiryMinute))
+                .expiresAt(LocalDateTime.now().plusSeconds(expirySeconds))
                 .build();
 
         userOtpRepository.save(userOtp);
@@ -105,6 +112,52 @@ public class OtpService {
         }
         if (!passwordEncoder.matches(otp, userOtp.getOtpHash())) {
             throw new InvalidOtpException("Otp is invalid.");
+        }
+    }
+
+    private void validateLastEmailOtp(Long id, int expirySeconds, int resendOtpSeconds){
+        UserOtp userOtp = userOtpRepository.findTopByUserIdAndTypeAndUsedFalseOrderByIdDesc(id, OtpType.EMAIL_VERIFICATION)
+                .orElse(null);
+
+        if(userOtp == null) return;
+
+        LocalDateTime resendAllowedAt =
+                userOtp.getExpiresAt()
+                        .minusSeconds(expirySeconds)
+                        .plusSeconds(resendOtpSeconds);
+
+        if (LocalDateTime.now().isBefore(resendAllowedAt)) {
+            long waitSeconds = Duration.between(
+                    LocalDateTime.now(),
+                    resendAllowedAt
+            ).toSeconds();
+
+            throw new OtpWaitException(
+                    "Wait for " + waitSeconds + " seconds."
+            );
+        }
+    }
+
+    private void validateLastPhoneOtp(Long id, int expirySeconds, int resendOtpSeconds){
+        UserOtp userOtp = userOtpRepository.findTopByUserIdAndTypeAndUsedFalseOrderByIdDesc(id, OtpType.PHONE_VERIFICATION)
+                .orElse(null);
+
+        if(userOtp == null) return;
+
+        LocalDateTime resendAllowedAt =
+                userOtp.getExpiresAt()
+                        .minusSeconds(expirySeconds)
+                        .plusSeconds(resendOtpSeconds);
+
+        if (LocalDateTime.now().isBefore(resendAllowedAt)) {
+            long waitSeconds = Duration.between(
+                    LocalDateTime.now(),
+                    resendAllowedAt
+            ).toSeconds();
+
+            throw new OtpWaitException(
+                    "Wait for " + waitSeconds + " seconds."
+            );
         }
     }
 

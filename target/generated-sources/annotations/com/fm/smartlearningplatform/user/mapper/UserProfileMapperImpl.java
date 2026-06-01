@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-06-01T00:13:48+0530",
+    date = "2026-06-01T17:45:10+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 26.0.1 (Oracle Corporation)"
 )
 @Component
@@ -83,10 +83,7 @@ public class UserProfileMapperImpl implements UserProfileMapper {
             userProfile.instituteName( request.instituteName() );
             userProfile.profilePictureUrl( request.profilePictureUrl() );
         }
-        if ( user != null ) {
-            userProfile.id( user.getId() );
-            userProfile.user( user );
-        }
+        userProfile.user( user );
         userProfile.educationLevel( educationLevel );
         userProfile.profession( profession );
         userProfile.gender( gender );

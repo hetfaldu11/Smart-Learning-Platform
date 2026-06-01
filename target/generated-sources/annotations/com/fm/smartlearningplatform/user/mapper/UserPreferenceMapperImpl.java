@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2026-06-01T00:13:48+0530",
+    date = "2026-06-01T17:41:30+0530",
     comments = "version: 1.6.3, compiler: javac, environment: Java 26.0.1 (Oracle Corporation)"
 )
 @Component
@@ -31,10 +31,7 @@ public class UserPreferenceMapperImpl implements UserPreferenceMapper {
                 userPreference.notificationEnabled( request.notificationEnabled() );
             }
         }
-        if ( user != null ) {
-            userPreference.id( user.getId() );
-            userPreference.user( user );
-        }
+        userPreference.user( user );
         userPreference.language( language );
         userPreference.theme( theme );
 

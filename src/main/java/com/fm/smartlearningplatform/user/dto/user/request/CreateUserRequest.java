@@ -23,8 +23,5 @@ public record CreateUserRequest(
                 if(email != null){
                         email = email.trim().toLowerCase();
                 }
-                if(password != null){
-                        password = password.toLowerCase();
-                }
         }
 }
