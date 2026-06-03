@@ -16,4 +16,5 @@ public interface UserOtpRepository
             Long userId,
             OtpType type
     );
+
 }

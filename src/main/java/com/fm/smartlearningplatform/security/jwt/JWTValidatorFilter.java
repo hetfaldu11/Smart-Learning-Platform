@@ -1,22 +1,22 @@
 package com.fm.smartlearningplatform.security.jwt;
 
 
-import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundException;
 import com.fm.smartlearningplatform.security.principal.UserPrincipal;
+import io.jsonwebtoken.Claims;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
+import org.springframework.security.oauth2.jwt.JwtException;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component
 @RequiredArgsConstructor
 public class JWTValidatorFilter extends OncePerRequestFilter {
 
@@ -27,12 +27,14 @@ public class JWTValidatorFilter extends OncePerRequestFilter {
         String jwt = request.getHeader("Authorization");
         if (null != jwt && !jwt.startsWith("Basic ")) {
             try{
-                UserPrincipal userPrincipal = jwtService.extractUserPrincipal(jwt);
+                Claims claims = jwtService.extractClaims(jwt);
+                UserPrincipal userPrincipal = jwtService.extractUserPrincipal(claims);
                 Authentication authentication = new UsernamePasswordAuthenticationToken(userPrincipal,null,
-                        jwtService.extractAuthorities(jwt));
+                        jwtService.extractAuthorities(claims));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
-            }catch (Exception e){
-                throw new ResourceNotFoundException("Token is invalid.");
+            }catch (JwtException e){
+                SecurityContextHolder.clearContext();
+                throw new BadCredentialsException("Invalid JWT");
             }
         }
         filterChain.doFilter(request,response);
@@ -40,6 +42,6 @@ public class JWTValidatorFilter extends OncePerRequestFilter {
 
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String path =  request.getServletPath();
-        return (path.equals("/secure"));
+        return (path.equals("/login"));
     }
 }

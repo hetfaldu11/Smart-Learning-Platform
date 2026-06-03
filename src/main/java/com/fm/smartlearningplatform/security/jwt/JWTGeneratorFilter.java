@@ -9,12 +9,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
-@Component
+
 @RequiredArgsConstructor
 public class JWTGeneratorFilter extends OncePerRequestFilter {
 
@@ -22,19 +21,21 @@ public class JWTGeneratorFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        if(null != userPrincipal){
-            String jwt = jwtService.generateToken(userPrincipal.id());
-            response.setHeader("Authorization",jwt);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.getPrincipal() == null || !(authentication.getPrincipal() instanceof UserPrincipal userPrincipal) || !authentication.isAuthenticated()) {
+            return;
         }
 
-        filterChain.doFilter(request,response);
+        String jwt = jwtService.generateToken(userPrincipal.id());
+        response.setHeader("Authorization", jwt);
+
+        filterChain.doFilter(request, response);
     }
 
     protected boolean shouldNotFilter(HttpServletRequest request) {
         String path = request.getServletPath();
-        return !(path.equals("/secure"));
+        return !(path.equals("/login"));
     }
 }

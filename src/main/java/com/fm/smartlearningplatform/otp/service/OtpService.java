@@ -10,6 +10,7 @@ import com.fm.smartlearningplatform.otp.repository.UserOtpRepository;
 import com.fm.smartlearningplatform.user.model.User;
 import com.fm.smartlearningplatform.user.repository.UserRepository;
 import com.fm.smartlearningplatform.util.OtpGenerator;
+import com.fm.smartlearningplatform.verification.dto.request.PasswordResetRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -104,6 +105,26 @@ public class OtpService {
         userOtpRepository.save(userOtp);
     }
 
+
+    @Transactional
+    public void sendPasswordResetOtp(PasswordResetRequest request)
+    {
+        User user = getUser(request.userId());
+
+        String otp = OtpGenerator.generate();
+
+        UserOtp userOtp = UserOtp.builder()
+                .user(user)
+                .type(OtpType.PASSWORD_RESET)
+                .otpHash(passwordEncoder.encode(otp))
+                .expiresAt(LocalDateTime.now().plusSeconds(request.expirySeconds()))
+                .build();
+
+        userOtpRepository.save(userOtp);
+
+        emailService.sendOtp(user.getEmail(), otp);
+    }
+
     // Helper
 
     private void validateOtp(String otp, UserOtp userOtp) {
@@ -160,6 +181,8 @@ public class OtpService {
             );
         }
     }
+
+
 
     private User getUser(Long id) {
         return userRepository.findById(id)

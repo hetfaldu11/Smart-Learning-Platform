@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class EmailVerificationService {
 
     private final UserRepository userRepository;

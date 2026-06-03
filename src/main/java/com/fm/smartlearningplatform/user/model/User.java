@@ -38,15 +38,9 @@ public class User {
     @Builder.Default
     private boolean enabled = true;
 
-    @Column(name = "last_login_at")
-    private LocalDateTime lastLoginAt;
-
     @Column(name = "failed_login_attempt")
     @Builder.Default
     private int failedLoginAttempt = 0;
-
-    @Column(name = "last_seen_at")
-    private LocalDateTime lastSeenAt;
 
     @Column(name = "password_changed_at")
     private LocalDateTime passwordChangedAt;
@@ -64,16 +58,6 @@ public class User {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
-
-    // ─── User Social Link ────────────────────────────────────────────────
-
-    @OneToMany(
-            mappedBy = "user",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-            fetch = FetchType.LAZY
-    )
-    @Builder.Default
-    private List<UserSocialLink> userSocialLinks = new ArrayList<>();
 
 //    // ─── User Profile ────────────────────────────────────────────────
 //
@@ -95,6 +79,16 @@ public class User {
 //            fetch = FetchType.LAZY
 //    )
 //    private UserPreference userPreference;
+
+    // ─── User Social Link ────────────────────────────────────────────────
+
+    @OneToMany(
+            mappedBy = "user",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.LAZY
+    )
+    @Builder.Default
+    private List<UserSocialLink> userSocialLinks = new ArrayList<>();
 
     // ─── User Skill ────────────────────────────────────────────────
 

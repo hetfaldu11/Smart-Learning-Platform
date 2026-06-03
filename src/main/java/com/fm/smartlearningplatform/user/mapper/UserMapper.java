@@ -14,8 +14,6 @@ public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "passwordHash", ignore = true)
-    @Mapping(target = "lastLoginAt", ignore = true)
-    @Mapping(target = "lastSeenAt", ignore = true)
     @Mapping(target = "passwordChangedAt", ignore = true)
     @Mapping(target = "accountLockedUntil", ignore = true)
     @Mapping(target = "failedLoginAttempt", ignore = true)

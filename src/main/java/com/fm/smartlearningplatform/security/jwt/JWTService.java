@@ -48,42 +48,57 @@ public class JWTService {
                 .claim("email",user.getEmail())
                 .claim("authorities", authorities.stream().map(Authority::getName).collect(Collectors.joining(",")))
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60))
+                .expiration(new Date(System.currentTimeMillis() + 300000))
                 .signWith(getSignKey())
                 .compact();
     }
 
-    public UserPrincipal extractUserPrincipal(String token) {
-
-        Claims claims = Jwts.parser()
-                        .verifyWith(getSignKey())
-                        .build()
-                        .parseSignedClaims(token)
-                        .getPayload();
-
-        return new UserPrincipal((Long)claims.get("id"),(String) claims.get("email"));
-    }
-
-    public List<GrantedAuthority> extractAuthorities(String token) {
-
-        Claims claims = Jwts.parser()
+    public Claims extractClaims(String token) {
+        return  Jwts.parser()
                 .verifyWith(getSignKey())
                 .build()
                 .parseSignedClaims(token)
                 .getPayload();
-
-        String authorities = (String) claims.get("authorities");
-
-        return AuthorityUtils.commaSeparatedStringToAuthorityList(authorities);
     }
 
-    public boolean isTokenValid(String token, User user) {
+    public UserPrincipal extractUserPrincipal(Claims claims) {
 
-        UserPrincipal userPrincipal = extractUserPrincipal(token);
+        return new UserPrincipal(
+                claims.get("id", Long.class),
+                claims.get("email", String.class)
+        );
+    }
+
+
+    public List<GrantedAuthority> extractAuthorities(Claims claims) {
+
+        String authorities =
+                claims.get("authorities", String.class);
+
+        return AuthorityUtils
+                .commaSeparatedStringToAuthorityList(authorities);
+    }
+
+    public boolean isTokenValid(Claims claims, User user) {
+
+        UserPrincipal userPrincipal = extractUserPrincipal(claims);
 
         Long id = userPrincipal.id();
         String email = userPrincipal.email();
 
-        return Objects.equals(id, user.getId()) || Objects.equals(email,user.getEmail());
+        return Objects.equals(id, user.getId()) && Objects.equals(email,user.getEmail());
+    }
+
+
+    public String generatePasswordResetToken(Long userId)
+    {
+
+        return Jwts.builder()
+                .subject(userId.toString())
+                .claim("purpose", "PASSWORD_RESET")
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .signWith(getSignKey())
+                .compact();
     }
 }
