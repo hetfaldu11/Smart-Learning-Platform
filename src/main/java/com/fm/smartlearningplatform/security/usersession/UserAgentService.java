@@ -1,5 +1,6 @@
 package com.fm.smartlearningplatform.security.usersession;
 
+import com.fm.smartlearningplatform.security.dto.DeviceInfo;
 import nl.basjes.parse.useragent.UserAgent;
 import nl.basjes.parse.useragent.UserAgentAnalyzer;
 import org.springframework.stereotype.Component;

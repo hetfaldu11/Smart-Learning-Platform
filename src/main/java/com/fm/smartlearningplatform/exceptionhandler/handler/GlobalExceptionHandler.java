@@ -97,7 +97,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(SessionExpiredException.class)
     public ResponseEntity<Map<String, String>> handleRefreshTokenExpiry(
-            OtpWaitException ex) {
+            SessionExpiredException ex) {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", ex.getMessage()));
@@ -105,9 +105,15 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(SessionRevokedException.class)
     public ResponseEntity<Map<String, String>> handleRefreshTokenRevoked(
-            OtpWaitException ex) {
+            SessionRevokedException ex) {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(Map.of("error", ex.getMessage()));
+    }
+
+    @ExceptionHandler(RateLimitExceededException.class)
+    public ResponseEntity<Map<String,String>> handleRateLimit(RateLimitExceededException ex) {
+
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).body(Map.of("error", ex.getMessage()));
     }
 }

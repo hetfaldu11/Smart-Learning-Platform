@@ -54,7 +54,7 @@ public class UserSessionService {
 
     public void enforceSessionLimit(Long id){
         List<UserSession> sessions = userSessionRepository.findByUserIdAndStatusOrderByLastActiveAtAsc(id, SessionStatus.ACTIVE);
-        if (sessions.size() >= 2) {
+        if (sessions.size() > 2) {
             UserSession oldestSession = sessions.get(0);
             oldestSession.setStatus(SessionStatus.REVOKED);
             oldestSession.setRevokedAt(LocalDateTime.now());

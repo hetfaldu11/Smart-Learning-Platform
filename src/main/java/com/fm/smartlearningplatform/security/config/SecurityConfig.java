@@ -18,6 +18,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 
 import java.io.IOException;
 
@@ -49,13 +50,52 @@ public class SecurityConfig {
 
                 .addFilterBefore(jwtValidatorFilter, BasicAuthenticationFilter.class)
 
+                .headers(headers -> headers
+                        .httpStrictTransportSecurity(hsts -> hsts
+                                .maxAgeInSeconds(31536000)
+                                .includeSubDomains(true)
+                        ) // it redirects to https instead of http so it is for prod only
+
+                        .frameOptions(frame -> frame.deny()) // If the other site is <iframe src="https://yourwebsite.com"></iframe>
+                                                    // It not allows that
+
+                        .contentTypeOptions(Customizer.withDefaults())// Server sends: alert("hacked");
+                                                                      // Browser guesses:  JavaScript
+                                                                      //and executes it.
+                                                                      // Do not guess. Use exactly what server says.
+                        .contentSecurityPolicy(csp ->
+                                csp.policyDirectives(
+                                        "default-src 'self'; " +
+                                                "script-src 'self'; " +
+                                                "style-src 'self'; " +
+                                                "img-src 'self' data:;"
+                                )
+                        )
+                        // Attacker injects: <script> stealCookies() </script>
+                        // Without CSP: Browser executes script.
+                        // With CSP: Content-Security-Policy:
+                        // default-src 'self'
+                        // Browser blocks it.
+
+                        .referrerPolicy(referrer ->
+                                referrer.policy(
+                                        ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN
+                                )
+                        ) // If I go from this website to some other than in referral only, the origin goes no any path no any token only origin
+
+                        .permissionsPolicyHeader(policy ->
+                                policy.policy(
+                                        "camera=(), microphone=(), geolocation=()"
+                                )
+                        )
+                )
+
                 .httpBasic(Customizer.withDefaults())
                 .build();
     }
 
     @Bean
     public DatabaseReader databaseReader() throws IOException {
-
         ClassPathResource resource = new ClassPathResource("geoip/GeoLite2-City.mmdb");
         return new DatabaseReader.Builder(resource.getInputStream()).build();
     }

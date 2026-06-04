@@ -29,8 +29,7 @@ public class JWTValidatorFilter extends OncePerRequestFilter {
             try{
                 Claims claims = jwtService.extractClaims(jwt);
                 UserPrincipal userPrincipal = jwtService.extractUserPrincipal(claims);
-                Authentication authentication = new UsernamePasswordAuthenticationToken(userPrincipal,null,
-                        jwtService.extractAuthorities(claims));
+                Authentication authentication = new UsernamePasswordAuthenticationToken(userPrincipal,null, jwtService.extractAuthorities(claims));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }catch (JwtException e){
                 SecurityContextHolder.clearContext();
