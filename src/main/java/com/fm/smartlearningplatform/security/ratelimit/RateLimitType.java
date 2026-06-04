@@ -7,5 +7,6 @@ public enum RateLimitType {
     VERIFY_OTP,
     FORGOT_PASSWORD,
     RESET_PASSWORD,
-    REFRESH_TOKEN
+    REFRESH_TOKEN,
+    CHANGE_PASSWORD
 }

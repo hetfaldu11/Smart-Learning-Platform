@@ -82,7 +82,6 @@ public class UserSessionService {
             session.setStatus(SessionStatus.REVOKED);
             session.setRevokedAt(LocalDateTime.now());
         });
-
         userSessionRepository.saveAll(sessions);
     }
 

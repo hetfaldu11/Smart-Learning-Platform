@@ -47,6 +47,10 @@ public class RateLimitService {
             case REFRESH_TOKEN -> Bucket.builder()
                             .addLimit(Bandwidth.classic(3, Refill.greedy(3, Duration.ofMinutes(1))))
                             .build();
+            case CHANGE_PASSWORD -> Bucket.builder()
+                            .addLimit(Bandwidth.classic(5, Refill.greedy(5, Duration.ofHours(1))))
+                            .build();
+
         };
     }
 }

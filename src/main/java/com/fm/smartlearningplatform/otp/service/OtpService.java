@@ -7,6 +7,8 @@ import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundE
 import com.fm.smartlearningplatform.otp.model.OtpType;
 import com.fm.smartlearningplatform.otp.model.UserOtp;
 import com.fm.smartlearningplatform.otp.repository.UserOtpRepository;
+import com.fm.smartlearningplatform.security.ratelimit.RateLimitService;
+import com.fm.smartlearningplatform.security.ratelimit.RateLimitType;
 import com.fm.smartlearningplatform.user.model.User;
 import com.fm.smartlearningplatform.user.repository.UserRepository;
 import com.fm.smartlearningplatform.util.OtpGenerator;
@@ -32,7 +34,12 @@ public class OtpService {
 
     private final EmailService emailService;
 
+    private final RateLimitService rateLimitService;
+
     @Transactional
+
+
+    // ────────────────────── email  ────────────────────────────────────────────────
 
     public void sendEmailVerificationOtp(Long userId, int expirySeconds, int resendOtpSeconds) {
 
@@ -70,6 +77,8 @@ public class OtpService {
         userOtpRepository.save(userOtp);
     }
 
+    // ────────────────────── phone ────────────────────────────────────────────────
+
     @Transactional
     public void sendPhoneVerificationOtp(Long userId, int expirySeconds, int resendOtpSeconds) {
         User user = getUser(userId);
@@ -105,10 +114,15 @@ public class OtpService {
         userOtpRepository.save(userOtp);
     }
 
+    // ────────────────────── password ────────────────────────────────────────────────
+
 
     @Transactional
     public void sendPasswordResetOtp(PasswordResetRequest request)
     {
+
+        rateLimitService.consume(RateLimitType.FORGOT_PASSWORD, request.userId().toString());
+
         User user = getUser(request.userId());
 
         String otp = OtpGenerator.generate();
@@ -125,7 +139,8 @@ public class OtpService {
         emailService.sendOtp(user.getEmail(), otp);
     }
 
-    // Helper
+    // ────────────────────── Helper ────────────────────────────────────────────────
+
 
     private void validateOtp(String otp, UserOtp userOtp) {
         if (userOtp.isUsed() || userOtp.getExpiresAt().isBefore(LocalDateTime.now())) {
