@@ -18,6 +18,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -33,6 +34,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
+@Slf4j
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -44,6 +46,7 @@ public class AuthController {
     private final UserRepository userRepository;
     private final GeoLocationService geoLocationService;
     private final RateLimitService rateLimitService;
+
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, GeoIp2Exception {
@@ -66,6 +69,9 @@ public class AuthController {
         if (null != deviceId) {
             Optional<UserSession> existingSession = userSessionService.existingSessions(user.getId(), deviceId);
             if(existingSession.isPresent()){
+
+                log.info("Existing session reused for userId: {} and deviceId: {}", user.getId(), deviceId);
+
                 UserSession session = existingSession.get();
                 String accessToken = jwtService.generateToken(user.getId());
                 String refreshToken = userSessionService.createRefreshToken();
@@ -77,6 +83,7 @@ public class AuthController {
         }
 
         deviceId = UUID.randomUUID().toString();
+        log.info("New device login for userId: {}", user.getId());
 
         Cookie cookie = new Cookie("device_id", deviceId);
         cookie.setHttpOnly(true);
@@ -148,6 +155,7 @@ public class AuthController {
 
     @PostMapping("/refresh")
     public ResponseEntity<?> refresh(@RequestBody RefreshTokenRequest request, HttpServletRequest httpServletRequest) {
+
         String deviceId = getDeviceIdentifier(httpServletRequest);
         UserSession session = userSessionService.findByDeviceId(deviceId);
 
@@ -171,10 +179,13 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<String> logout(@AuthenticationPrincipal UserPrincipal userPrincipal, HttpServletRequest request){
+
+
         String deviceId = getDeviceIdentifier(request);
         UserSession session = userSessionService.existingSessions(userPrincipal.id(), deviceId)
                         .orElseThrow(() -> new ResourceNotFoundException("Session not found."));
         userSessionService.revokeSession(session);
+        log.info("Logout successful for userId: {}", userPrincipal.id());
         return ResponseEntity.ok().body("Logout successfully.");
     }
 

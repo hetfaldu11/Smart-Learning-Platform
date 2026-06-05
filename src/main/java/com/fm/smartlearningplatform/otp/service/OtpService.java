@@ -13,7 +13,9 @@ import com.fm.smartlearningplatform.user.model.User;
 import com.fm.smartlearningplatform.user.repository.UserRepository;
 import com.fm.smartlearningplatform.util.OtpGenerator;
 import com.fm.smartlearningplatform.verification.dto.request.PasswordResetRequest;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,6 +26,7 @@ import java.time.LocalDateTime;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class OtpService {
 
     private final UserRepository userRepository;
@@ -42,6 +45,8 @@ public class OtpService {
     // ────────────────────── email  ────────────────────────────────────────────────
 
     public void sendEmailVerificationOtp(Long userId, int expirySeconds, int resendOtpSeconds) {
+
+        log.info("Sending email verification OTP for userId: {}", userId);
 
         User user = getUser(userId);
 
@@ -75,12 +80,17 @@ public class OtpService {
         userOtp.setVerifiedAt(LocalDateTime.now());
 
         userOtpRepository.save(userOtp);
+
+        log.info("Email OTP verified successfully for userId: {}", userId);
     }
 
     // ────────────────────── phone ────────────────────────────────────────────────
 
     @Transactional
     public void sendPhoneVerificationOtp(Long userId, int expirySeconds, int resendOtpSeconds) {
+
+        log.info("Sending phone verification OTP for userId: {}", userId);
+
         User user = getUser(userId);
 
         validateLastPhoneOtp(userId,expirySeconds, resendOtpSeconds);
@@ -112,6 +122,8 @@ public class OtpService {
         userOtp.setVerifiedAt(LocalDateTime.now());
 
         userOtpRepository.save(userOtp);
+
+        log.info("Phone OTP verified successfully for userId: {}", userId);
     }
 
     // ────────────────────── password ────────────────────────────────────────────────
@@ -120,6 +132,7 @@ public class OtpService {
     @Transactional
     public void sendPasswordResetOtp(PasswordResetRequest request)
     {
+        log.info("Password reset OTP requested for userId: {}", request.userId());
 
         rateLimitService.consume(RateLimitType.FORGOT_PASSWORD, request.userId().toString());
 
@@ -144,9 +157,15 @@ public class OtpService {
 
     private void validateOtp(String otp, UserOtp userOtp) {
         if (userOtp.isUsed() || userOtp.getExpiresAt().isBefore(LocalDateTime.now())) {
+            log.warn("Expired OTP used for userId: {}",
+                    userOtp.getUser().getId());
+
             throw new OtpExpiryException("Otp is expired.");
         }
         if (!passwordEncoder.matches(otp, userOtp.getOtpHash())) {
+            log.warn("Invalid OTP attempt for userId: {}",
+                    userOtp.getUser().getId());
+
             throw new InvalidOtpException("Otp is invalid.");
         }
     }
@@ -188,12 +207,9 @@ public class OtpService {
         if (LocalDateTime.now().isBefore(resendAllowedAt)) {
             long waitSeconds = Duration.between(
                     LocalDateTime.now(),
-                    resendAllowedAt
-            ).toSeconds();
+                    resendAllowedAt).toSeconds();
 
-            throw new OtpWaitException(
-                    "Wait for " + waitSeconds + " seconds."
-            );
+            throw new OtpWaitException("Wait for " + waitSeconds + " seconds.");
         }
     }
 

@@ -10,6 +10,8 @@ import com.fm.smartlearningplatform.user.mapper.LanguageMapper;
 import com.fm.smartlearningplatform.user.model.Language;
 import com.fm.smartlearningplatform.user.repository.LanguageRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,23 +64,29 @@ public class LanguageService {
     }
 
     @Transactional(readOnly = true)
-    public List<LanguageResponse> searchByKeyword(String keyword) {
+    public Page<LanguageResponse> searchByKeyword(
+            String keyword,
+            Pageable pageable
+    ) {
+
+        Page<Language> languages;
+
         if (keyword == null || keyword.isBlank()) {
-            return findAll();
+
+            languages = languageRepository.findByDeletedAtIsNull(pageable);
+
+        } else {
+
+            keyword = keyword
+                    .trim()
+                    .replaceAll("\\s+", " ")
+                    .toLowerCase();
+
+            languages = languageRepository
+                    .search(keyword, pageable);
         }
 
-        keyword = keyword.trim().replaceAll("\\s+", " ").toLowerCase();
-        return languageRepository.search(keyword)
-                .stream()
-                .map(languageMapper::toResponse)
-                .toList();
-    }
-
-    private List<LanguageResponse> findAll() {
-        return languageRepository.findByDeletedAtIsNullOrderByNameAsc()
-                .stream()
-                .map(languageMapper::toResponse)
-                .toList();
+        return languages.map(languageMapper::toResponse);
     }
 
     // ─── Delete ────────────────────────────────────────────────

@@ -4,6 +4,7 @@ import com.fm.smartlearningplatform.exceptionhandler.exception.RateLimitExceeded
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -11,6 +12,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service
+@Slf4j
 public class RateLimitService {
 
     private final Map<String, Bucket> buckets = new ConcurrentHashMap<>();
@@ -18,6 +20,9 @@ public class RateLimitService {
     public void consume(RateLimitType type, String key) {
         Bucket bucket = buckets.computeIfAbsent(type + ":" + key, k -> createBucket(type));
         if (!bucket.tryConsume(1)) {
+            log.warn("Rate limit exceeded for type: {} and key: {}",
+                    type,
+                    key);
             throw new RateLimitExceededException("Too many requests. Please try again later.");
         }
     }

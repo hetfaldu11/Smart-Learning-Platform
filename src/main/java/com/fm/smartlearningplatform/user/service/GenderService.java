@@ -6,10 +6,14 @@ import com.fm.smartlearningplatform.user.dto.gender.request.CreateGenderRequest;
 import com.fm.smartlearningplatform.user.dto.gender.request.UpdateGenderRequest;
 import com.fm.smartlearningplatform.user.dto.gender.response.DeleteGenderResponse;
 import com.fm.smartlearningplatform.user.dto.gender.response.GenderResponse;
+import com.fm.smartlearningplatform.user.dto.gender.response.GenderResponse;
 import com.fm.smartlearningplatform.user.mapper.GenderMapper;
+import com.fm.smartlearningplatform.user.model.Gender;
 import com.fm.smartlearningplatform.user.model.Gender;
 import com.fm.smartlearningplatform.user.repository.GenderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,23 +62,16 @@ public class GenderService {
     }
 
     @Transactional(readOnly = true)
-    public List<GenderResponse> searchByKeyword(String keyword) {
+    public Page<GenderResponse> searchByKeyword(String keyword, Pageable pageable)
+    {
+        Page<Gender> genders;
         if (keyword == null || keyword.isBlank()) {
-            return findAll();
+            genders = genderRepository.findByDeletedAtIsNull(pageable);
+        } else {
+            keyword = keyword.trim();
+            genders = genderRepository .findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
-
-        keyword = keyword.trim();
-        return genderRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword)
-                .stream()
-                .map(genderMapper::toResponse)
-                .toList();
-    }
-
-    private List<GenderResponse> findAll() {
-        return genderRepository.findByDeletedAtIsNullOrderByNameAsc()
-                .stream()
-                .map(genderMapper::toResponse)
-                .toList();
+        return genders.map(genderMapper::toResponse);
     }
 
     // ─── Delete ────────────────────────────────────────────────

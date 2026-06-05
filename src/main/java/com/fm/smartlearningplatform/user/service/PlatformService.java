@@ -6,10 +6,14 @@ import com.fm.smartlearningplatform.user.dto.platform.request.CreatePlatformRequ
 import com.fm.smartlearningplatform.user.dto.platform.request.UpdatePlatformRequest;
 import com.fm.smartlearningplatform.user.dto.platform.response.DeletePlatformResponse;
 import com.fm.smartlearningplatform.user.dto.platform.response.PlatformResponse;
+import com.fm.smartlearningplatform.user.dto.platform.response.PlatformResponse;
 import com.fm.smartlearningplatform.user.mapper.PlatformMapper;
+import com.fm.smartlearningplatform.user.model.Platform;
 import com.fm.smartlearningplatform.user.model.Platform;
 import com.fm.smartlearningplatform.user.repository.PlatformRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,23 +62,16 @@ public class PlatformService {
     }
 
     @Transactional(readOnly = true)
-    public List<PlatformResponse> searchByKeyword(String keyword) {
+    public Page<PlatformResponse> searchByKeyword(String keyword, Pageable pageable)
+    {
+        Page<Platform> platforms;
         if (keyword == null || keyword.isBlank()) {
-            return findAll();
+            platforms = platformRepository.findByDeletedAtIsNull(pageable);
+        } else {
+            keyword = keyword.trim();
+            platforms = platformRepository .findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
-
-        keyword = keyword.trim();
-        return platformRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword)
-                .stream()
-                .map(platformMapper::toResponse)
-                .toList();
-    }
-
-    private List<PlatformResponse> findAll() {
-        return platformRepository.findByDeletedAtIsNullOrderByNameAsc()
-                .stream()
-                .map(platformMapper::toResponse)
-                .toList();
+        return platforms.map(platformMapper::toResponse);
     }
 
     // ─── Delete ────────────────────────────────────────────────

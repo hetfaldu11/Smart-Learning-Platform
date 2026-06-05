@@ -6,10 +6,14 @@ import com.fm.smartlearningplatform.user.dto.profession.request.CreateProfession
 import com.fm.smartlearningplatform.user.dto.profession.request.UpdateProfessionRequest;
 import com.fm.smartlearningplatform.user.dto.profession.response.DeleteProfessionResponse;
 import com.fm.smartlearningplatform.user.dto.profession.response.ProfessionResponse;
+import com.fm.smartlearningplatform.user.dto.profession.response.ProfessionResponse;
 import com.fm.smartlearningplatform.user.mapper.ProfessionMapper;
+import com.fm.smartlearningplatform.user.model.Profession;
 import com.fm.smartlearningplatform.user.model.Profession;
 import com.fm.smartlearningplatform.user.repository.ProfessionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,23 +62,16 @@ public class ProfessionService {
     }
 
     @Transactional(readOnly = true)
-    public List<ProfessionResponse> searchByKeyword(String keyword) {
+    public Page<ProfessionResponse> searchByKeyword(String keyword, Pageable pageable)
+    {
+        Page<Profession> professions;
         if (keyword == null || keyword.isBlank()) {
-            return findAll();
+            professions = professionRepository.findByDeletedAtIsNull(pageable);
+        } else {
+            keyword = keyword.trim();
+            professions = professionRepository .findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
-
-        keyword = keyword.trim();
-        return professionRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword)
-                .stream()
-                .map(professionMapper::toResponse)
-                .toList();
-    }
-
-    private List<ProfessionResponse> findAll() {
-        return professionRepository.findByDeletedAtIsNullOrderByNameAsc()
-                .stream()
-                .map(professionMapper::toResponse)
-                .toList();
+        return professions.map(professionMapper::toResponse);
     }
 
     // ─── Delete ────────────────────────────────────────────────

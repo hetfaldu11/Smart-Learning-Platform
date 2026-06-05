@@ -6,11 +6,15 @@ import com.fm.smartlearningplatform.user.dto.interest.request.CreateInterestRequ
 import com.fm.smartlearningplatform.user.dto.interest.request.UpdateInterestRequest;
 import com.fm.smartlearningplatform.user.dto.interest.response.DeleteInterestResponse;
 import com.fm.smartlearningplatform.user.dto.interest.response.InterestResponse;
+import com.fm.smartlearningplatform.user.dto.interest.response.InterestResponse;
 import com.fm.smartlearningplatform.user.mapper.InterestMapper;
+import com.fm.smartlearningplatform.user.model.Interest;
 import com.fm.smartlearningplatform.user.model.Interest;
 import com.fm.smartlearningplatform.user.repository.InterestRepository;
 import com.fm.smartlearningplatform.user.repository.UserInterestRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,25 +64,17 @@ public class InterestService {
     }
 
     @Transactional(readOnly = true)
-    public List<InterestResponse> searchByKeyword(String keyword) {
+    public Page<InterestResponse> searchByKeyword(String keyword, Pageable pageable)
+    {
+        Page<Interest> interests;
         if (keyword == null || keyword.isBlank()) {
-            return findAll();
+            interests = interestRepository.findByDeletedAtIsNull(pageable);
+        } else {
+            keyword = keyword.trim();
+            interests = interestRepository .findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
-
-        keyword = keyword.trim();
-        return interestRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword)
-                .stream()
-                .map(interestMapper::toResponse)
-                .toList();
+        return interests.map(interestMapper::toResponse);
     }
-
-    private List<InterestResponse> findAll() {
-        return interestRepository.findByDeletedAtIsNullOrderByNameAsc()
-                .stream()
-                .map(interestMapper::toResponse)
-                .toList();
-    }
-
     // ─── Delete ────────────────────────────────────────────────
 
     @Transactional

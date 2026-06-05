@@ -1,6 +1,8 @@
 package com.fm.smartlearningplatform.user.repository;
 
 import com.fm.smartlearningplatform.user.model.Language;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -33,6 +35,13 @@ public interface LanguageRepository extends JpaRepository<Language, Long> {
     List<Language> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword);
 
     List<Language> findByIdInAndDeletedAtIsNull(List<Long> ids);
+
+    Page<Language> findByDeletedAtIsNull(Pageable pageable);
+
+    Page<Language> findByDeletedAtIsNullAndNameContainingIgnoreCase(
+            String keyword,
+            Pageable pageable
+    );
 
     @Query("""
         SELECT l

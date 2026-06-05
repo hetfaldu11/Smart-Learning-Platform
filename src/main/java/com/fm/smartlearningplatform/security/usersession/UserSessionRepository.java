@@ -21,6 +21,6 @@ public interface UserSessionRepository extends JpaRepository<UserSession, Long> 
     List<UserSession> findAllByUserIdAndStatus(Long userId, SessionStatus status);
     List<UserSession> findByUserIdAndStatusOrderByCreatedAtAsc(Long userId, SessionStatus status);
     List<UserSession> findByUserIdAndStatusOrderByLastActiveAtAsc(Long userId, SessionStatus status);
-    void deleteByStatusAndRevokedAtBefore(SessionStatus status, LocalDateTime revokedAtBefore);
-    void deleteByStatusAndExpiresAtBefore(SessionStatus status, LocalDateTime expiresAtBefore);
+    Long deleteByStatusAndRevokedAtBefore(SessionStatus status, LocalDateTime revokedAtBefore);
+    Long deleteByStatusAndExpiresAtBefore(SessionStatus status, LocalDateTime expiresAtBefore);
 }
