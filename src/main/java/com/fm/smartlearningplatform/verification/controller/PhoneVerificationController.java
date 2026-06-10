@@ -24,17 +24,23 @@ public class PhoneVerificationController {
     private final PhoneVerificationService phoneVerificationService;
 
     @PostMapping("/request")
-    public ResponseEntity<String> requestPhoneVerification(@AuthenticationPrincipal UserPrincipal principal, @RequestBody CreatePhoneRequest request) {
+    public ResponseEntity<String> requestPhoneVerification(@AuthenticationPrincipal UserPrincipal principal) {
         Long userId = principal.id();
+        String email= principal.email();
+
         phoneVerificationService.validatePhoneNumberNotVerified(userId);
-        otpService.sendPhoneVerificationOtp(userId, request.expirySeconds(),request.resendOtpSeconds());
+
+        otpService.sendPhoneVerificationOtp(userId,email);
+
         return ResponseEntity.ok().body("Otp sent successfully.");
     }
 
     @PostMapping("/verify")
     public ResponseEntity<UserVerificationResponse> verifyPhone(@AuthenticationPrincipal UserPrincipal principal, @RequestBody VerifyPhoneRequest request) {
         Long userId = principal.id();
+
         otpService.verifyPhoneOtp(userId, request.otp());
+
         return ResponseEntity.ok().body(phoneVerificationService.verifyPhone(userId));
     }
 }

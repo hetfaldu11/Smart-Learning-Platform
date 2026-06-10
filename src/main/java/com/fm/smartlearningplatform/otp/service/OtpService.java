@@ -16,12 +16,14 @@ import com.fm.smartlearningplatform.verification.dto.request.PasswordResetReques
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -39,194 +41,150 @@ public class OtpService {
 
     private final RateLimitService rateLimitService;
 
+    private final StringRedisTemplate redisTemplate;
+
+
+    private static final int OTP_EXPIRY_SECONDS = 300;
+    private static final int OTP_RESEND_SECONDS = 30;
+
+
+
+    // ──────────────────────  send email otp  ────────────────────────────────────────────────
+
     @Transactional
+    public void sendEmailVerificationOtp(Long userId, String email) {
 
+        String cooldownKey = "otp:cooldown:email:" + userId;
 
-    // ────────────────────── email  ────────────────────────────────────────────────
-
-    public void sendEmailVerificationOtp(Long userId, int expirySeconds, int resendOtpSeconds) {
-
-        log.info("Sending email verification OTP for userId: {}", userId);
-
-        User user = getUser(userId);
-
-        validateLastEmailOtp(userId, expirySeconds,resendOtpSeconds);
+        if(Boolean.TRUE.equals(redisTemplate.hasKey(cooldownKey))) {
+            throw new OtpWaitException("Wait before requesting another OTP.");
+        }
 
         String otp = OtpGenerator.generate();
 
-        UserOtp userOtp = UserOtp.builder()
-                .user(user)
-                .type(OtpType.EMAIL_VERIFICATION)
-                .otpHash(passwordEncoder.encode(otp))
-                .expiresAt(LocalDateTime.now().plusSeconds(expirySeconds))
-                .build();
+        String otpKey = "otp:email:" + userId;
 
-        userOtpRepository.save(userOtp);
+        redisTemplate.opsForValue().set(
+                otpKey,
+                passwordEncoder.encode(otp),
+                OTP_EXPIRY_SECONDS,
+                TimeUnit.SECONDS
+        );
 
-        emailService.sendOtp(user.getEmail(), otp);
+        redisTemplate.opsForValue().set(
+                cooldownKey,
+                "blocked",
+                OTP_RESEND_SECONDS,
+                TimeUnit.SECONDS
+        );
 
-        System.out.println(otp);
-
-        emailService.sendOtp(user.getEmail(),otp);
+        emailService.sendOtp(email, otp);
     }
+
+    // ──────────────────────  verify email otp  ────────────────────────────────────────────────
+
 
     @Transactional
     public void verifyEmailOtp(Long userId, String otp) {
 
-        UserOtp userOtp = getEmailOtp(userId);
-        validateOtp(otp, userOtp);
 
-        userOtp.setUsed(true);
-        userOtp.setVerifiedAt(LocalDateTime.now());
+        String attemptKey = "otp:attempt:email:" + userId;
 
-        userOtpRepository.save(userOtp);
+        Long attempts = redisTemplate.opsForValue().increment(attemptKey);
+
+        redisTemplate.expire(attemptKey, 5, TimeUnit.MINUTES);
+
+        if(attempts > 5) {
+            throw new InvalidOtpException("Too many attempts");
+        }
+
+
+        String key = "otp:email:" + userId;
+        String otpHash= redisTemplate.opsForValue().get(key);
+        if(otpHash==null)
+        {
+            throw new OtpExpiryException("OTP expired:");
+        }
+        if(!passwordEncoder.matches(otp,otpHash))
+        {
+            throw  new InvalidOtpException("OTP is invalid");
+        }
+        redisTemplate.delete(key);
+        redisTemplate.delete(attemptKey);
 
         log.info("Email OTP verified successfully for userId: {}", userId);
     }
 
-    // ────────────────────── phone ────────────────────────────────────────────────
+    // ──────────────────────send phone otp ────────────────────────────────────────────────
 
-    @Transactional
-    public void sendPhoneVerificationOtp(Long userId, int expirySeconds, int resendOtpSeconds) {
+    public void sendPhoneVerificationOtp(Long userId, String email) {
 
         log.info("Sending phone verification OTP for userId: {}", userId);
 
-        User user = getUser(userId);
+        String coolDownKey = "otp:cooldown:phone:"+ userId;
 
-        validateLastPhoneOtp(userId,expirySeconds, resendOtpSeconds);
+        if(Boolean.TRUE.equals(redisTemplate.hasKey(coolDownKey)))
+        {
+            throw  new OtpWaitException("wait before requesting another OTP:");
+        }
+
+        String phoneKey = "otp:phone:"+ userId;
 
         String otp = OtpGenerator.generate();
 
-        UserOtp userOtp = UserOtp.builder()
-                .user(user)
-                .type(OtpType.PHONE_VERIFICATION)
-                .otpHash(passwordEncoder.encode(otp))
-                .expiresAt(LocalDateTime.now().plusSeconds(expirySeconds))
-                .build();
+        redisTemplate.opsForValue().set(
+                phoneKey, passwordEncoder.encode(otp),
+                OTP_EXPIRY_SECONDS,
+                TimeUnit.SECONDS
+        );
 
-        userOtpRepository.save(userOtp);
+        redisTemplate.opsForValue().set(
+                coolDownKey, "blocked",
+                OTP_RESEND_SECONDS ,
+                TimeUnit.SECONDS
+        );
+
 
         System.out.println(otp);
 
-        emailService.sendOtp(user.getEmail(),otp);
+        emailService.sendOtp(email,otp);
     }
 
+    // ──────────────────────verify phone otp ────────────────────────────────────────────────
+
+
     @Transactional
-    public void verifyPhoneOtp(Long userId, String otp) {
+    public void verifyPhoneOtp(Long userId, String otp)
+    {
 
-        UserOtp userOtp = getPhoneOtp(userId);
+        String attemptKey = "otp:attempt:phone:" + userId;
 
-        validateOtp(otp, userOtp);
+        Long attempts = redisTemplate.opsForValue().increment(attemptKey);
 
-        userOtp.setUsed(true);
-        userOtp.setVerifiedAt(LocalDateTime.now());
+        redisTemplate.expire(attemptKey, 5, TimeUnit.MINUTES);
 
-        userOtpRepository.save(userOtp);
+        if(attempts > 5) {
+            throw new InvalidOtpException("Too many attempts");
+        }
+
+        String phoneKey = "otp:phone:"+ userId;
+
+        String otpHash= redisTemplate.opsForValue().get(phoneKey);
+
+        if(otpHash==null)
+        {
+            throw  new OtpExpiryException("OTP expired:");
+        }
+        if(!passwordEncoder.matches(otp, otpHash))
+        {
+            throw  new InvalidOtpException("OTP is invalid ");
+        }
+
+        redisTemplate.delete(phoneKey);
+
+        redisTemplate.delete(attemptKey);
 
         log.info("Phone OTP verified successfully for userId: {}", userId);
     }
 
-    // ────────────────────── password ────────────────────────────────────────────────
-
-
-    @Transactional
-    public void sendPasswordResetOtp(PasswordResetRequest request)
-    {
-        log.info("Password reset OTP requested for userId: {}", request.userId());
-
-        rateLimitService.consume(RateLimitType.FORGOT_PASSWORD, request.userId().toString());
-
-        User user = getUser(request.userId());
-
-        String otp = OtpGenerator.generate();
-
-        UserOtp userOtp = UserOtp.builder()
-                .user(user)
-                .type(OtpType.PASSWORD_RESET)
-                .otpHash(passwordEncoder.encode(otp))
-                .expiresAt(LocalDateTime.now().plusSeconds(request.expirySeconds()))
-                .build();
-
-        userOtpRepository.save(userOtp);
-
-        emailService.sendOtp(user.getEmail(), otp);
-    }
-
-    // ────────────────────── Helper ────────────────────────────────────────────────
-
-
-    private void validateOtp(String otp, UserOtp userOtp) {
-        if (userOtp.isUsed() || userOtp.getExpiresAt().isBefore(LocalDateTime.now())) {
-            log.warn("Expired OTP used for userId: {}",
-                    userOtp.getUser().getId());
-
-            throw new OtpExpiryException("Otp is expired.");
-        }
-        if (!passwordEncoder.matches(otp, userOtp.getOtpHash())) {
-            log.warn("Invalid OTP attempt for userId: {}",
-                    userOtp.getUser().getId());
-
-            throw new InvalidOtpException("Otp is invalid.");
-        }
-    }
-
-    private void validateLastEmailOtp(Long id, int expirySeconds, int resendOtpSeconds){
-        UserOtp userOtp = userOtpRepository.findTopByUserIdAndTypeAndUsedFalseOrderByIdDesc(id, OtpType.EMAIL_VERIFICATION)
-                .orElse(null);
-
-        if(userOtp == null) return;
-
-        LocalDateTime resendAllowedAt =
-                userOtp.getExpiresAt()
-                        .minusSeconds(expirySeconds)
-                        .plusSeconds(resendOtpSeconds);
-
-        if (LocalDateTime.now().isBefore(resendAllowedAt)) {
-            long waitSeconds = Duration.between(
-                    LocalDateTime.now(),
-                    resendAllowedAt
-            ).toSeconds();
-
-            throw new OtpWaitException(
-                    "Wait for " + waitSeconds + " seconds."
-            );
-        }
-    }
-
-    private void validateLastPhoneOtp(Long id, int expirySeconds, int resendOtpSeconds){
-        UserOtp userOtp = userOtpRepository.findTopByUserIdAndTypeAndUsedFalseOrderByIdDesc(id, OtpType.PHONE_VERIFICATION)
-                .orElse(null);
-
-        if(userOtp == null) return;
-
-        LocalDateTime resendAllowedAt =
-                userOtp.getExpiresAt()
-                        .minusSeconds(expirySeconds)
-                        .plusSeconds(resendOtpSeconds);
-
-        if (LocalDateTime.now().isBefore(resendAllowedAt)) {
-            long waitSeconds = Duration.between(
-                    LocalDateTime.now(),
-                    resendAllowedAt).toSeconds();
-
-            throw new OtpWaitException("Wait for " + waitSeconds + " seconds.");
-        }
-    }
-
-
-
-    private User getUser(Long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found."));
-    }
-
-    private UserOtp getEmailOtp(Long id) {
-        return userOtpRepository.findTopByUserIdAndTypeAndUsedFalseOrderByIdDesc(id, OtpType.EMAIL_VERIFICATION)
-                .orElseThrow(() -> new ResourceNotFoundException("Otp not found."));
-    }
-
-    private UserOtp getPhoneOtp(Long id) {
-        return userOtpRepository.findTopByUserIdAndTypeAndUsedFalseOrderByIdDesc(id, OtpType.PHONE_VERIFICATION)
-                .orElseThrow(() -> new ResourceNotFoundException("Otp not found."));
-    }
 }

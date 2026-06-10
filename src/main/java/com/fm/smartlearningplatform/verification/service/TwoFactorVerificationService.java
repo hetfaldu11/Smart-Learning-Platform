@@ -37,6 +37,9 @@ public class TwoFactorVerificationService {
 
     @Transactional
     public UserVerificationResponse enableTwoFactor(Long userId, EnableTwoFactorRequest request) {
+
+        validateTwoFactorNotVerified(userId);
+
         User user = getUser(userId);
 
         if (!passwordEncoder.matches(request.currentPassword(), user.getPasswordHash())) {
@@ -44,9 +47,6 @@ public class TwoFactorVerificationService {
         }
 
         UserVerification verification = getVerification(userId);
-        if (verification.isTwoFactorEnabled()) {
-            throw new DuplicateResourceException("Two-factor authentication is already enabled.");
-        }
 
         if (!verification.isEmailVerified()) {
             throw new EmailNotVerifiedException("Email must be verified before enabling two-factor authentication.");

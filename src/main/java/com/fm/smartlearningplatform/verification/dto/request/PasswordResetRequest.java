@@ -1,9 +1,11 @@
 package com.fm.smartlearningplatform.verification.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
+
 public record PasswordResetRequest (
 
-        Long userId,
-        int expirySeconds,
-        int resendOtpSeconds
+        @NotBlank
+        String email
+
 ){
 }

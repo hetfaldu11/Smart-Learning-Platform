@@ -82,8 +82,7 @@ public class LanguageService {
                     .replaceAll("\\s+", " ")
                     .toLowerCase();
 
-            languages = languageRepository
-                    .search(keyword, pageable);
+            languages = languageRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
 
         return languages.map(languageMapper::toResponse);

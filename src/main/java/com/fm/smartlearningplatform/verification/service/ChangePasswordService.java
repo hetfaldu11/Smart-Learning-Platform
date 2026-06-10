@@ -1,9 +1,6 @@
 package com.fm.smartlearningplatform.verification.service;
 
-import com.fm.smartlearningplatform.exceptionhandler.exception.InvalidOtpException;
-import com.fm.smartlearningplatform.exceptionhandler.exception.InvalidPasswordException;
-import com.fm.smartlearningplatform.exceptionhandler.exception.OtpExpiryException;
-import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.exceptionhandler.exception.*;
 import com.fm.smartlearningplatform.otp.model.OtpType;
 import com.fm.smartlearningplatform.otp.model.UserOtp;
 import com.fm.smartlearningplatform.otp.repository.UserOtpRepository;
@@ -15,19 +12,26 @@ import com.fm.smartlearningplatform.security.usersession.UserSessionService;
 import com.fm.smartlearningplatform.user.model.User;
 import com.fm.smartlearningplatform.user.repository.UserRepository;
 import com.fm.smartlearningplatform.user.service.UserService;
+import com.fm.smartlearningplatform.util.OtpGenerator;
 import com.fm.smartlearningplatform.verification.dto.request.ChangePasswordRequest;
+import com.fm.smartlearningplatform.verification.dto.request.PasswordResetRequest;
 import com.fm.smartlearningplatform.verification.dto.request.ResetPasswordRequest;
 import com.fm.smartlearningplatform.verification.dto.request.VerifyResetOtpRequest;
 import com.fm.smartlearningplatform.verification.dto.response.ResetTokenResponse;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.concurrent.TimeUnit;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 
 public class ChangePasswordService {
@@ -40,6 +44,10 @@ public class ChangePasswordService {
     private  final UserOtpRepository userOtpRepository;
     private  final UserSessionService userSessionService;
     private final RateLimitService rateLimitService;
+    private final StringRedisTemplate redisTemplate;
+
+    private static final int OTP_EXPIRY_SECONDS = 300;
+    private static final int OTP_RESEND_SECONDS = 30;
 
 
     // ────────────────────── change password ────────────────────────────────────────────────
@@ -62,24 +70,76 @@ public class ChangePasswordService {
         userSessionService.revokeAllSessions(user.getId());
     }
 
+    // ────────────────────── send password OTP  ────────────────────────────────────────────────
+
+    @Transactional
+    public void sendPasswordResetOtp(PasswordResetRequest request)
+    {
+
+        Long userId= userRepository.findByEmailAndDeletedAtIsNull(request.email()).orElseThrow(()->new ResourceNotFoundException("user Not Found")).getId();
+        log.info("Password reset OTP requested for userId: {}", userId);
+
+        rateLimitService.consume(RateLimitType.FORGOT_PASSWORD, userId.toString());
+
+        String coolDownKey= "otp:coolDown:password"+userId;
+
+        if(Boolean.TRUE.equals(redisTemplate.hasKey(coolDownKey)))
+        {
+            throw new OtpWaitException("wait for send another OTP:");
+        }
+
+        String otp = OtpGenerator.generate();
+
+        String key= "otp:password:"+ userId;
+
+        redisTemplate.opsForValue().set(
+                key, passwordEncoder.encode(otp),
+                OTP_EXPIRY_SECONDS,
+                TimeUnit.SECONDS
+        );
+
+        redisTemplate.opsForValue().set(
+                coolDownKey,"blocked",
+                OTP_RESEND_SECONDS,
+                TimeUnit.SECONDS
+        );
+
+
+        emailService.sendOtp(request.email(), otp);
+    }
+
     // ────────────────────── verify otp ────────────────────────────────────────────────
 
 
     @Transactional
     public ResetTokenResponse verifyPasswordResetOtp(VerifyResetOtpRequest request)
     {
+        Long userId= userRepository.findByEmailAndDeletedAtIsNull(request.email()).orElseThrow(()->new ResourceNotFoundException("user Not Found")).getId();
 
-        UserOtp userOtp = userOtpRepository
-                        .findTopByUserIdAndTypeAndUsedFalseOrderByIdDesc(request.userId(), OtpType.PASSWORD_RESET)
-                        .orElseThrow(() -> new ResourceNotFoundException("Otp not found."));
+        String attemptKey = "otp:attempt:password:" + userId;
 
-        validateOtp(request.otp(), userOtp);
+        Long attempts = redisTemplate.opsForValue().increment(attemptKey);
 
-        userOtp.setUsed(true);
+        redisTemplate.expire(attemptKey, 5, TimeUnit.MINUTES);
 
-        userOtp.setVerifiedAt(LocalDateTime.now());
+        if(attempts > 5) {
+            throw new InvalidOtpException("Too many attempts");
+        }
 
-        String resetToken = jWTService.generatePasswordResetToken(request.userId());
+
+        String key = "otp:password:"+ userId;
+        String otpHash= redisTemplate.opsForValue().get(key);
+        if(otpHash==null)
+        {
+            throw new OtpExpiryException("OTP expired:");
+        }
+        if(!passwordEncoder.matches(request.otp(),otpHash))
+        {
+            throw  new InvalidOtpException("OTP is invalid");
+        }
+        redisTemplate.delete(key);
+        redisTemplate.delete(attemptKey);
+        String resetToken = jWTService.generatePasswordResetToken(userId);
 
         return new ResetTokenResponse(resetToken);
     }
@@ -120,14 +180,4 @@ public class ChangePasswordService {
         return userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
-
-    private void validateOtp(String otp, UserOtp userOtp) {
-        if (userOtp.isUsed() || userOtp.getExpiresAt().isBefore(LocalDateTime.now())) {
-            throw new OtpExpiryException("Otp is expired.");
-        }
-        if (!passwordEncoder.matches(otp, userOtp.getOtpHash())) {
-            throw new InvalidOtpException("Otp is invalid.");
-        }
-    }
-
 }
