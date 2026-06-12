@@ -1,0 +1,36 @@
+package com.fm.smartlearningplatform.model.lesson;
+
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
+@Entity
+@Table(name = "caption_types")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class CaptionType {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name="id")
+    private Long id;
+
+    @Column(name="name",unique = true)
+    private String name;
+
+    @CreationTimestamp
+    @Column(name= "created_at")
+    private LocalDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name= "updated_at")
+    private LocalDateTime updatedAt;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+}
