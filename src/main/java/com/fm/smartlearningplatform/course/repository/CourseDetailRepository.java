@@ -17,15 +17,9 @@ public interface CourseDetailRepository
      */
 
     Optional<CourseDetail>
-    findByIdAndCourseDeletedAtIsNull(Long courseId);
-
-
-
-    /*
-     |--------------------------------------------------------------------------
-     | Feature Filters
-     |--------------------------------------------------------------------------
-     */
+    findByIdAndCourseDeletedAtIsNull(
+            Long courseId
+    );
 
     Optional<CourseDetail>
     findByCourseIdAndCourseDeletedAtIsNull(
@@ -36,47 +30,11 @@ public interface CourseDetailRepository
 
     /*
      |--------------------------------------------------------------------------
-     | Certificate Courses
+     | Validation / Existence
      |--------------------------------------------------------------------------
      */
 
-    boolean existsByCourseIdAndHasCertificateTrueAndCourseDeletedAtIsNull(
-            Long courseId
-    );
-
-
-
-    /*
-     |--------------------------------------------------------------------------
-     | Assignment Courses
-     |--------------------------------------------------------------------------
-     */
-
-    boolean existsByCourseIdAndHasAssignmentTrueAndCourseDeletedAtIsNull(
-            Long courseId
-    );
-
-
-
-    /*
-     |--------------------------------------------------------------------------
-     | Project Courses
-     |--------------------------------------------------------------------------
-     */
-
-    boolean existsByCourseIdAndHasProjectTrueAndCourseDeletedAtIsNull(
-            Long courseId
-    );
-
-
-
-    /*
-     |--------------------------------------------------------------------------
-     | Quiz Courses
-     |--------------------------------------------------------------------------
-     */
-
-    boolean existsByCourseIdAndHasQuizTrueAndCourseDeletedAtIsNull(
+    boolean existsByCourseIdAndCourseDeletedAtIsNull(
             Long courseId
     );
 

@@ -36,11 +36,13 @@ public record CreateCourseRequest(
     public CreateCourseRequest {
 
         if (title != null) {
-            title = title.trim().toLowerCase();
+            title = title.trim().replaceAll("\\s+", " ")
+                    .toLowerCase();
         }
 
         if (subtitle != null) {
-            subtitle = subtitle.trim().toLowerCase();
+            subtitle = subtitle.trim().replaceAll("\\s+", " ")
+                    .toLowerCase();
         }
     }
 }

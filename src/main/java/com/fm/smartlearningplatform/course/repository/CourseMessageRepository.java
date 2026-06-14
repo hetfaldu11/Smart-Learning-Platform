@@ -20,7 +20,9 @@ public interface CourseMessageRepository
      */
 
     Optional<CourseMessage>
-    findByIdAndCourseDeletedAtIsNull(Long id);
+    findByIdAndCourseDeletedAtIsNull(
+            Long id
+    );
 
 
 
@@ -82,7 +84,17 @@ public interface CourseMessageRepository
      |--------------------------------------------------------------------------
      */
 
+    boolean existsByIdAndCourseDeletedAtIsNull(
+            Long id
+    );
+
     boolean existsByCourseIdAndCourseMessageTypeIdAndCourseDeletedAtIsNull(
+            Long courseId,
+            Long messageTypeId
+    );
+
+    boolean existsByIdNotAndCourseIdAndCourseMessageTypeIdAndCourseDeletedAtIsNull(
+            Long id,
             Long courseId,
             Long messageTypeId
     );
@@ -96,9 +108,22 @@ public interface CourseMessageRepository
      */
 
     Page<CourseMessage>
-    findByMessageContainingIgnoreCaseAndCourseDeletedAtIsNull(
+    findByCourseDeletedAtIsNullAndMessageContainingIgnoreCase(
             String message,
             Pageable pageable
+    );
+
+
+
+    /*
+     |--------------------------------------------------------------------------
+     | Sorting
+     |--------------------------------------------------------------------------
+     */
+
+    List<CourseMessage>
+    findByCourseIdAndCourseDeletedAtIsNullOrderByIdAsc(
+            Long courseId
     );
 
 }

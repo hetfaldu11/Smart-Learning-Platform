@@ -68,6 +68,16 @@ public interface CourseRequirementRepository
             String requirement
     );
 
+    boolean existsByIdAndCourseDeletedAtIsNull(
+            Long id
+    );
+
+    boolean existsByIdNotAndCourseIdAndRequirementAndCourseDeletedAtIsNull(
+            Long id,
+            Long courseId,
+            String requirement
+    );
+
 
 
     /*
@@ -80,6 +90,19 @@ public interface CourseRequirementRepository
     findByCourseIdAndRequirementAndCourseDeletedAtIsNull(
             Long courseId,
             String requirement
+    );
+
+
+
+    /*
+     |--------------------------------------------------------------------------
+     | Sorting
+     |--------------------------------------------------------------------------
+     */
+
+    List<CourseRequirement>
+    findByCourseIdAndCourseDeletedAtIsNullOrderByIdAsc(
+            Long courseId
     );
 
 }

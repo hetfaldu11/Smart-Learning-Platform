@@ -48,6 +48,13 @@ public interface CurrencyRepository
             Pageable pageable
     );
 
+    Page<Currency>
+    findByNameContainingIgnoreCaseOrCodeContainingIgnoreCase(
+            String name,
+            String code,
+            Pageable pageable
+    );
+
 
 
     /*
@@ -59,6 +66,16 @@ public interface CurrencyRepository
     boolean existsByName(String name);
 
     boolean existsByCode(String code);
+
+    boolean existsByIdNotAndName(
+            Long id,
+            String name
+    );
+
+    boolean existsByIdNotAndCode(
+            Long id,
+            String code
+    );
 
 
 

@@ -20,10 +20,14 @@ public interface CourseRepository
      */
 
     Optional<Course>
-    findByIdAndDeletedAtIsNull(Long id);
+    findByIdAndDeletedAtIsNull(
+            Long id
+    );
 
     Page<Course>
-    findByDeletedAtIsNull(Pageable pageable);
+    findByDeletedAtIsNull(
+            Pageable pageable
+    );
 
     Page<Course>
     findByInstructorAndDeletedAtIsNull(
@@ -40,7 +44,9 @@ public interface CourseRepository
      */
 
     Page<Course>
-    findByDeletedAtIsNotNull(Pageable pageable);
+    findByDeletedAtIsNotNull(
+            Pageable pageable
+    );
 
 
 
@@ -51,13 +57,13 @@ public interface CourseRepository
      */
 
     Page<Course>
-    findByTitleContainingIgnoreCaseAndDeletedAtIsNull(
+    findByDeletedAtIsNullAndTitleContainingIgnoreCase(
             String title,
             Pageable pageable
     );
 
     Page<Course>
-    findBySubtitleContainingIgnoreCaseAndDeletedAtIsNull(
+    findByDeletedAtIsNullAndSubtitleContainingIgnoreCase(
             String subtitle,
             Pageable pageable
     );
@@ -112,10 +118,25 @@ public interface CourseRepository
      |--------------------------------------------------------------------------
      */
 
-    boolean existsByIdAndDeletedAtIsNull(Long id);
+    boolean existsByIdAndDeletedAtIsNull(
+            Long id
+    );
 
     boolean existsByTitleAndDeletedAtIsNull(
             String title
+    );
+
+
+
+    /*
+     |--------------------------------------------------------------------------
+     | Sorting
+     |--------------------------------------------------------------------------
+     */
+
+    Page<Course>
+    findByDeletedAtIsNullOrderByCreatedAtDesc(
+            Pageable pageable
     );
 
 }

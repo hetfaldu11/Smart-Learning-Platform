@@ -17,34 +17,12 @@ public interface CourseSupportRepository
      */
 
     Optional<CourseSupport>
-    findByIdAndCourseDeletedAtIsNull(Long courseId);
+    findByIdAndCourseDeletedAtIsNull(
+            Long courseId
+    );
 
     Optional<CourseSupport>
     findByCourseIdAndCourseDeletedAtIsNull(
-            Long courseId
-    );
-
-
-
-    /*
-     |--------------------------------------------------------------------------
-     | Support Email
-     |--------------------------------------------------------------------------
-     */
-
-    boolean existsByCourseIdAndSupportEmailIsNotNullAndCourseDeletedAtIsNull(
-            Long courseId
-    );
-
-
-
-    /*
-     |--------------------------------------------------------------------------
-     | Support Phone
-     |--------------------------------------------------------------------------
-     */
-
-    boolean existsByCourseIdAndSupportPhoneIsNotNullAndCourseDeletedAtIsNull(
             Long courseId
     );
 
@@ -59,6 +37,18 @@ public interface CourseSupportRepository
     Optional<CourseSupport>
     findBySupportEmailAndCourseDeletedAtIsNull(
             String supportEmail
+    );
+
+
+
+    /*
+     |--------------------------------------------------------------------------
+     | Validation / Existence
+     |--------------------------------------------------------------------------
+     */
+
+    boolean existsByCourseIdAndCourseDeletedAtIsNull(
+            Long courseId
     );
 
 }

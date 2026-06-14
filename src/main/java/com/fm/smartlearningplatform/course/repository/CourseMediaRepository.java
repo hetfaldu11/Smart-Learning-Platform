@@ -17,7 +17,9 @@ public interface CourseMediaRepository
      */
 
     Optional<CourseMedia>
-    findByIdAndCourseDeletedAtIsNull(Long courseId);
+    findByIdAndCourseDeletedAtIsNull(
+            Long courseId
+    );
 
     Optional<CourseMedia>
     findByCourseIdAndCourseDeletedAtIsNull(
@@ -28,35 +30,11 @@ public interface CourseMediaRepository
 
     /*
      |--------------------------------------------------------------------------
-     | Thumbnail
+     | Validation / Existence
      |--------------------------------------------------------------------------
      */
 
-    boolean existsByCourseIdAndThumbnailUrlIsNotNullAndCourseDeletedAtIsNull(
-            Long courseId
-    );
-
-
-
-    /*
-     |--------------------------------------------------------------------------
-     | Promotional Video
-     |--------------------------------------------------------------------------
-     */
-
-    boolean existsByCourseIdAndPromotionalLessonUrlIsNotNullAndCourseDeletedAtIsNull(
-            Long courseId
-    );
-
-
-
-    /*
-     |--------------------------------------------------------------------------
-     | Certificate Template
-     |--------------------------------------------------------------------------
-     */
-
-    boolean existsByCourseIdAndCertificateTemplateUrlIsNotNullAndCourseDeletedAtIsNull(
+    boolean existsByCourseIdAndCourseDeletedAtIsNull(
             Long courseId
     );
 

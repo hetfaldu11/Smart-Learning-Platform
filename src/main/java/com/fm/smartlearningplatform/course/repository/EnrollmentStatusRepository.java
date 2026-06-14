@@ -57,6 +57,11 @@ public interface EnrollmentStatusRepository
 
     boolean existsByName(String name);
 
+    boolean existsByIdNotAndName(
+            Long id,
+            String name
+    );
+
 
 
     /*

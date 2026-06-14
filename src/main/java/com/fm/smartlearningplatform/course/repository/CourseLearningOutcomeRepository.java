@@ -20,7 +20,9 @@ public interface CourseLearningOutcomeRepository
      */
 
     Optional<CourseLearningOutcome>
-    findByIdAndCourseDeletedAtIsNull(Long id);
+    findByIdAndCourseDeletedAtIsNull(
+            Long id
+    );
 
 
 
@@ -50,7 +52,7 @@ public interface CourseLearningOutcomeRepository
      */
 
     Page<CourseLearningOutcome>
-    findByOutcomeContainingIgnoreCaseAndCourseDeletedAtIsNull(
+    findByCourseDeletedAtIsNullAndOutcomeContainingIgnoreCase(
             String outcome,
             Pageable pageable
     );
@@ -63,7 +65,17 @@ public interface CourseLearningOutcomeRepository
      |--------------------------------------------------------------------------
      */
 
+    boolean existsByIdAndCourseDeletedAtIsNull(
+            Long id
+    );
+
     boolean existsByCourseIdAndOutcomeAndCourseDeletedAtIsNull(
+            Long courseId,
+            String outcome
+    );
+
+    boolean existsByIdNotAndCourseIdAndOutcomeAndCourseDeletedAtIsNull(
+            Long id,
             Long courseId,
             String outcome
     );

@@ -20,17 +20,26 @@ public interface CourseAssistantInstructorRepository
      |--------------------------------------------------------------------------
      */
 
-    Optional<CourseAssistantInstructor> findById(Long id);
+    Optional<CourseAssistantInstructor>
+    findById(Long id);
 
-    List<CourseAssistantInstructor> findByCourseId(Long courseId);
+    List<CourseAssistantInstructor>
+    findByCourseId(Long courseId);
 
-    Page<CourseAssistantInstructor> findByCourseId(
-            Long courseId, Pageable pageable);
+    Page<CourseAssistantInstructor>
+    findByCourseId(
+            Long courseId,
+            Pageable pageable
+    );
 
-    List<CourseAssistantInstructor> findByInstructorId(Long instructorId);
+    List<CourseAssistantInstructor>
+    findByInstructorId(Long instructorId);
 
-    Page<CourseAssistantInstructor> findByInstructorId(
-            Long instructorId, Pageable pageable);
+    Page<CourseAssistantInstructor>
+    findByInstructorId(
+            Long instructorId,
+            Pageable pageable
+    );
 
 
 
@@ -40,11 +49,16 @@ public interface CourseAssistantInstructorRepository
      |--------------------------------------------------------------------------
      */
 
-    List<CourseAssistantInstructor> findByAssistantInstructorRoleId(
-            Long roleId);
+    List<CourseAssistantInstructor>
+    findByAssistantInstructorRoleId(
+            Long roleId
+    );
 
-    Page<CourseAssistantInstructor> findByAssistantInstructorRoleId(
-            Long roleId, Pageable pageable);
+    Page<CourseAssistantInstructor>
+    findByAssistantInstructorRoleId(
+            Long roleId,
+            Pageable pageable
+    );
 
 
 
@@ -54,8 +68,12 @@ public interface CourseAssistantInstructorRepository
      |--------------------------------------------------------------------------
      */
 
+    boolean existsById(Long id);
+
     boolean existsByCourseIdAndInstructorId(
-            Long courseId, Long instructorId);
+            Long courseId,
+            Long instructorId
+    );
 
 
 
@@ -65,8 +83,11 @@ public interface CourseAssistantInstructorRepository
      |--------------------------------------------------------------------------
      */
 
-    Optional<CourseAssistantInstructor> findByCourseIdAndInstructorId(
-            Long courseId, Long instructorId);
+    Optional<CourseAssistantInstructor>
+    findByCourseIdAndInstructorId(
+            Long courseId,
+            Long instructorId
+    );
 
 
 
@@ -76,7 +97,24 @@ public interface CourseAssistantInstructorRepository
      |--------------------------------------------------------------------------
      */
 
-    Page<CourseAssistantInstructor> findByInstructorAndAssistantInstructorRoleId(
-            User instructor, Long roleId, Pageable pageable);
+    Page<CourseAssistantInstructor>
+    findByInstructorAndAssistantInstructorRoleId(
+            User instructor,
+            Long roleId,
+            Pageable pageable
+    );
+
+
+
+    /*
+     |--------------------------------------------------------------------------
+     | Sorting
+     |--------------------------------------------------------------------------
+     */
+
+    List<CourseAssistantInstructor>
+    findByCourseIdOrderByIdAsc(
+            Long courseId
+    );
 
 }

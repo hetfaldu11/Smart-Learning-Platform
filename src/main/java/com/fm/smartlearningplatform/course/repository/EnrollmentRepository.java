@@ -21,7 +21,9 @@ public interface EnrollmentRepository
      */
 
     Optional<Enrollment>
-    findByIdAndCourseDeletedAtIsNull(Long id);
+    findByIdAndCourseDeletedAtIsNull(
+            Long id
+    );
 
     Optional<Enrollment>
     findByUserIdAndCourseIdAndCourseDeletedAtIsNull(
@@ -126,9 +128,29 @@ public interface EnrollmentRepository
      |--------------------------------------------------------------------------
      */
 
+    boolean existsByIdAndCourseDeletedAtIsNull(
+            Long id
+    );
+
     boolean existsByUserIdAndCourseIdAndCourseDeletedAtIsNull(
             Long userId,
             Long courseId
+    );
+
+
+
+    /*
+     |--------------------------------------------------------------------------
+     | Statistics
+     |--------------------------------------------------------------------------
+     */
+
+    long countByCourseIdAndCourseDeletedAtIsNull(
+            Long courseId
+    );
+
+    long countByEnrollmentStatusIdAndCourseDeletedAtIsNull(
+            Long enrollmentStatusId
     );
 
 }

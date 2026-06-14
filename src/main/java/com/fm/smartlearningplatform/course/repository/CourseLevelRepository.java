@@ -1,5 +1,6 @@
 package com.fm.smartlearningplatform.course.repository;
 
+import com.fm.smartlearningplatform.course.model.CourseLevel;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface CourseLevelRepository
-        extends JpaRepository<CourseLevelRepository, Long> {
+        extends JpaRepository<CourseLevel, Long> {
 
     /*
      |--------------------------------------------------------------------------
@@ -18,16 +19,16 @@ public interface CourseLevelRepository
      |--------------------------------------------------------------------------
      */
 
-    Optional<CourseLevelRepository>
+    Optional<CourseLevel>
     findByIdAndDeletedAtIsNull(Long id);
 
-    Optional<CourseLevelRepository>
+    Optional<CourseLevel>
     findByNameAndDeletedAtIsNull(String name);
 
-    List<CourseLevelRepository>
+    List<CourseLevel>
     findByDeletedAtIsNull();
 
-    Page<CourseLevelRepository>
+    Page<CourseLevel>
     findByDeletedAtIsNull(Pageable pageable);
 
 
@@ -38,10 +39,10 @@ public interface CourseLevelRepository
      |--------------------------------------------------------------------------
      */
 
-    List<CourseLevelRepository>
+    List<CourseLevel>
     findByDeletedAtIsNotNull();
 
-    Page<CourseLevelRepository>
+    Page<CourseLevel>
     findByDeletedAtIsNotNull(Pageable pageable);
 
 
@@ -52,8 +53,8 @@ public interface CourseLevelRepository
      |--------------------------------------------------------------------------
      */
 
-    Page<CourseLevelRepository>
-    findByNameContainingIgnoreCaseAndDeletedAtIsNull(
+    Page<CourseLevel>
+    findByDeletedAtIsNullAndNameContainingIgnoreCase(
             String name,
             Pageable pageable
     );
@@ -69,5 +70,21 @@ public interface CourseLevelRepository
     boolean existsByIdAndDeletedAtIsNull(Long id);
 
     boolean existsByNameAndDeletedAtIsNull(String name);
+
+    boolean existsByIdNotAndNameAndDeletedAtIsNull(
+            Long id,
+            String name
+    );
+
+
+
+    /*
+     |--------------------------------------------------------------------------
+     | Sorting
+     |--------------------------------------------------------------------------
+     */
+
+    List<CourseLevel>
+    findByDeletedAtIsNullOrderByNameAsc();
 
 }

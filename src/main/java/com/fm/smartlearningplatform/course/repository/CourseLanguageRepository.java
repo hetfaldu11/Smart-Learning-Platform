@@ -21,7 +21,9 @@ public interface CourseLanguageRepository
      */
 
     Optional<CourseLanguage>
-    findByIdAndCourseDeletedAtIsNull(Long id);
+    findByIdAndCourseDeletedAtIsNull(
+            Long id
+    );
 
 
 
@@ -82,6 +84,10 @@ public interface CourseLanguageRepository
      |--------------------------------------------------------------------------
      */
 
+    boolean existsByIdAndCourseDeletedAtIsNull(
+            Long id
+    );
+
     boolean existsByCourseIdAndLanguageIdAndCourseDeletedAtIsNull(
             Long courseId,
             Long languageId
@@ -112,6 +118,19 @@ public interface CourseLanguageRepository
     List<CourseLanguage>
     findByLanguageAndCourseDeletedAtIsNull(
             Language language
+    );
+
+
+
+    /*
+     |--------------------------------------------------------------------------
+     | Sorting
+     |--------------------------------------------------------------------------
+     */
+
+    List<CourseLanguage>
+    findByCourseIdAndCourseDeletedAtIsNullOrderByIsPrimaryDescIdAsc(
+            Long courseId
     );
 
 }

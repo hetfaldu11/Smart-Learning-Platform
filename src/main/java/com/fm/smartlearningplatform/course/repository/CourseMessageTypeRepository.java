@@ -54,7 +54,7 @@ public interface CourseMessageTypeRepository
      */
 
     Page<CourseMessageType>
-    findByNameContainingIgnoreCaseAndDeletedAtIsNull(
+    findByDeletedAtIsNullAndNameContainingIgnoreCase(
             String name,
             Pageable pageable
     );
@@ -70,5 +70,21 @@ public interface CourseMessageTypeRepository
     boolean existsByIdAndDeletedAtIsNull(Long id);
 
     boolean existsByNameAndDeletedAtIsNull(String name);
+
+    boolean existsByIdNotAndNameAndDeletedAtIsNull(
+            Long id,
+            String name
+    );
+
+
+
+    /*
+     |--------------------------------------------------------------------------
+     | Sorting
+     |--------------------------------------------------------------------------
+     */
+
+    List<CourseMessageType>
+    findByDeletedAtIsNullOrderByNameAsc();
 
 }

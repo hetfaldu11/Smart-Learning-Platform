@@ -4,7 +4,6 @@ import com.fm.smartlearningplatform.course.model.CoursePricing;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
 @Repository
@@ -18,7 +17,9 @@ public interface CoursePricingRepository
      */
 
     Optional<CoursePricing>
-    findByIdAndCourseDeletedAtIsNull(Long courseId);
+    findByIdAndCourseDeletedAtIsNull(
+            Long courseId
+    );
 
     Optional<CoursePricing>
     findByCourseIdAndCourseDeletedAtIsNull(
@@ -29,39 +30,12 @@ public interface CoursePricingRepository
 
     /*
      |--------------------------------------------------------------------------
-     | Currency
+     | Validation / Existence
      |--------------------------------------------------------------------------
      */
 
-    boolean existsByCourseIdAndCurrencyIdAndCourseDeletedAtIsNull(
-            Long courseId,
-            Long currencyId
-    );
-
-
-
-    /*
-     |--------------------------------------------------------------------------
-     | Discount Validation
-     |--------------------------------------------------------------------------
-     */
-
-    boolean existsByCourseIdAndDiscountPriceGreaterThanAndCourseDeletedAtIsNull(
-            Long courseId,
-            BigDecimal discountPrice
-    );
-
-
-
-    /*
-     |--------------------------------------------------------------------------
-     | Price Filters
-     |--------------------------------------------------------------------------
-     */
-
-    boolean existsByCourseIdAndPriceGreaterThanAndCourseDeletedAtIsNull(
-            Long courseId,
-            BigDecimal price
+    boolean existsByCourseIdAndCourseDeletedAtIsNull(
+            Long courseId
     );
 
 }

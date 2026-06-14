@@ -54,7 +54,7 @@ public interface CourseStatusRepository
      */
 
     Page<CourseStatus>
-    findByNameContainingIgnoreCaseAndDeletedAtIsNull(
+    findByDeletedAtIsNullAndNameContainingIgnoreCase(
             String name,
             Pageable pageable
     );
@@ -70,5 +70,21 @@ public interface CourseStatusRepository
     boolean existsByIdAndDeletedAtIsNull(Long id);
 
     boolean existsByNameAndDeletedAtIsNull(String name);
+
+    boolean existsByIdNotAndNameAndDeletedAtIsNull(
+            Long id,
+            String name
+    );
+
+
+
+    /*
+     |--------------------------------------------------------------------------
+     | Sorting
+     |--------------------------------------------------------------------------
+     */
+
+    List<CourseStatus>
+    findByDeletedAtIsNullOrderByNameAsc();
 
 }

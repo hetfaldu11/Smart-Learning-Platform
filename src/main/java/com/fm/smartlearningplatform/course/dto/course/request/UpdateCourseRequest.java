@@ -20,14 +20,17 @@ public record UpdateCourseRequest(
 
         Long courseLevelId,
 
-        Long courseStatusId
+        Long courseStatusId,
+
+        Long instructorId
 
 ) {
 
     public UpdateCourseRequest {
 
         if (title != null) {
-            title = title.trim().toLowerCase();
+            title = title.trim().replaceAll("\\s+", " ")
+                    .toLowerCase();
 
             if (title.isBlank()) {
                 title = null;
@@ -35,7 +38,8 @@ public record UpdateCourseRequest(
         }
 
         if (subtitle != null) {
-            subtitle = subtitle.trim().toLowerCase();
+            subtitle = subtitle.trim().replaceAll("\\s+", " ")
+                    .toLowerCase();;
 
             if (subtitle.isBlank()) {
                 subtitle = null;

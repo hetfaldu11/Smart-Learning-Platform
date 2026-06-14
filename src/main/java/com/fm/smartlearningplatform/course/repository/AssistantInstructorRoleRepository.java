@@ -19,15 +19,17 @@ public interface AssistantInstructorRoleRepository
      |--------------------------------------------------------------------------
      */
 
-    Optional<AssistantInstructorRole> findByIdAndDeletedAtIsNull(Long id);
+    Optional<AssistantInstructorRole>
+    findByIdAndDeletedAtIsNull(Long id);
 
-    Optional<AssistantInstructorRole> findByNameAndDeletedAtIsNull(String name);
+    Optional<AssistantInstructorRole>
+    findByNameAndDeletedAtIsNull(String name);
 
-    boolean existsByNameAndDeletedAtIsNull(String name);
+    List<AssistantInstructorRole>
+    findByDeletedAtIsNull();
 
-    List<AssistantInstructorRole> findByDeletedAtIsNull();
-
-    Page<AssistantInstructorRole> findByDeletedAtIsNull(Pageable pageable);
+    Page<AssistantInstructorRole>
+    findByDeletedAtIsNull(Pageable pageable);
 
 
 
@@ -37,9 +39,11 @@ public interface AssistantInstructorRoleRepository
      |--------------------------------------------------------------------------
      */
 
-    List<AssistantInstructorRole> findByDeletedAtIsNotNull();
+    List<AssistantInstructorRole>
+    findByDeletedAtIsNotNull();
 
-    Page<AssistantInstructorRole> findByDeletedAtIsNotNull(Pageable pageable);
+    Page<AssistantInstructorRole>
+    findByDeletedAtIsNotNull(Pageable pageable);
 
 
 
@@ -49,8 +53,11 @@ public interface AssistantInstructorRoleRepository
      |--------------------------------------------------------------------------
      */
 
-    Page<AssistantInstructorRole> findByNameContainingIgnoreCaseAndDeletedAtIsNull(
-            String name, Pageable pageable);
+    Page<AssistantInstructorRole>
+    findByDeletedAtIsNullAndNameContainingIgnoreCase(
+            String name,
+            Pageable pageable
+    );
 
 
 
@@ -61,5 +68,23 @@ public interface AssistantInstructorRoleRepository
      */
 
     boolean existsByIdAndDeletedAtIsNull(Long id);
+
+    boolean existsByNameAndDeletedAtIsNull(String name);
+
+    boolean existsByIdNotAndNameAndDeletedAtIsNull(
+            Long id,
+            String name
+    );
+
+
+
+    /*
+     |--------------------------------------------------------------------------
+     | Sorting
+     |--------------------------------------------------------------------------
+     */
+
+    List<AssistantInstructorRole>
+    findByDeletedAtIsNullOrderByNameAsc();
 
 }
