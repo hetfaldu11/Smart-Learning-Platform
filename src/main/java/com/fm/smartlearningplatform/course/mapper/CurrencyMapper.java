@@ -14,19 +14,14 @@ public interface CurrencyMapper {
 
     @Mapping(target = "id", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
+
     Currency toEntity(
             CreateCurrencyRequest request
     );
 
-
-
     CurrencyResponse toResponse(
             Currency currency
     );
-
-
 
     @BeanMapping(
             nullValuePropertyMappingStrategy =
@@ -34,8 +29,6 @@ public interface CurrencyMapper {
     )
     @Mapping(target = "id", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     void update(
             UpdateCurrencyRequest request,
             @MappingTarget Currency currency

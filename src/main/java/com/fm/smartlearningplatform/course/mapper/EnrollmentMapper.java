@@ -20,8 +20,7 @@ public interface EnrollmentMapper {
 
     @Mapping(target = "completedAt", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
+
     Enrollment toEntity(
             CreateEnrollmentRequest request
     );
@@ -29,7 +28,7 @@ public interface EnrollmentMapper {
 
 
     @Mapping(target = "userId", source = "user.id")
-    @Mapping(target = "userName", source = "user.username")
+    @Mapping(target = "userName", source = "user.email")
 
     @Mapping(target = "courseId", source = "course.id")
     @Mapping(target = "courseTitle", source = "course.title")
@@ -58,8 +57,7 @@ public interface EnrollmentMapper {
     @Mapping(target = "course", ignore = true)
     @Mapping(target = "enrollmentStatus", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
+
     void update(
             UpdateEnrollmentRequest request,
             @MappingTarget Enrollment enrollment

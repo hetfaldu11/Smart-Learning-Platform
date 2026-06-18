@@ -4,16 +4,13 @@ import java.time.LocalDateTime;
 
 public record CourseAssistantInstructorResponse(
 
-        Long id,
-
         Long courseId,
-
+        String courseTitle,
 
         Long instructorId,
+        String instructorName,
 
+        Long assistantInstructorRoleId,
+        String assistantInstructorRoleName
 
-        Long assistantInstructorRoleId
-
-
-) {
-}
+) {}

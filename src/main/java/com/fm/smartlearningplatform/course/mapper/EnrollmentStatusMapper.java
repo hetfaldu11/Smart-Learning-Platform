@@ -14,8 +14,6 @@ public interface EnrollmentStatusMapper {
 
     @Mapping(target = "id", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     EnrollmentStatus toEntity(
             CreateEnrollmentStatusRequest request
     );
@@ -34,8 +32,6 @@ public interface EnrollmentStatusMapper {
     )
     @Mapping(target = "id", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     void update(
             UpdateEnrollmentStatusRequest request,
             @MappingTarget EnrollmentStatus enrollmentStatus

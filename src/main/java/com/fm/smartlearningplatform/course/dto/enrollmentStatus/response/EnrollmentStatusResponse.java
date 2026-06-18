@@ -8,11 +8,7 @@ public record EnrollmentStatusResponse(
 
         String name,
 
-        String description,
-
-        LocalDateTime createdAt,
-
-        LocalDateTime updatedAt
+        String description
 
 ) {
 }

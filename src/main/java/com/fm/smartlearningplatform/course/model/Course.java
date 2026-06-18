@@ -1,6 +1,5 @@
 package com.fm.smartlearningplatform.course.model;
 
-import com.fm.smartlearningplatform.model.lesson.Section;
 import com.fm.smartlearningplatform.user.model.Auditable;
 import com.fm.smartlearningplatform.user.model.User;
 import jakarta.persistence.*;
@@ -46,33 +45,6 @@ public class Course extends Auditable {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
-//    @OneToOne(
-//            mappedBy = "course",
-//            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
-//            orphanRemoval = true)
-//    private CourseDetail courseDetail;
-
-//    @OneToOne(
-//            mappedBy = "course",
-//            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
-//            orphanRemoval = true
-//    )
-//    private CourseMedia courseMedia;
-
-//    @OneToOne(
-//            mappedBy = "course",
-//            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
-//            orphanRemoval = true
-//    )
-//    private CourseSupport courseSupport;
-
-//    @OneToOne(
-//            mappedBy = "course",
-//            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
-//            orphanRemoval = true
-//    )
-//    private CoursePricing coursePricing;
-
     @OneToMany(
             mappedBy = "course",
             cascade = {CascadeType.PERSIST,CascadeType.MERGE},
@@ -99,7 +71,6 @@ public class Course extends Auditable {
     @Builder.Default
     private List<CourseLearningOutcome> courseLearningOutcomes= new ArrayList<>();
 
-
     @OneToMany(
             mappedBy = "course",
             cascade = {CascadeType.PERSIST,CascadeType.MERGE},
@@ -116,13 +87,12 @@ public class Course extends Auditable {
     @Builder.Default
     private List<CourseAssistantInstructor> assistantInstructors= new ArrayList<>();
 
-
-    @OneToMany(
-            mappedBy = "course",
-            cascade =  {CascadeType.PERSIST,CascadeType.MERGE},
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<Section>sections = new ArrayList<>();
+//    @OneToMany(
+//            mappedBy = "course",
+//            cascade =  {CascadeType.PERSIST,CascadeType.MERGE},
+//            orphanRemoval = true,
+//            fetch = FetchType.LAZY)
+//    @Builder.Default
+//    private List<Section>sections = new ArrayList<>();
 
 }

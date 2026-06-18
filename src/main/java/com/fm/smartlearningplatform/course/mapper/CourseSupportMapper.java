@@ -16,20 +16,14 @@ public interface CourseSupportMapper {
 
     @Mapping(target = "course", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     CourseSupport toEntity(
             CreateCourseSupportRequest request
     );
-
-
 
     @Mapping(target = "courseId", source = "course.id")
     CourseSupportResponse toResponse(
             CourseSupport courseSupport
     );
-
-
 
     @BeanMapping(
             nullValuePropertyMappingStrategy =
@@ -39,8 +33,7 @@ public interface CourseSupportMapper {
 
     @Mapping(target = "course", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
+
     void update(
             UpdateCourseSupportRequest request,
             @MappingTarget CourseSupport courseSupport

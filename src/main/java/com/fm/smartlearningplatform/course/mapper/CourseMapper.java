@@ -25,10 +25,6 @@ public interface CourseMapper {
     @Mapping(target = "courseLearningOutcomes", ignore = true)
     @Mapping(target = "courseLanguages", ignore = true)
     @Mapping(target = "assistantInstructors", ignore = true)
-    @Mapping(target = "sections", ignore = true)
-
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     Course toEntity(CreateCourseRequest request);
 
 
@@ -36,7 +32,7 @@ public interface CourseMapper {
     @Mapping(target = "instructorId", source = "instructor.id")
     @Mapping(
             target = "instructorName",
-            source = "instructor.username"
+            source = "instructor.email"
     )
 
     @Mapping(
@@ -77,13 +73,8 @@ public interface CourseMapper {
     @Mapping(target = "courseLearningOutcomes", ignore = true)
     @Mapping(target = "courseLanguages", ignore = true)
     @Mapping(target = "assistantInstructors", ignore = true)
-    @Mapping(target = "sections", ignore = true)
+//    @Mapping(target = "sections", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    void update(
-            UpdateCourseRequest request,
-            @MappingTarget Course course
-    );
+    void update(UpdateCourseRequest request, @MappingTarget Course course);
 
 }

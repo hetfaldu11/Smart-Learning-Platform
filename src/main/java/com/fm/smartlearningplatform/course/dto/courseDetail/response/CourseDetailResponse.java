@@ -14,11 +14,8 @@ public record CourseDetailResponse(
 
         boolean hasProject,
 
-        boolean hasQuiz,
+        boolean hasQuiz
 
-        LocalDateTime createdAt,
-
-        LocalDateTime updatedAt
 
 ) {
 }

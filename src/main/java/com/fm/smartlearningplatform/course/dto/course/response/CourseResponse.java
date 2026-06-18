@@ -16,10 +16,8 @@ public record CourseResponse(
         String courseLevelName,
 
         Long courseStatusId,
-        String courseStatusName,
+        String courseStatusName
 
-        LocalDateTime createdAt,
-        LocalDateTime updatedAt
 
 ) {
 }

@@ -8,11 +8,7 @@ public record CurrencyResponse(
 
         String name,
 
-        String code,
-
-        LocalDateTime createdAt,
-
-        LocalDateTime updatedAt
+        String code
 
 ) {
 }

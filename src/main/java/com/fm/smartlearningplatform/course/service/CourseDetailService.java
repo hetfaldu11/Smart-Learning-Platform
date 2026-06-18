@@ -11,6 +11,8 @@ import com.fm.smartlearningplatform.course.repository.CourseRepository;
 import com.fm.smartlearningplatform.exceptionhandler.exception.DuplicateResourceException;
 import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -59,6 +61,12 @@ public class CourseDetailService {
         return courseDetailMapper.toResponse(
                 getCourseDetail(courseId)
         );
+    }
+
+    public Page<CourseDetailResponse> findAll(Pageable pageable) {
+        return courseDetailRepository
+                .findAll(pageable)
+                .map(courseDetailMapper::toResponse);
     }
 
     // ─── Update ───────────────────────────────────────────────

@@ -15,11 +15,7 @@ public record EnrollmentResponse(
         Long enrollmentStatusId,
         String enrollmentStatusName,
 
-        LocalDateTime completedAt,
-
-        LocalDateTime createdAt,
-
-        LocalDateTime updatedAt
+        LocalDateTime completedAt
 
 ) {
 }

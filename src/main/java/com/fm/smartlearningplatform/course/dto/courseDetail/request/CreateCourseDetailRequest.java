@@ -30,13 +30,14 @@ public record CreateCourseDetailRequest(
     public CreateCourseDetailRequest {
 
         if (description != null) {
+
             description = description.trim()
                     .replaceAll("\\s+", " ")
                     .toLowerCase();
-        }
 
-        if (description.isBlank()) {
-            description = null;
+            if (description.isEmpty()) {
+                description = null;
+            }
         }
     }
 }

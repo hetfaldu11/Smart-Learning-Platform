@@ -18,9 +18,8 @@ public record CreateCourseLearningOutcomeRequest(
         )
         String outcome,
 
-        @PositiveOrZero(
-                message = "Display order must be greater than or equal to 0."
-        )
+        @PositiveOrZero(message = "Display order must be greater than or equal to 0.")
+        @NotNull(message = "displayOrder is required.")
         Integer displayOrder
 
 ) {

@@ -10,11 +10,7 @@ public record CourseMediaResponse(
 
         String promotionalLessonUrl,
 
-        String certificateTemplateUrl,
-
-        LocalDateTime createdAt,
-
-        LocalDateTime updatedAt
+        String certificateTemplateUrl
 
 ) {
 }

@@ -16,8 +16,7 @@ public interface CourseRequirementMapper {
 
     @Mapping(target = "course", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
+
     CourseRequirement toEntity(
             CreateCourseRequirementRequest request
     );
@@ -39,9 +38,6 @@ public interface CourseRequirementMapper {
     @Mapping(target = "id", ignore = true)
 
     @Mapping(target = "course", ignore = true)
-
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     void update(
             UpdateCourseRequirementRequest request,
             @MappingTarget CourseRequirement courseRequirement

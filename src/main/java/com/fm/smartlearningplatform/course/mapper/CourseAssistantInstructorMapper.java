@@ -19,28 +19,23 @@ public interface CourseAssistantInstructorMapper {
     @Mapping(target = "instructor", ignore = true)
     @Mapping(target = "assistantInstructorRole", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
+//    @Mapping(target = "createdAt", ignore = true)
+//    @Mapping(target = "updatedAt", ignore = true)
     CourseAssistantInstructor toEntity(
             CreateCourseAssistantInstructorRequest request
     );
-
-
 
     @Mapping(target = "courseId", source = "course.id")
     @Mapping(target = "courseTitle", source = "course.title")
 
     @Mapping(target = "instructorId", source = "instructor.id")
-    @Mapping(target = "instructorName", source = "instructor.username")
+    @Mapping(target = "instructorName", source = "instructor.email")
 
-    @Mapping(
-            target = "assistantInstructorRoleId",
-            source = "assistantInstructorRole.id"
-    )
-    @Mapping(
-            target = "assistantInstructorRoleName",
-            source = "assistantInstructorRole.name"
-    )
+    @Mapping(target = "assistantInstructorRoleId",
+            source = "assistantInstructorRole.id")
+    @Mapping(target = "assistantInstructorRoleName",
+            source = "assistantInstructorRole.name")
+
     CourseAssistantInstructorResponse toResponse(
             CourseAssistantInstructor courseAssistantInstructor
     );

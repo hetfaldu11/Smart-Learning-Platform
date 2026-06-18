@@ -6,11 +6,7 @@ public record CourseLevelResponse(
 
         Long id,
 
-        String name,
-
-        LocalDateTime createdAt,
-
-        LocalDateTime updatedAt
+        String name
 
 ) {
 }

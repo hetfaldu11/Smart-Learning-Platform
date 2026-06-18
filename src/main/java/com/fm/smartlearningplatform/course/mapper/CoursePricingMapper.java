@@ -17,8 +17,8 @@ public interface CoursePricingMapper {
     @Mapping(target = "course", ignore = true)
     @Mapping(target = "currency", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
+//    @Mapping(target = "createdAt", ignore = true)
+//    @Mapping(target = "updatedAt", ignore = true)
     CoursePricing toEntity(
             CreateCoursePricingRequest request
     );
@@ -41,12 +41,8 @@ public interface CoursePricingMapper {
                     NullValuePropertyMappingStrategy.IGNORE
     )
     @Mapping(target = "id", ignore = true)
-
     @Mapping(target = "course", ignore = true)
     @Mapping(target = "currency", ignore = true)
-
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     void update(
             UpdateCoursePricingRequest request,
             @MappingTarget CoursePricing coursePricing

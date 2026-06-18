@@ -15,9 +15,6 @@ public interface CourseLevelMapper {
     @Mapping(target = "id", ignore = true)
 
     @Mapping(target = "deletedAt", ignore = true)
-
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     CourseLevel toEntity(
             CreateCourseLevelRequest request
     );
@@ -38,8 +35,6 @@ public interface CourseLevelMapper {
 
     @Mapping(target = "deletedAt", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     void update(
             UpdateCourseLevelRequest request,
             @MappingTarget CourseLevel courseLevel

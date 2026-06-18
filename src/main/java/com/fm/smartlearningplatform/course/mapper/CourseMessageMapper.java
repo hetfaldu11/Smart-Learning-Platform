@@ -17,8 +17,6 @@ public interface CourseMessageMapper {
     @Mapping(target = "course", ignore = true)
     @Mapping(target = "courseMessageType", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     CourseMessage toEntity(
             CreateCourseMessageRequest request
     );
@@ -51,8 +49,6 @@ public interface CourseMessageMapper {
     @Mapping(target = "course", ignore = true)
     @Mapping(target = "courseMessageType", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     void update(
             UpdateCourseMessageRequest request,
             @MappingTarget CourseMessage courseMessage

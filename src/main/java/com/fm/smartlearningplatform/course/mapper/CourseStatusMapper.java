@@ -15,9 +15,6 @@ public interface CourseStatusMapper {
     @Mapping(target = "id", ignore = true)
 
     @Mapping(target = "deletedAt", ignore = true)
-
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     CourseStatus toEntity(
             CreateCourseStatusRequest request
     );
@@ -38,8 +35,6 @@ public interface CourseStatusMapper {
 
     @Mapping(target = "deletedAt", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     void update(
             UpdateCourseStatusRequest request,
             @MappingTarget CourseStatus courseStatus

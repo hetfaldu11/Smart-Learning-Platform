@@ -14,12 +14,9 @@ import org.mapstruct.ReportingPolicy;
 public interface CourseLanguageMapper {
 
     @Mapping(target = "id", ignore = true)
-
     @Mapping(target = "course", ignore = true)
     @Mapping(target = "language", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     CourseLanguage toEntity(
             CreateCourseLanguageRequest request
     );

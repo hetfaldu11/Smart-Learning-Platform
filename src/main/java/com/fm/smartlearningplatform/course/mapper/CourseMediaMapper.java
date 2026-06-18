@@ -16,8 +16,6 @@ public interface CourseMediaMapper {
 
     @Mapping(target = "course", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     CourseMedia toEntity(
             CreateCourseMediaRequest request
     );
@@ -38,9 +36,6 @@ public interface CourseMediaMapper {
     @Mapping(target = "id", ignore = true)
 
     @Mapping(target = "course", ignore = true)
-
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     void update(
             UpdateCourseMediaRequest request,
             @MappingTarget CourseMedia courseMedia

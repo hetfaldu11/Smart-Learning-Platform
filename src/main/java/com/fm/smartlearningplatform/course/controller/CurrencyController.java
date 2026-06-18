@@ -14,7 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/v1/currencies")
+@RequestMapping("/api/v1/currency")
 @RequiredArgsConstructor
 public class CurrencyController {
 
@@ -23,8 +23,7 @@ public class CurrencyController {
     // ─── Create ───────────────────────────────────────────────
 
     @PostMapping
-    public ResponseEntity<CurrencyResponse>
-    createCurrency(
+    public ResponseEntity<CurrencyResponse> createCurrency(
             @Valid
             @RequestBody
             CreateCurrencyRequest request

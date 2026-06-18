@@ -12,35 +12,21 @@ import org.mapstruct.*;
 )
 public interface CourseDetailMapper {
 
-    @Mapping(target = "id", ignore = true)
-
-    @Mapping(target = "course", ignore = true)
-
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    CourseDetail toEntity(
-            CreateCourseDetailRequest request
-    );
-
-
-
-    @Mapping(target = "courseId", source = "course.id")
-    CourseDetailResponse toResponse(
-            CourseDetail courseDetail
-    );
-
-
-
     @BeanMapping(
             nullValuePropertyMappingStrategy =
                     NullValuePropertyMappingStrategy.IGNORE
     )
     @Mapping(target = "id", ignore = true)
-
     @Mapping(target = "course", ignore = true)
+    CourseDetail toEntity(CreateCourseDetailRequest request);
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "courseId", source = "course.id")
+    CourseDetailResponse toResponse(CourseDetail courseDetail);
+
+
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "course", ignore = true)
     void update(
             UpdateCourseDetailRequest request,
             @MappingTarget CourseDetail courseDetail

@@ -62,20 +62,13 @@ public class CourseAssistantInstructorService {
                         request.assistantInstructorRoleId()
                 );
 
-        CourseAssistantInstructor courseAssistantInstructor =
-                courseAssistantInstructorMapper.toEntity(
-                        request
-                );
+        CourseAssistantInstructor courseAssistantInstructor = courseAssistantInstructorMapper.toEntity(request);
 
         courseAssistantInstructor.setCourse(course);
 
-        courseAssistantInstructor.setInstructor(
-                instructor
-        );
+        courseAssistantInstructor.setInstructor(instructor);
 
-        courseAssistantInstructor.setAssistantInstructorRole(
-                assistantInstructorRole
-        );
+        courseAssistantInstructor.setAssistantInstructorRole(assistantInstructorRole);
 
         return courseAssistantInstructorMapper.toResponse(
                 courseAssistantInstructorRepository.save(
@@ -107,10 +100,7 @@ public class CourseAssistantInstructorService {
                         courseId,
                         pageable
                 )
-                .map(
-                        courseAssistantInstructorMapper
-                                ::toResponse
-                );
+                .map(courseAssistantInstructorMapper::toResponse);
     }
 
     // ─── Delete ───────────────────────────────────────────────

@@ -13,16 +13,9 @@ import org.mapstruct.*;
 public interface CourseLearningOutcomeMapper {
 
     @Mapping(target = "id", ignore = true)
-
     @Mapping(target = "course", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    CourseLearningOutcome toEntity(
-            CreateCourseLearningOutcomeRequest request
-    );
-
-
+    CourseLearningOutcome toEntity(CreateCourseLearningOutcomeRequest request);
 
     @Mapping(target = "courseId", source = "course.id")
     @Mapping(target = "courseTitle", source = "course.title")
@@ -32,16 +25,9 @@ public interface CourseLearningOutcomeMapper {
 
 
 
-    @BeanMapping(
-            nullValuePropertyMappingStrategy =
-                    NullValuePropertyMappingStrategy.IGNORE
-    )
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
-
     @Mapping(target = "course", ignore = true)
-
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     void update(
             UpdateCourseLearningOutcomeRequest request,
             @MappingTarget CourseLearningOutcome courseLearningOutcome

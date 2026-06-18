@@ -21,11 +21,9 @@ import java.time.LocalDateTime;
 @Transactional(readOnly = true)
 public class AssistantInstructorRoleService {
 
-    private final AssistantInstructorRoleRepository
-            assistantInstructorRoleRepository;
+    private final AssistantInstructorRoleRepository assistantInstructorRoleRepository;
 
-    private final AssistantInstructorRoleMapper
-            assistantInstructorRoleMapper;
+    private final AssistantInstructorRoleMapper assistantInstructorRoleMapper;
 
     // ─── Create ───────────────────────────────────────────────
 
@@ -52,16 +50,10 @@ public class AssistantInstructorRoleService {
             Long assistantInstructorRoleId
     ) {
 
-        return assistantInstructorRoleMapper.toResponse(
-                getAssistantInstructorRole(
-                        assistantInstructorRoleId
-                )
-        );
+        return assistantInstructorRoleMapper.toResponse(getAssistantInstructorRole(assistantInstructorRoleId));
     }
 
-    public Page<AssistantInstructorRoleResponse> search(
-            String keyword,
-            Pageable pageable
+    public Page<AssistantInstructorRoleResponse> search(String keyword, Pageable pageable
     ) {
 
         Page<AssistantInstructorRole> roles;
@@ -71,20 +63,17 @@ public class AssistantInstructorRoleService {
             roles = assistantInstructorRoleRepository
                     .findByDeletedAtIsNull(pageable);
 
-        } else {
+        }
+        else
+        {
 
             keyword = keyword.trim();
 
             roles = assistantInstructorRoleRepository
-                    .findByDeletedAtIsNullAndNameContainingIgnoreCase(
-                            keyword,
-                            pageable
-                    );
+                    .findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
 
-        return roles.map(
-                assistantInstructorRoleMapper::toResponse
-        );
+        return roles.map(assistantInstructorRoleMapper::toResponse);
     }
 
     // ─── Update ───────────────────────────────────────────────
@@ -96,33 +85,18 @@ public class AssistantInstructorRoleService {
     ) {
 
         AssistantInstructorRole assistantInstructorRole =
-                getAssistantInstructorRole(
-                        assistantInstructorRoleId
-                );
+                getAssistantInstructorRole(assistantInstructorRoleId);
 
-        if (
-                request.name() != null
-                        && assistantInstructorRoleRepository
-                        .existsByIdNotAndNameAndDeletedAtIsNull(
-                                assistantInstructorRoleId,
-                                request.name()
-                        )
+        if (request.name() != null && assistantInstructorRoleRepository
+                        .existsByIdNotAndNameAndDeletedAtIsNull(assistantInstructorRoleId, request.name())
         ) {
 
-            throw new DuplicateResourceException(
-                    "Assistant instructor role already exists."
-            );
+            throw new DuplicateResourceException("Assistant instructor role already exists.");
         }
-
-        assistantInstructorRoleMapper.update(
-                request,
-                assistantInstructorRole
-        );
+        assistantInstructorRoleMapper.update(request, assistantInstructorRole);
 
         return assistantInstructorRoleMapper.toResponse(
-                assistantInstructorRoleRepository.save(
-                        assistantInstructorRole
-                )
+                assistantInstructorRoleRepository.save(assistantInstructorRole)
         );
     }
 

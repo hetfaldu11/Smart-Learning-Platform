@@ -27,7 +27,8 @@ public class CourseDetail  extends Auditable {
     private Course course;
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
-    private String description;
+    @Builder.Default
+    private String description=null;
 
     @Column(name = "certification_available")
     @Builder.Default

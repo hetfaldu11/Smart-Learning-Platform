@@ -1,14 +1,9 @@
 package com.fm.smartlearningplatform.course.model;
 
 import com.fm.smartlearningplatform.user.model.Auditable;
-import com.fm.smartlearningplatform.user.model.Role;
 import com.fm.smartlearningplatform.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "course_assistant_instructors",

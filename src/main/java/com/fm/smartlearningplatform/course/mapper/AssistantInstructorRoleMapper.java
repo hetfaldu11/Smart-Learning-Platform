@@ -16,17 +16,11 @@ public interface AssistantInstructorRoleMapper {
 
     @Mapping(target = "deletedAt", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
-    AssistantInstructorRole toEntity(
-            CreateAssistantInstructorRoleRequest request
-    );
+    AssistantInstructorRole toEntity(CreateAssistantInstructorRoleRequest request);
 
 
 
-    AssistantInstructorRoleResponse toResponse(
-            AssistantInstructorRole assistantInstructorRole
-    );
+    AssistantInstructorRoleResponse toResponse(AssistantInstructorRole assistantInstructorRole);
 
 
 
@@ -35,11 +29,8 @@ public interface AssistantInstructorRoleMapper {
                     NullValuePropertyMappingStrategy.IGNORE
     )
     @Mapping(target = "id", ignore = true)
-
     @Mapping(target = "deletedAt", ignore = true)
 
-    @Mapping(target = "createdAt", ignore = true)
-    @Mapping(target = "updatedAt", ignore = true)
     void update(
             UpdateAssistantInstructorRoleRequest request,
             @MappingTarget AssistantInstructorRole assistantInstructorRole
