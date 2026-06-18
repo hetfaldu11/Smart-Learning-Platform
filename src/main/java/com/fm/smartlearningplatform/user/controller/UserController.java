@@ -7,6 +7,9 @@ import com.fm.smartlearningplatform.user.dto.user.response.UserResponse;
 import com.fm.smartlearningplatform.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,12 +39,11 @@ public class UserController {
     }
 
     // ─── Find All ─────────────────────────────────────────────
-
     @GetMapping
-    public ResponseEntity<List<UserResponse>> findAll() {
-        return ResponseEntity.ok(userService.findAll());
+    public ResponseEntity<Page<UserResponse>> findAll(@PageableDefault(size = 10, sort = "id") Pageable pageable
+    ) {
+        return ResponseEntity.ok(userService.findAll(pageable));
     }
-
     // ─── Update ───────────────────────────────────────────────
 
     @PatchMapping

@@ -10,6 +10,8 @@ import com.fm.smartlearningplatform.user.mapper.AuthorityMapper;
 import com.fm.smartlearningplatform.user.model.Authority;
 import com.fm.smartlearningplatform.user.repository.AuthorityRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,24 +60,20 @@ public class AuthorityService {
     }
 
     @Transactional(readOnly = true)
-    public List<AuthorityResponse> searchByKeyword(String keyword) {
+    public Page<AuthorityResponse> searchByKeyword(String keyword, Pageable pageable
+    ) {
+        Page<Authority> authorities;
         if (keyword == null || keyword.isBlank()) {
-            return findAll();
+            authorities = authorityRepository.findByDeletedAtIsNull(pageable);
         }
-
-        keyword = keyword.trim();
-        return authorityRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword)
-                .stream()
-                .map(authorityMapper::toResponse)
-                .toList();
+        else
+        {
+            keyword = keyword.trim();
+            authorities = authorityRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
+        }
+        return authorities.map(authorityMapper::toResponse);
     }
 
-    private List<AuthorityResponse> findAll() {
-        return authorityRepository.findByDeletedAtIsNullOrderByNameAsc()
-                .stream()
-                .map(authorityMapper::toResponse)
-                .toList();
-    }
 
     // ─── Delete ────────────────────────────────────────────────
 

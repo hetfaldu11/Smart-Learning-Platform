@@ -7,6 +7,9 @@ import com.fm.smartlearningplatform.user.dto.interest.response.InterestResponse;
 import com.fm.smartlearningplatform.user.service.InterestService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +34,9 @@ public class InterestController {
     }
 
     @GetMapping
-    public ResponseEntity<List<InterestResponse>> getInterests(@RequestParam(value = "q", required = false) String keyword) {
-        return ResponseEntity.ok(interestService.searchByKeyword(keyword));
+    public ResponseEntity<Page<InterestResponse>> getInterests(@RequestParam(value = "q", required = false) String keyword,
+                                                               @PageableDefault(size = 10, sort = "name") Pageable pageable ) {
+        return ResponseEntity.ok(interestService.searchByKeyword(keyword, pageable));
     }
 
     @PutMapping("/{id}")

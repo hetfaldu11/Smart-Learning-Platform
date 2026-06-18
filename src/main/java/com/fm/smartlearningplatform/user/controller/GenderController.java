@@ -7,8 +7,12 @@ import com.fm.smartlearningplatform.user.dto.gender.response.GenderResponse;
 import com.fm.smartlearningplatform.user.service.GenderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,8 +35,9 @@ public class GenderController {
     }
 
     @GetMapping
-    public ResponseEntity<List<GenderResponse>> getGenders(@RequestParam(value = "q", required = false) String keyword) {
-        return ResponseEntity.ok(genderService.searchByKeyword(keyword));
+    public ResponseEntity<Page<GenderResponse>> getGenders(@RequestParam(value = "q", required = false) String keyword,
+                                                           @PageableDefault(size = 10, sort = "name") Pageable pageable ) {
+        return ResponseEntity.ok(genderService.searchByKeyword(keyword, pageable));
     }
 
     @PutMapping("/{id}")

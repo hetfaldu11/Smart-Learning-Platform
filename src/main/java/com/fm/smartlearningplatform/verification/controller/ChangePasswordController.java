@@ -36,7 +36,7 @@ public class ChangePasswordController {
     @PostMapping("/send-otp")
     public ResponseEntity<Void> sendOtp(@RequestBody @Valid PasswordResetRequest request)
     {
-        otpService.sendPasswordResetOtp(request);
+        changePasswordService.sendPasswordResetOtp(request);
         return ResponseEntity.ok().build();
     }
 

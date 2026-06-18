@@ -2,6 +2,8 @@ package com.fm.smartlearningplatform.user.repository;
 
 import com.fm.smartlearningplatform.user.model.Authority;
 import com.fm.smartlearningplatform.user.model.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -27,8 +29,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByPhoneNumberAndDeletedAtIsNull(String phoneNumber);
 
-    List<User> findByDeletedAtIsNullOrderByCreatedAtDesc();
-
+    Page<User> findByDeletedAtIsNull(Pageable pageable);
     // ─── Find With Relationships ─────────────────────────────
 
     @EntityGraph(attributePaths = "userSkills")

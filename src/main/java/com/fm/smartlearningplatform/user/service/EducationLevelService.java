@@ -6,10 +6,14 @@ import com.fm.smartlearningplatform.user.dto.educationLevel.request.CreateEducat
 import com.fm.smartlearningplatform.user.dto.educationLevel.request.UpdateEducationLevelRequest;
 import com.fm.smartlearningplatform.user.dto.educationLevel.response.DeleteEducationLevelResponse;
 import com.fm.smartlearningplatform.user.dto.educationLevel.response.EducationLevelResponse;
+import com.fm.smartlearningplatform.user.dto.educationLevel.response.EducationLevelResponse;
 import com.fm.smartlearningplatform.user.mapper.EducationLevelMapper;
+import com.fm.smartlearningplatform.user.model.EducationLevel;
 import com.fm.smartlearningplatform.user.model.EducationLevel;
 import com.fm.smartlearningplatform.user.repository.EducationLevelRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,23 +62,16 @@ public class EducationLevelService {
     }
 
     @Transactional(readOnly = true)
-    public List<EducationLevelResponse> searchByKeyword(String keyword) {
+    public Page<EducationLevelResponse> searchByKeyword(String keyword, Pageable pageable)
+    {
+        Page<EducationLevel> educationLevels;
         if (keyword == null || keyword.isBlank()) {
-            return findAll();
+            educationLevels = educationLevelRepository.findByDeletedAtIsNull(pageable);
+        } else {
+            keyword = keyword.trim();
+            educationLevels = educationLevelRepository .findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
-
-        keyword = keyword.trim();
-        return educationLevelRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword)
-                .stream()
-                .map(educationLevelMapper::toResponse)
-                .toList();
-    }
-
-    private List<EducationLevelResponse> findAll() {
-        return educationLevelRepository.findByDeletedAtIsNullOrderByNameAsc()
-                .stream()
-                .map(educationLevelMapper::toResponse)
-                .toList();
+        return educationLevels.map(educationLevelMapper::toResponse);
     }
 
     // ─── Delete ────────────────────────────────────────────────

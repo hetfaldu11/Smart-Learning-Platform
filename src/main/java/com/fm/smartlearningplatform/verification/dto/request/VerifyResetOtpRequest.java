@@ -5,8 +5,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record VerifyResetOtpRequest(
 
-        @NotNull
-        Long userId,
+        @NotBlank
+        String email,
 
         @NotBlank
         String otp

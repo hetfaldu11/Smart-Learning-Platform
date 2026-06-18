@@ -15,6 +15,8 @@ import com.fm.smartlearningplatform.verification.service.EmailVerificationServic
 import com.fm.smartlearningplatform.verification.service.PhoneVerificationService;
 import com.fm.smartlearningplatform.verification.service.TwoFactorVerificationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,12 +62,12 @@ public class UserService {
         return userMapper.toResponse(getUser(userId));
     }
 
-    public List<UserResponse> findAll() {
-        return userRepository
-                .findByDeletedAtIsNullOrderByCreatedAtDesc()
-                .stream()
-                .map(userMapper::toResponse)
-                .toList();
+    public Page<UserResponse> findAll(Pageable pageable) {
+
+        Page<User> users = userRepository
+                .findByDeletedAtIsNull(pageable);
+
+        return users.map(userMapper::toResponse);
     }
 
     // ─── Update ──────────────────────────────────────────────

@@ -1,6 +1,9 @@
 package com.fm.smartlearningplatform.user.repository;
 
+import com.fm.smartlearningplatform.user.model.EducationLevel;
 import com.fm.smartlearningplatform.user.model.Gender;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -25,4 +28,7 @@ public interface GenderRepository extends JpaRepository<Gender, Long> {
     List<Gender> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword);
 
     List<Gender> findByIdInAndDeletedAtIsNull(List<Long> ids);
+
+    Page<Gender> findByDeletedAtIsNull(Pageable pageable);
+    Page<Gender> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword, Pageable pageable);
 }

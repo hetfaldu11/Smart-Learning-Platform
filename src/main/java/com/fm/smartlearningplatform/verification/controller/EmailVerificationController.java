@@ -22,18 +22,25 @@ public class EmailVerificationController {
     private final EmailVerificationService emailVerificationService;
 
     @PostMapping("/request")
-    public ResponseEntity<String> requestEmailVerification(@AuthenticationPrincipal UserPrincipal principal, @RequestBody CreateEmailRequest request) {
+    public ResponseEntity<String> requestEmailVerification(@AuthenticationPrincipal UserPrincipal principal) {
         Long userId = principal.id();
+        String email= principal.email();
+
         emailVerificationService.validateEmailNotVerified(userId);
-        otpService.sendEmailVerificationOtp(userId, request.expirySeconds(), request.resendOtpSeconds());
+
+        otpService.sendEmailVerificationOtp(userId,email);
+
         return ResponseEntity.ok().body("Otp sent successfully.");
     }
 
     @PostMapping("/verify")
     public ResponseEntity<String> verifyEmail(@AuthenticationPrincipal UserPrincipal principal, @RequestBody VerifyEmailRequest request) {
         Long userId = principal.id();
+
         otpService.verifyEmailOtp(userId, request.otp());
+
         emailVerificationService.verifyEmail(userId);
+
         return ResponseEntity.ok().body("Otp verified.");
     }
 }

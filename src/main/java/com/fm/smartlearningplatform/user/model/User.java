@@ -62,7 +62,7 @@ public class User {
 //    // ─── User Profile ────────────────────────────────────────────────
 //
 //    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-//    private UserProfile userProfile;
+//   private UserProfile userProfile;
 //
 //    // ─── User Verification ────────────────────────────────────────────────
 //

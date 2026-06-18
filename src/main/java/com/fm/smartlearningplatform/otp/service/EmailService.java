@@ -19,8 +19,13 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
 
         message.setTo(to);
-        message.setSubject("Email Verification OTP");
-        message.setText("Your OTP is: " + otp);
+        message.setSubject("Forgot Password Again?");
+        message.setText(
+                "Hey, short-memory person!\n \n" +
+                "You forgot your important password again\n" +
+                "No worries, here’s your chance to change it.\n \n" +
+                "Your OTP:\n" + otp +"\n \n"+
+                "Next time, remember your password carefully");
 
         mailSender.send(message);
     }

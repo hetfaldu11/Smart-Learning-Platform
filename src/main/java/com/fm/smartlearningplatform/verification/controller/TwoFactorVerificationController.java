@@ -20,7 +20,6 @@ public class TwoFactorVerificationController {
 
     @PostMapping("/enable")
     public ResponseEntity<Void> enable(@AuthenticationPrincipal UserPrincipal userPrincipal, @RequestBody EnableTwoFactorRequest request) {
-        twoFactorVerificationService.validateTwoFactorNotVerified(userPrincipal.id());
         twoFactorVerificationService.enableTwoFactor(userPrincipal.id(), request);
         return ResponseEntity.ok().build();
     }

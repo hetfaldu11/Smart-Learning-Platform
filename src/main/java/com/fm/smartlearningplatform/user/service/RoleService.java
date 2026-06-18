@@ -6,11 +6,15 @@ import com.fm.smartlearningplatform.user.dto.role.request.CreateRoleRequest;
 import com.fm.smartlearningplatform.user.dto.role.request.UpdateRoleRequest;
 import com.fm.smartlearningplatform.user.dto.role.response.DeleteRoleResponse;
 import com.fm.smartlearningplatform.user.dto.role.response.RoleResponse;
+import com.fm.smartlearningplatform.user.dto.role.response.RoleResponse;
 import com.fm.smartlearningplatform.user.mapper.RoleMapper;
+import com.fm.smartlearningplatform.user.model.Role;
 import com.fm.smartlearningplatform.user.model.Role;
 import com.fm.smartlearningplatform.user.repository.RoleRepository;
 import com.fm.smartlearningplatform.user.repository.UserRoleRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -60,23 +64,16 @@ public class RoleService {
     }
 
     @Transactional(readOnly = true)
-    public List<RoleResponse> searchByKeyword(String keyword) {
+    public Page<RoleResponse> searchByKeyword(String keyword, Pageable pageable)
+    {
+        Page<Role> roles;
         if (keyword == null || keyword.isBlank()) {
-            return findAll();
+            roles = roleRepository.findByDeletedAtIsNull(pageable);
+        } else {
+            keyword = keyword.trim();
+            roles = roleRepository .findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
-
-        keyword = keyword.trim();
-        return roleRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword)
-                .stream()
-                .map(roleMapper::toResponse)
-                .toList();
-    }
-
-    private List<RoleResponse> findAll() {
-        return roleRepository.findByDeletedAtIsNullOrderByNameAsc()
-                .stream()
-                .map(roleMapper::toResponse)
-                .toList();
+        return roles.map(roleMapper::toResponse);
     }
 
     // ─── Delete ────────────────────────────────────────────────

@@ -7,6 +7,9 @@ import com.fm.smartlearningplatform.user.dto.educationLevel.response.EducationLe
 import com.fm.smartlearningplatform.user.service.EducationLevelService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -31,8 +34,9 @@ public class EducationLevelController {
     }
 
     @GetMapping
-    public ResponseEntity<List<EducationLevelResponse>> getEducationLevels(@RequestParam(value = "q", required = false) String keyword) {
-        return ResponseEntity.ok(educationLevelService.searchByKeyword(keyword));
+    public ResponseEntity<Page<EducationLevelResponse>> getEducationLevels(@RequestParam(value = "q", required = false) String keyword,
+                                                                           @PageableDefault(size = 10, sort = "name") Pageable pageable) {
+        return ResponseEntity.ok(educationLevelService.searchByKeyword(keyword, pageable));
     }
 
     @PutMapping("/{id}")

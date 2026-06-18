@@ -1,6 +1,9 @@
 package com.fm.smartlearningplatform.user.repository;
 
+import com.fm.smartlearningplatform.user.model.Authority;
 import com.fm.smartlearningplatform.user.model.Role;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -25,4 +28,8 @@ public interface RoleRepository extends JpaRepository<Role, Long> {
     List<Role> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword);
 
     List<Role> findByIdInAndDeletedAtIsNull(List<Long> ids);
+
+    Page<Role> findByDeletedAtIsNull(Pageable pageable);
+    Page<Role> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword, Pageable pageable);
+
 }

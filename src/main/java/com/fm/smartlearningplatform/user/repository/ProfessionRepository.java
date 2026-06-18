@@ -1,6 +1,9 @@
 package com.fm.smartlearningplatform.user.repository;
 
+import com.fm.smartlearningplatform.user.model.Authority;
 import com.fm.smartlearningplatform.user.model.Profession;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -25,4 +28,8 @@ public interface ProfessionRepository extends JpaRepository<Profession, Long> {
     List<Profession> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword);
 
     List<Profession> findByIdInAndDeletedAtIsNull(List<Long> ids);
+
+    Page<Profession> findByDeletedAtIsNull(Pageable pageable);
+    Page<Profession> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword, Pageable pageable);
+
 }

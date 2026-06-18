@@ -11,7 +11,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableScheduling
 public class SmartLearningPlatformApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args)
+    {
         SpringApplication.run(SmartLearningPlatformApplication.class, args);
     }
 

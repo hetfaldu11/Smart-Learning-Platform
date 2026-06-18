@@ -10,6 +10,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 
 import java.util.List;
 
@@ -31,8 +34,10 @@ public class SkillController {
     }
 
     @GetMapping
-    public ResponseEntity<List<SkillResponse>> getSkills(@RequestParam(value = "q", required = false) String keyword) {
-        return ResponseEntity.ok(skillService.searchByKeyword(keyword));
+    public ResponseEntity<Page<SkillResponse>> getSkills(@RequestParam(value = "q", required = false) String keyword,
+            @PageableDefault(size = 10, sort = "name") Pageable pageable )
+    {
+        return ResponseEntity.ok(skillService.searchByKeyword(keyword, pageable));
     }
 
     @PutMapping("/{id}")

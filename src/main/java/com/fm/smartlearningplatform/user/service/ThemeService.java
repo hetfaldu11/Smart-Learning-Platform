@@ -2,14 +2,18 @@ package com.fm.smartlearningplatform.user.service;
 
 import com.fm.smartlearningplatform.exceptionhandler.exception.DuplicateResourceException;
 import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundException;
+import com.fm.smartlearningplatform.user.dto.theme.response.ThemeResponse;
 import com.fm.smartlearningplatform.user.dto.theme.request.CreateThemeRequest;
 import com.fm.smartlearningplatform.user.dto.theme.request.UpdateThemeRequest;
 import com.fm.smartlearningplatform.user.dto.theme.response.DeleteThemeResponse;
 import com.fm.smartlearningplatform.user.dto.theme.response.ThemeResponse;
 import com.fm.smartlearningplatform.user.mapper.ThemeMapper;
 import com.fm.smartlearningplatform.user.model.Theme;
+import com.fm.smartlearningplatform.user.model.Theme;
 import com.fm.smartlearningplatform.user.repository.ThemeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,23 +62,16 @@ public class ThemeService {
     }
 
     @Transactional(readOnly = true)
-    public List<ThemeResponse> searchByKeyword(String keyword) {
+    public Page<ThemeResponse> searchByKeyword(String keyword, Pageable pageable)
+    {
+        Page<Theme> themes;
         if (keyword == null || keyword.isBlank()) {
-            return findAll();
+            themes = themeRepository.findByDeletedAtIsNull(pageable);
+        } else {
+            keyword = keyword.trim();
+            themes = themeRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
-
-        keyword = keyword.trim();
-        return themeRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword)
-                .stream()
-                .map(themeMapper::toResponse)
-                .toList();
-    }
-
-    private List<ThemeResponse> findAll() {
-        return themeRepository.findByDeletedAtIsNullOrderByNameAsc()
-                .stream()
-                .map(themeMapper::toResponse)
-                .toList();
+        return themes.map(themeMapper::toResponse);
     }
 
     // ─── Delete ────────────────────────────────────────────────

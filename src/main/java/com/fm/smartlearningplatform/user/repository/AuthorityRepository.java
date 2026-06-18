@@ -1,6 +1,8 @@
 package com.fm.smartlearningplatform.user.repository;
 
 import com.fm.smartlearningplatform.user.model.Authority;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -25,4 +27,7 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long> {
     List<Authority> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword);
 
     List<Authority> findByIdInAndDeletedAtIsNull(List<Long> ids);
+    Page<Authority> findByDeletedAtIsNull(Pageable pageable);
+    Page<Authority> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword, Pageable pageable);
+
 }
