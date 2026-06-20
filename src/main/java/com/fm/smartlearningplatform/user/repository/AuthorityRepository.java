@@ -27,7 +27,9 @@ public interface AuthorityRepository extends JpaRepository<Authority, Long> {
     List<Authority> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword);
 
     List<Authority> findByIdInAndDeletedAtIsNull(List<Long> ids);
+
     Page<Authority> findByDeletedAtIsNull(Pageable pageable);
+
     Page<Authority> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword, Pageable pageable);
 
 }

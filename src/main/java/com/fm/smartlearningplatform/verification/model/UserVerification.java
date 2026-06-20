@@ -1,10 +1,9 @@
 package com.fm.smartlearningplatform.verification.model;
 
+import com.fm.smartlearningplatform.user.model.Auditable;
 import com.fm.smartlearningplatform.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -16,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString(exclude = "user")
 @Builder
-public class UserVerification {
+public class UserVerification extends Auditable {
 
     @Id
     @Column(name = "user_id")
@@ -56,12 +55,4 @@ public class UserVerification {
 
     @Column(name = "two_factor_enabled_at")
     private LocalDateTime twoFactorEnabledAt;
-
-    @CreationTimestamp
-    @Column(name = "created_at")
-    private LocalDateTime createAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 }

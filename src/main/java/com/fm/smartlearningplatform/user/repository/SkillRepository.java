@@ -1,9 +1,10 @@
 package com.fm.smartlearningplatform.user.repository;
 
 import com.fm.smartlearningplatform.user.model.Skill;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -22,9 +23,9 @@ public interface SkillRepository extends JpaRepository<Skill, Long> {
     boolean existsByIdNotAndNameAndDeletedAtIsNull(Long id, String name);
 
 
-
     Page<Skill> findByDeletedAtIsNull(Pageable pageable);
 
     Page<Skill> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword, Pageable pageable);
+
     List<Skill> findByIdInAndDeletedAtIsNull(List<Long> ids);
 }

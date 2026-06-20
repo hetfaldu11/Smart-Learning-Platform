@@ -24,7 +24,6 @@ public interface CoursePricingMapper {
     );
 
 
-
     @Mapping(target = "courseId", source = "course.id")
 
     @Mapping(target = "currencyId", source = "currency.id")
@@ -33,7 +32,6 @@ public interface CoursePricingMapper {
     CoursePricingResponse toResponse(
             CoursePricing coursePricing
     );
-
 
 
     @BeanMapping(

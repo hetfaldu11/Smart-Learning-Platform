@@ -35,7 +35,6 @@ public interface CourseAssistantInstructorMapper {
             source = "assistantInstructorRole.id")
     @Mapping(target = "assistantInstructorRoleName",
             source = "assistantInstructorRole.name")
-
     CourseAssistantInstructorResponse toResponse(
             CourseAssistantInstructor courseAssistantInstructor
     );

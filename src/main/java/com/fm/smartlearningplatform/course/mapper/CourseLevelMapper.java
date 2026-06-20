@@ -20,11 +20,9 @@ public interface CourseLevelMapper {
     );
 
 
-
     CourseLevelResponse toResponse(
             CourseLevel courseLevel
     );
-
 
 
     @BeanMapping(
@@ -34,7 +32,6 @@ public interface CourseLevelMapper {
     @Mapping(target = "id", ignore = true)
 
     @Mapping(target = "deletedAt", ignore = true)
-
     void update(
             UpdateCourseLevelRequest request,
             @MappingTarget CourseLevel courseLevel

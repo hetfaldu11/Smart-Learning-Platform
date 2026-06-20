@@ -1,7 +1,6 @@
 package com.fm.smartlearningplatform.course.model;
 
 import com.fm.smartlearningplatform.user.model.Auditable;
-import com.github.benmanes.caffeine.cache.LoadingCache;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -14,7 +13,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseMedia  extends Auditable {
+public class CourseMedia extends Auditable {
 
     @Id
     @Column(name = "course_id")
@@ -34,6 +33,6 @@ public class CourseMedia  extends Auditable {
     @Column(name = "certificate_template_url")
     private String certificateTemplateUrl;
 
-    @Column(name= "deleted_At")
+    @Column(name = "deleted_At")
     private LocalDate deletedAt;
 }

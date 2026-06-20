@@ -6,9 +6,7 @@ import com.fm.smartlearningplatform.user.dto.role.request.CreateRoleRequest;
 import com.fm.smartlearningplatform.user.dto.role.request.UpdateRoleRequest;
 import com.fm.smartlearningplatform.user.dto.role.response.DeleteRoleResponse;
 import com.fm.smartlearningplatform.user.dto.role.response.RoleResponse;
-import com.fm.smartlearningplatform.user.dto.role.response.RoleResponse;
 import com.fm.smartlearningplatform.user.mapper.RoleMapper;
-import com.fm.smartlearningplatform.user.model.Role;
 import com.fm.smartlearningplatform.user.model.Role;
 import com.fm.smartlearningplatform.user.repository.RoleRepository;
 import com.fm.smartlearningplatform.user.repository.UserRoleRepository;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -64,14 +61,13 @@ public class RoleService {
     }
 
     @Transactional(readOnly = true)
-    public Page<RoleResponse> searchByKeyword(String keyword, Pageable pageable)
-    {
+    public Page<RoleResponse> searchByKeyword(String keyword, Pageable pageable) {
         Page<Role> roles;
         if (keyword == null || keyword.isBlank()) {
             roles = roleRepository.findByDeletedAtIsNull(pageable);
         } else {
             keyword = keyword.trim();
-            roles = roleRepository .findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
+            roles = roleRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
         return roles.map(roleMapper::toResponse);
     }

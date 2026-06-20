@@ -33,7 +33,7 @@ public class UserSessionService {
 
     public UserSession findValidSession(Long userId, String deviceId, String refreshToken) {
         UserSession session = userSessionRepository.findByUserIdAndDeviceIdentifier(userId, deviceId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Session not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Session not found."));
 
         if (session.getStatus() != SessionStatus.ACTIVE) {
             throw new RuntimeException("Session revoked.");
@@ -52,7 +52,7 @@ public class UserSessionService {
         return session;
     }
 
-    public void enforceSessionLimit(Long id){
+    public void enforceSessionLimit(Long id) {
         List<UserSession> sessions = userSessionRepository.findByUserIdAndStatusOrderByLastActiveAtAsc(id, SessionStatus.ACTIVE);
         if (sessions.size() > 2) {
             UserSession oldestSession = sessions.get(0);
@@ -62,9 +62,9 @@ public class UserSessionService {
         }
     }
 
-    public UserSession findByDeviceId(String deviceId){
+    public UserSession findByDeviceId(String deviceId) {
         return userSessionRepository.findByDeviceIdentifier(deviceId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Session not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Session not found."));
     }
 
     @Transactional
@@ -76,7 +76,7 @@ public class UserSessionService {
 
     @Transactional
     public void revokeAllSessions(Long userId) {
-        List<UserSession> sessions = userSessionRepository.findAllByUserIdAndStatus(userId,SessionStatus.ACTIVE);
+        List<UserSession> sessions = userSessionRepository.findAllByUserIdAndStatus(userId, SessionStatus.ACTIVE);
 
         sessions.forEach(session -> {
             session.setStatus(SessionStatus.REVOKED);
@@ -86,12 +86,12 @@ public class UserSessionService {
     }
 
     @Transactional(readOnly = true)
-    public Optional<UserSession> existingSessions(Long userId, String deviceId){
-        return userSessionRepository.findByUserIdAndDeviceIdentifierAndStatus(userId, deviceId,SessionStatus.ACTIVE);
+    public Optional<UserSession> existingSessions(Long userId, String deviceId) {
+        return userSessionRepository.findByUserIdAndDeviceIdentifierAndStatus(userId, deviceId, SessionStatus.ACTIVE);
     }
 
     @Transactional
-    public UserSession save(UserSession userSession){
+    public UserSession save(UserSession userSession) {
         return userSessionRepository.save(userSession);
     }
 }

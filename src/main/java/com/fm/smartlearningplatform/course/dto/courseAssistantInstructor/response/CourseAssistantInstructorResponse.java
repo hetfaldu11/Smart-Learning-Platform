@@ -1,7 +1,5 @@
 package com.fm.smartlearningplatform.course.dto.courseAssistantInstructor.response;
 
-import java.time.LocalDateTime;
-
 public record CourseAssistantInstructorResponse(
 
         Long courseId,
@@ -13,4 +11,5 @@ public record CourseAssistantInstructorResponse(
         Long assistantInstructorRoleId,
         String assistantInstructorRoleName
 
-) {}
+) {
+}

@@ -8,9 +8,9 @@ public record CreatePlatformRequest(
         String name
 
 ) {
-        public  CreatePlatformRequest{
-                if (name != null) {
-                        name = name.trim().replaceAll("\\s+", " ").toLowerCase();
-                }
+    public CreatePlatformRequest {
+        if (name != null) {
+            name = name.trim().replaceAll("\\s+", " ").toLowerCase();
         }
+    }
 }

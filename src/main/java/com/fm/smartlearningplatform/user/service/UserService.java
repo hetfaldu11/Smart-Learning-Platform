@@ -13,7 +13,6 @@ import com.fm.smartlearningplatform.verification.model.UserVerification;
 import com.fm.smartlearningplatform.verification.repository.UserVerificationRepository;
 import com.fm.smartlearningplatform.verification.service.EmailVerificationService;
 import com.fm.smartlearningplatform.verification.service.PhoneVerificationService;
-import com.fm.smartlearningplatform.verification.service.TwoFactorVerificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,7 +21,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

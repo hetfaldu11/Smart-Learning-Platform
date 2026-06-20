@@ -9,16 +9,16 @@ public record CreateLanguageRequest(
         String name,
 
         @NotBlank(message = "Language code is required")
-        @Size(min = 2,max = 2, message = "Language code must be 2 length.")
+        @Size(min = 2, max = 2, message = "Language code must be 2 length.")
         String code
-        
+
 ) {
-        public CreateLanguageRequest{
-                if(name != null){
-                        name = name.trim().replaceAll("\\s+", " ").toLowerCase();
-                }
-                if(code != null){
-                        code = code.trim().replaceAll("\\s+", " ").toLowerCase();
-                }
+    public CreateLanguageRequest {
+        if (name != null) {
+            name = name.trim().replaceAll("\\s+", " ").toLowerCase();
         }
+        if (code != null) {
+            code = code.trim().replaceAll("\\s+", " ").toLowerCase();
+        }
+    }
 }

@@ -12,10 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/genders")
@@ -36,7 +33,7 @@ public class GenderController {
 
     @GetMapping
     public ResponseEntity<Page<GenderResponse>> getGenders(@RequestParam(value = "q", required = false) String keyword,
-                                                           @PageableDefault(size = 10, sort = "name") Pageable pageable ) {
+                                                           @PageableDefault(size = 10, sort = "name") Pageable pageable) {
         return ResponseEntity.ok(genderService.searchByKeyword(keyword, pageable));
     }
 

@@ -26,9 +26,9 @@ public record PatchUserProfileRequest(
         String profilePictureUrl
 
 ) {
-    public  PatchUserProfileRequest{
+    public PatchUserProfileRequest {
         if (firstName != null) {
-            firstName  = firstName .trim().replaceAll("\\s+", " ").toLowerCase();
+            firstName = firstName.trim().replaceAll("\\s+", " ").toLowerCase();
         }
         if (lastName != null) {
             lastName = lastName.trim().replaceAll("\\s+", " ").toLowerCase();

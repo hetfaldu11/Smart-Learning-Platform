@@ -1,6 +1,5 @@
 package com.fm.smartlearningplatform.user.repository;
 
-import com.fm.smartlearningplatform.user.model.Authority;
 import com.fm.smartlearningplatform.user.model.Platform;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +29,7 @@ public interface PlatformRepository extends JpaRepository<Platform, Long> {
     List<Platform> findByIdInAndDeletedAtIsNull(List<Long> ids);
 
     Page<Platform> findByDeletedAtIsNull(Pageable pageable);
+
     Page<Platform> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword, Pageable pageable);
 
 }

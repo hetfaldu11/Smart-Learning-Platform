@@ -63,9 +63,7 @@ public class AssistantInstructorRoleService {
             roles = assistantInstructorRoleRepository
                     .findByDeletedAtIsNull(pageable);
 
-        }
-        else
-        {
+        } else {
 
             keyword = keyword.trim();
 
@@ -88,7 +86,7 @@ public class AssistantInstructorRoleService {
                 getAssistantInstructorRole(assistantInstructorRoleId);
 
         if (request.name() != null && assistantInstructorRoleRepository
-                        .existsByIdNotAndNameAndDeletedAtIsNull(assistantInstructorRoleId, request.name())
+                .existsByIdNotAndNameAndDeletedAtIsNull(assistantInstructorRoleId, request.name())
         ) {
 
             throw new DuplicateResourceException("Assistant instructor role already exists.");

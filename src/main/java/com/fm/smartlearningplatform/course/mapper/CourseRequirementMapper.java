@@ -15,12 +15,9 @@ public interface CourseRequirementMapper {
     @Mapping(target = "id", ignore = true)
 
     @Mapping(target = "course", ignore = true)
-
-
     CourseRequirement toEntity(
             CreateCourseRequirementRequest request
     );
-
 
 
     @Mapping(target = "courseId", source = "course.id")
@@ -28,7 +25,6 @@ public interface CourseRequirementMapper {
     CourseRequirementResponse toResponse(
             CourseRequirement courseRequirement
     );
-
 
 
     @BeanMapping(

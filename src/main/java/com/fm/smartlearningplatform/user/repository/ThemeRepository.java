@@ -1,6 +1,5 @@
 package com.fm.smartlearningplatform.user.repository;
 
-import com.fm.smartlearningplatform.user.model.Authority;
 import com.fm.smartlearningplatform.user.model.Theme;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +29,7 @@ public interface ThemeRepository extends JpaRepository<Theme, Long> {
     List<Theme> findByIdInAndDeletedAtIsNull(List<Long> ids);
 
     Page<Theme> findByDeletedAtIsNull(Pageable pageable);
+
     Page<Theme> findByDeletedAtIsNullAndNameContainingIgnoreCase(String keyword, Pageable pageable);
 
 }

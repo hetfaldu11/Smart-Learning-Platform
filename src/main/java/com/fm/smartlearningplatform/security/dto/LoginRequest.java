@@ -14,11 +14,11 @@ public record LoginRequest(
         Boolean trusted
 ) {
 
-    public LoginRequest{
-        if(email != null){
+    public LoginRequest {
+        if (email != null) {
             email = email.trim().replaceAll("\\s+", " ").toLowerCase();
         }
-        if(password != null){
+        if (password != null) {
             password = password.trim();
         }
     }

@@ -10,7 +10,6 @@ import com.fm.smartlearningplatform.course.repository.CourseMediaRepository;
 import com.fm.smartlearningplatform.course.repository.CourseRepository;
 import com.fm.smartlearningplatform.exceptionhandler.exception.DuplicateResourceException;
 import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundException;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

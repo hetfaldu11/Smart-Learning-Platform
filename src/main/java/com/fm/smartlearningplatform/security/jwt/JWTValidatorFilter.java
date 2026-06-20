@@ -9,6 +9,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,31 +25,32 @@ public class JWTValidatorFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
 
+    @Value("${jwt.header}")
+    private String JWT_HEADER;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String jwt = request.getHeader("Authorization");
+        String jwt = request.getHeader(JWT_HEADER);
         if (null != jwt && !jwt.startsWith("Basic ")) {
-            try
-            {
+            try {
                 Claims claims = jwtService.extractClaims(jwt);
                 UserPrincipal userPrincipal = jwtService.extractUserPrincipal(claims);
-                Authentication authentication = new UsernamePasswordAuthenticationToken(userPrincipal,null, jwtService.extractAuthorities(claims));
+                Authentication authentication = new UsernamePasswordAuthenticationToken(userPrincipal, null, jwtService.extractAuthorities(claims));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
                 log.debug("JWT authentication successful for userId: {}",
                         userPrincipal.id());
-            }
-            catch (JwtException e){
+            } catch (JwtException e) {
                 log.warn("Invalid JWT token for path: {}",
                         request.getRequestURI());
                 SecurityContextHolder.clearContext();
                 throw new BadCredentialsException("Invalid JWT");
             }
         }
-        filterChain.doFilter(request,response);
+        filterChain.doFilter(request, response);
     }
 
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        String path =  request.getServletPath();
+        String path = request.getServletPath();
         return (path.equals("/login"));
     }
 }

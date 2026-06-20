@@ -6,9 +6,7 @@ import com.fm.smartlearningplatform.user.dto.profession.request.CreateProfession
 import com.fm.smartlearningplatform.user.dto.profession.request.UpdateProfessionRequest;
 import com.fm.smartlearningplatform.user.dto.profession.response.DeleteProfessionResponse;
 import com.fm.smartlearningplatform.user.dto.profession.response.ProfessionResponse;
-import com.fm.smartlearningplatform.user.dto.profession.response.ProfessionResponse;
 import com.fm.smartlearningplatform.user.mapper.ProfessionMapper;
-import com.fm.smartlearningplatform.user.model.Profession;
 import com.fm.smartlearningplatform.user.model.Profession;
 import com.fm.smartlearningplatform.user.repository.ProfessionRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -62,14 +59,13 @@ public class ProfessionService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ProfessionResponse> searchByKeyword(String keyword, Pageable pageable)
-    {
+    public Page<ProfessionResponse> searchByKeyword(String keyword, Pageable pageable) {
         Page<Profession> professions;
         if (keyword == null || keyword.isBlank()) {
             professions = professionRepository.findByDeletedAtIsNull(pageable);
         } else {
             keyword = keyword.trim();
-            professions = professionRepository .findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
+            professions = professionRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
         return professions.map(professionMapper::toResponse);
     }

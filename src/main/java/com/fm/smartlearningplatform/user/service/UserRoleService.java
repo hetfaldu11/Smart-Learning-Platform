@@ -126,7 +126,7 @@ public class UserRoleService {
     // ─── Delete ────────────────────────────────────────────────
     @Transactional
     public DeleteUserRoleResponse deleteById(Long userId, Long roleId) {
-        validateUserRoleExist(userId,roleId);
+        validateUserRoleExist(userId, roleId);
         UserRole userRole = getUserRole(userId, roleId);
         userRoleRepository.delete(userRole);
         return new DeleteUserRoleResponse("User role association deleted successfully.");

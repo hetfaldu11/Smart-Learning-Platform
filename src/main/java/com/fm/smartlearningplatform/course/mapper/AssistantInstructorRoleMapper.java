@@ -15,13 +15,10 @@ public interface AssistantInstructorRoleMapper {
     @Mapping(target = "id", ignore = true)
 
     @Mapping(target = "deletedAt", ignore = true)
-
     AssistantInstructorRole toEntity(CreateAssistantInstructorRoleRequest request);
 
 
-
     AssistantInstructorRoleResponse toResponse(AssistantInstructorRole assistantInstructorRole);
-
 
 
     @BeanMapping(
@@ -30,7 +27,6 @@ public interface AssistantInstructorRoleMapper {
     )
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
-
     void update(
             UpdateAssistantInstructorRoleRequest request,
             @MappingTarget AssistantInstructorRole assistantInstructorRole

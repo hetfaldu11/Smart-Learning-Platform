@@ -20,11 +20,9 @@ public interface CourseMessageTypeMapper {
     );
 
 
-
     CourseMessageTypeResponse toResponse(
             CourseMessageType courseMessageType
     );
-
 
 
     @BeanMapping(

@@ -9,9 +9,9 @@ import org.springframework.stereotype.Component;
 public class UserAgentService {
 
     private final UserAgentAnalyzer analyzer = UserAgentAnalyzer.newBuilder()
-                    .hideMatcherLoadStats()
-                    .withCache(1000)
-                    .build();
+            .hideMatcherLoadStats()
+            .withCache(1000)
+            .build();
 
     public DeviceInfo parse(String userAgentString) {
 

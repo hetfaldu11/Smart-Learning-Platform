@@ -16,11 +16,9 @@ public interface CourseLanguageMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "course", ignore = true)
     @Mapping(target = "language", ignore = true)
-
     CourseLanguage toEntity(
             CreateCourseLanguageRequest request
     );
-
 
 
     @Mapping(target = "courseId", source = "course.id")

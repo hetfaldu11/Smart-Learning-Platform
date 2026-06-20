@@ -8,7 +8,6 @@ import com.fm.smartlearningplatform.verification.mapper.UserVerificationMapper;
 import com.fm.smartlearningplatform.verification.model.UserVerification;
 import com.fm.smartlearningplatform.verification.repository.UserVerificationRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

@@ -3,6 +3,7 @@ package com.fm.smartlearningplatform.course.model;
 import com.fm.smartlearningplatform.user.model.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
+
 @Entity
 @Table(
         name = "course_learning_outcomes",
@@ -19,7 +20,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class
-CourseLearningOutcome  extends Auditable {
+CourseLearningOutcome extends Auditable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

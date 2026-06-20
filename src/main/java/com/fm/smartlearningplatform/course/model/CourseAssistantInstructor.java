@@ -27,15 +27,15 @@ public class CourseAssistantInstructor extends Auditable {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name= "course_id", nullable = false)
+    @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name= "instructor_id", nullable = false)
+    @JoinColumn(name = "instructor_id", nullable = false)
     private User instructor;
 
-    @ManyToOne(fetch= FetchType.LAZY)
-    @JoinColumn(name= "instructor_role_id", nullable = false)
-    private  AssistantInstructorRole assistantInstructorRole;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "instructor_role_id", nullable = false)
+    private AssistantInstructorRole assistantInstructorRole;
 
 }

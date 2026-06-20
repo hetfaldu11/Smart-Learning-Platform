@@ -16,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -65,9 +64,7 @@ public class AuthorityService {
         Page<Authority> authorities;
         if (keyword == null || keyword.isBlank()) {
             authorities = authorityRepository.findByDeletedAtIsNull(pageable);
-        }
-        else
-        {
+        } else {
             keyword = keyword.trim();
             authorities = authorityRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }

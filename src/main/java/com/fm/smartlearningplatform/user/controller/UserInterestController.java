@@ -33,6 +33,6 @@ public class UserInterestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteUserInterestResponse> deleteById(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long id) {
-        return ResponseEntity.ok().body( userInterestService.deleteById(principal.id(), id));
+        return ResponseEntity.ok().body(userInterestService.deleteById(principal.id(), id));
     }
 }

@@ -13,11 +13,9 @@ import org.mapstruct.*;
 public interface EnrollmentStatusMapper {
 
     @Mapping(target = "id", ignore = true)
-
     EnrollmentStatus toEntity(
             CreateEnrollmentStatusRequest request
     );
-
 
 
     EnrollmentStatusResponse toResponse(
@@ -25,13 +23,11 @@ public interface EnrollmentStatusMapper {
     );
 
 
-
     @BeanMapping(
             nullValuePropertyMappingStrategy =
                     NullValuePropertyMappingStrategy.IGNORE
     )
     @Mapping(target = "id", ignore = true)
-
     void update(
             UpdateEnrollmentStatusRequest request,
             @MappingTarget EnrollmentStatus enrollmentStatus

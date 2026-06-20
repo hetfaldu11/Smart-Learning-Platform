@@ -6,9 +6,7 @@ import com.fm.smartlearningplatform.user.dto.interest.request.CreateInterestRequ
 import com.fm.smartlearningplatform.user.dto.interest.request.UpdateInterestRequest;
 import com.fm.smartlearningplatform.user.dto.interest.response.DeleteInterestResponse;
 import com.fm.smartlearningplatform.user.dto.interest.response.InterestResponse;
-import com.fm.smartlearningplatform.user.dto.interest.response.InterestResponse;
 import com.fm.smartlearningplatform.user.mapper.InterestMapper;
-import com.fm.smartlearningplatform.user.model.Interest;
 import com.fm.smartlearningplatform.user.model.Interest;
 import com.fm.smartlearningplatform.user.repository.InterestRepository;
 import com.fm.smartlearningplatform.user.repository.UserInterestRepository;
@@ -19,7 +17,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -64,14 +61,13 @@ public class InterestService {
     }
 
     @Transactional(readOnly = true)
-    public Page<InterestResponse> searchByKeyword(String keyword, Pageable pageable)
-    {
+    public Page<InterestResponse> searchByKeyword(String keyword, Pageable pageable) {
         Page<Interest> interests;
         if (keyword == null || keyword.isBlank()) {
             interests = interestRepository.findByDeletedAtIsNull(pageable);
         } else {
             keyword = keyword.trim();
-            interests = interestRepository .findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
+            interests = interestRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
         return interests.map(interestMapper::toResponse);
     }

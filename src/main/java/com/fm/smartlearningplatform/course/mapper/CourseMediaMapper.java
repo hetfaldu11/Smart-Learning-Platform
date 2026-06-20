@@ -15,18 +15,15 @@ public interface CourseMediaMapper {
     @Mapping(target = "id", ignore = true)
 
     @Mapping(target = "course", ignore = true)
-
     CourseMedia toEntity(
             CreateCourseMediaRequest request
     );
-
 
 
     @Mapping(target = "courseId", source = "course.id")
     CourseMediaResponse toResponse(
             CourseMedia courseMedia
     );
-
 
 
     @BeanMapping(

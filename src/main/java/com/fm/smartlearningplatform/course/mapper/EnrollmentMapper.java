@@ -19,12 +19,9 @@ public interface EnrollmentMapper {
     @Mapping(target = "enrollmentStatus", ignore = true)
 
     @Mapping(target = "completedAt", ignore = true)
-
-
     Enrollment toEntity(
             CreateEnrollmentRequest request
     );
-
 
 
     @Mapping(target = "userId", source = "user.id")
@@ -46,7 +43,6 @@ public interface EnrollmentMapper {
     );
 
 
-
     @BeanMapping(
             nullValuePropertyMappingStrategy =
                     NullValuePropertyMappingStrategy.IGNORE
@@ -56,8 +52,6 @@ public interface EnrollmentMapper {
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "course", ignore = true)
     @Mapping(target = "enrollmentStatus", ignore = true)
-
-
     void update(
             UpdateEnrollmentRequest request,
             @MappingTarget Enrollment enrollment

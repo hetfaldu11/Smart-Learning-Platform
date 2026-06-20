@@ -16,11 +16,9 @@ public interface CourseMessageMapper {
 
     @Mapping(target = "course", ignore = true)
     @Mapping(target = "courseMessageType", ignore = true)
-
     CourseMessage toEntity(
             CreateCourseMessageRequest request
     );
-
 
 
     @Mapping(target = "courseId", source = "course.id")
@@ -39,7 +37,6 @@ public interface CourseMessageMapper {
     );
 
 
-
     @BeanMapping(
             nullValuePropertyMappingStrategy =
                     NullValuePropertyMappingStrategy.IGNORE
@@ -48,7 +45,6 @@ public interface CourseMessageMapper {
 
     @Mapping(target = "course", ignore = true)
     @Mapping(target = "courseMessageType", ignore = true)
-
     void update(
             UpdateCourseMessageRequest request,
             @MappingTarget CourseMessage courseMessage

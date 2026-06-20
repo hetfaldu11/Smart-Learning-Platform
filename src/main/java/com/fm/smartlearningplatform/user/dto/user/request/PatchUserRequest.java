@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Pattern;
 
 public record PatchUserRequest(
 
-        @Email(message = "Invalid email format.",regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
+        @Email(message = "Invalid email format.", regexp = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")
         String email,
 
         @Pattern(regexp = "^[0-9]{10}$", message = "Phone number must be 10 digits.")
@@ -13,9 +13,9 @@ public record PatchUserRequest(
 
         Boolean enabled
 ) {
-        public PatchUserRequest{
-                if(email != null){
-                        email = email.trim().toLowerCase();
-                }
+    public PatchUserRequest {
+        if (email != null) {
+            email = email.trim().toLowerCase();
         }
+    }
 }

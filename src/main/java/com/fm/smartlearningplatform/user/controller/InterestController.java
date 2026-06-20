@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/interests")
 @RequiredArgsConstructor
@@ -35,7 +33,7 @@ public class InterestController {
 
     @GetMapping
     public ResponseEntity<Page<InterestResponse>> getInterests(@RequestParam(value = "q", required = false) String keyword,
-                                                               @PageableDefault(size = 10, sort = "name") Pageable pageable ) {
+                                                               @PageableDefault(size = 10, sort = "name") Pageable pageable) {
         return ResponseEntity.ok(interestService.searchByKeyword(keyword, pageable));
     }
 
