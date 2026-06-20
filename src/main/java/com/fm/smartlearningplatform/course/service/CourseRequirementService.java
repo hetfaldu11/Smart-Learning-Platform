@@ -81,23 +81,7 @@ public class CourseRequirementService {
             UpdateCourseRequirementRequest request
     ) {
 
-        CourseRequirement courseRequirement =
-                getCourseRequirement(courseRequirementId);
-
-        if (
-                request.requirement() != null
-                        && courseRequirementRepository
-                        .existsByIdNotAndCourseIdAndRequirementAndCourseDeletedAtIsNull(
-                                courseRequirementId,
-                                courseRequirement.getCourse().getId(),
-                                request.requirement()
-                        )
-        ) {
-
-            throw new DuplicateResourceException(
-                    "Course requirement already exists."
-            );
-        }
+        CourseRequirement courseRequirement = getCourseRequirement(courseRequirementId);
 
         courseRequirementMapper.update(
                 request,
@@ -113,16 +97,16 @@ public class CourseRequirementService {
 
     // ─── Delete ───────────────────────────────────────────────
 
-    @Transactional
-    public void delete(Long courseRequirementId) {
-
-        CourseRequirement courseRequirement =
-                getCourseRequirement(courseRequirementId);
-
-        courseRequirementRepository.delete(
-                courseRequirement
-        );
-    }
+//    @Transactional
+//    public void delete(Long courseRequirementId) {
+//
+//        CourseRequirement courseRequirement =
+//                getCourseRequirement(courseRequirementId);
+//
+//        courseRequirementRepository.delete(
+//                courseRequirement
+//        );
+//    }
 
     // ─── Exists ───────────────────────────────────────────────
 
@@ -136,45 +120,27 @@ public class CourseRequirementService {
 
     // ─── Helper ───────────────────────────────────────────────
 
-    private CourseRequirement getCourseRequirement(
-            Long courseRequirementId
-    ) {
-
+    private CourseRequirement getCourseRequirement(Long courseRequirementId)
+    {
         return courseRequirementRepository
                 .findById(courseRequirementId)
                 .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Course requirement not found."
-                        )
+                        new ResourceNotFoundException("Course requirement not found.")
                 );
     }
 
     private Course getCourse(Long courseId) {
 
         return courseRepository.findById(courseId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Course not found."
-                        )
-                );
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found."));
     }
 
-    private void validateRequirementNotExist(
-            Long courseId,
-            String requirement
-    ) {
+    private void validateRequirementNotExist(Long courseId, String requirement)
+    {
 
-        if (
-                courseRequirementRepository
-                        .existsByCourseIdAndRequirementAndCourseDeletedAtIsNull(
-                                courseId,
-                                requirement
-                        )
-        ) {
-
-            throw new DuplicateResourceException(
-                    "Course requirement already exists."
-            );
+        if (courseRequirementRepository.existsByIdAndCourseDeletedAtIsNull(courseId))
+        {
+            throw new DuplicateResourceException("Course requirement already exists.");
         }
     }
 }

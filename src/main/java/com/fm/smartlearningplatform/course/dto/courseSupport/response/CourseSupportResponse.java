@@ -8,11 +8,7 @@ public record CourseSupportResponse(
 
         String supportEmail,
 
-        String supportPhone,
-
-        LocalDateTime createdAt,
-
-        LocalDateTime updatedAt
+        String supportPhone
 
 ) {
 }

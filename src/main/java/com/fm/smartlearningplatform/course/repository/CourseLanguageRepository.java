@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +47,8 @@ public interface CourseLanguageRepository
 
 
 
+
+
     /*
      |--------------------------------------------------------------------------
      | Language Courses
@@ -71,10 +74,7 @@ public interface CourseLanguageRepository
      |--------------------------------------------------------------------------
      */
 
-    Optional<CourseLanguage>
-    findByCourseIdAndIsPrimaryTrueAndCourseDeletedAtIsNull(
-            Long courseId
-    );
+    public  Optional<CourseLanguage> findByCourseIdAndPrimaryTrueAndCourseDeletedAtIsNull(Long courseId);
 
 
 
@@ -129,8 +129,9 @@ public interface CourseLanguageRepository
      */
 
     List<CourseLanguage>
-    findByCourseIdAndCourseDeletedAtIsNullOrderByIsPrimaryDescIdAsc(
+    findByCourseIdAndCourseDeletedAtIsNullOrderByPrimaryDescIdAsc(
             Long courseId
     );
 
+    Optional<Object> findByCourseIdAndPrimaryTrueAndCourseDeletedAtIsNull(Long courseId, boolean isPrimary, LocalDateTime courseDeletedAt);
 }

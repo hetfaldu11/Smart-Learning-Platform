@@ -144,6 +144,10 @@ public class CourseMessageTypeService {
                                         "Course message type not found."
                                 )
                         );
+        if(courseMessageType.getDeletedAt()==null)
+        {
+            throw  new DuplicateResourceException("this message was already restored");
+        }
 
         courseMessageType.setDeletedAt(null);
 

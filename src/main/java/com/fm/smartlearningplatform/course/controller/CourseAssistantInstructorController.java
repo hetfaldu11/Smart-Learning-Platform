@@ -43,20 +43,15 @@ public class CourseAssistantInstructorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<CourseAssistantInstructorResponse>
-    getCourseAssistantInstructorById(
-            @PathVariable Long id
-    ) {
-
-        return ResponseEntity.ok(
-                courseAssistantInstructorService.findById(id)
-        );
+    getCourseAssistantInstructorById(@PathVariable Long id)
+    {
+        return ResponseEntity.ok(courseAssistantInstructorService.findById(id));
     }
 
     @GetMapping("/course/{courseId}")
     public ResponseEntity<Page<CourseAssistantInstructorResponse>>
     getCourseAssistantInstructorsByCourseId(
             @PathVariable Long courseId,
-
             @PageableDefault(size = 10)
             Pageable pageable
     ) {
@@ -75,10 +70,9 @@ public class CourseAssistantInstructorController {
     public ResponseEntity<Void>
     deleteCourseAssistantInstructorById(
             @PathVariable Long id
-    ) {
-
+    )
+    {
         courseAssistantInstructorService.delete(id);
-
         return ResponseEntity.noContent().build();
     }
 }

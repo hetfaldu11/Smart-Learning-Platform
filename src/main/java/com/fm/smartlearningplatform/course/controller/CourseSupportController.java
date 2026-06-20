@@ -39,7 +39,7 @@ public class CourseSupportController {
 
     // ─── Find ─────────────────────────────────────────────────
 
-    @GetMapping("/course/{courseId}")
+    @GetMapping("/{courseId}")
     public ResponseEntity<CourseSupportResponse>
     getCourseSupportByCourseId(
             @PathVariable Long courseId
@@ -54,7 +54,7 @@ public class CourseSupportController {
 
     // ─── Update ───────────────────────────────────────────────
 
-    @PutMapping("/course/{courseId}")
+    @PutMapping("/{courseId}")
     public ResponseEntity<CourseSupportResponse>
     updateCourseSupportByCourseId(
             @PathVariable Long courseId,
@@ -72,16 +72,7 @@ public class CourseSupportController {
         );
     }
 
-    // ─── Delete ───────────────────────────────────────────────
 
-    @DeleteMapping("/course/{courseId}")
-    public ResponseEntity<Void>
-    deleteCourseSupportByCourseId(
-            @PathVariable Long courseId
-    ) {
 
-        courseSupportService.delete(courseId);
 
-        return ResponseEntity.noContent().build();
-    }
 }

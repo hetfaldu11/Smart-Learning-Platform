@@ -1,6 +1,7 @@
 package com.fm.smartlearningplatform.course.controller;
 
 import com.fm.smartlearningplatform.course.dto.courseLanguage.request.CreateCourseLanguageRequest;
+import com.fm.smartlearningplatform.course.dto.courseLanguage.request.UpdateCourseLanguageRequest;
 import com.fm.smartlearningplatform.course.dto.courseLanguage.response.CourseLanguageResponse;
 import com.fm.smartlearningplatform.course.service.CourseLanguageService;
 import jakarta.validation.Valid;
@@ -67,6 +68,12 @@ public class CourseLanguageController {
                         pageable
                 )
         );
+    }
+
+    @PutMapping("{id}")
+    public ResponseEntity<CourseLanguageResponse> updatePrimaryLanguage(@PathVariable Long id, @RequestBody UpdateCourseLanguageRequest request)
+    {
+        return ResponseEntity.ok(courseLanguageService.updatePrimaryLanguage(id, request));
     }
 
     // ─── Delete ───────────────────────────────────────────────

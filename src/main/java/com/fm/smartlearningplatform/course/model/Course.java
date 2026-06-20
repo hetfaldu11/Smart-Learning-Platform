@@ -41,38 +41,21 @@ public class Course extends Auditable {
     @JoinColumn(name = "course_status_id", nullable = false)
     private CourseStatus courseStatus;
 
+
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @OneToMany(
             mappedBy = "course",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     @Builder.Default
     private List<CourseMessage> courseMessages = new ArrayList<>();
 
-
     @OneToMany(
             mappedBy = "course",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<CourseRequirement> courseRequirements = new ArrayList<>();
-
-
-    @OneToMany(
-            mappedBy = "course",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<CourseLearningOutcome> courseLearningOutcomes = new ArrayList<>();
-
-    @OneToMany(
-            mappedBy = "course",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     @Builder.Default
@@ -80,11 +63,11 @@ public class Course extends Auditable {
 
     @OneToMany(
             mappedBy = "course",
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true,
             fetch = FetchType.LAZY)
     @Builder.Default
-    private List<CourseAssistantInstructor> assistantInstructors = new ArrayList<>();
+    private List<CourseAssistantInstructor> assistantInstructors= new ArrayList<>();
 
 //    @OneToMany(
 //            mappedBy = "course",

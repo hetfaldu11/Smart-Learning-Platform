@@ -6,11 +6,8 @@ public record CourseMessageTypeResponse(
 
         Long id,
 
-        String name,
+        String name
 
-        LocalDateTime createdAt,
-
-        LocalDateTime updatedAt
 
 ) {
 }

@@ -6,6 +6,10 @@ public record CourseDetailResponse(
 
         String description,
 
+        String requirement,
+
+        String learningOutcome,
+
         boolean hasCertificate,
 
         boolean hasAssignment,

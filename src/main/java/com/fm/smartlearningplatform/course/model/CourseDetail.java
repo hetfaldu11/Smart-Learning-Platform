@@ -3,6 +3,10 @@ package com.fm.smartlearningplatform.course.model;
 import com.fm.smartlearningplatform.user.model.Auditable;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "course_details")
@@ -11,7 +15,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseDetail extends Auditable {
+public class CourseDetail  extends Auditable {
 
     @Id
     @Column(name = "course_id")
@@ -23,8 +27,13 @@ public class CourseDetail extends Auditable {
     private Course course;
 
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
-    @Builder.Default
-    private String description = null;
+    private String description;
+
+    @Column(name = "requirement", nullable = false, columnDefinition = "TEXT")
+    private String requirement;
+
+    @Column(name = "learning_outcome", nullable = false, columnDefinition = "TEXT")
+    private String learningOutcome;
 
     @Column(name = "certification_available")
     @Builder.Default

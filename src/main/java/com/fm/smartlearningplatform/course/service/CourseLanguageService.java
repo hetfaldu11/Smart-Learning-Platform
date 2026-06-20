@@ -1,6 +1,7 @@
 package com.fm.smartlearningplatform.course.service;
 
 import com.fm.smartlearningplatform.course.dto.courseLanguage.request.CreateCourseLanguageRequest;
+import com.fm.smartlearningplatform.course.dto.courseLanguage.request.UpdateCourseLanguageRequest;
 import com.fm.smartlearningplatform.course.dto.courseLanguage.response.CourseLanguageResponse;
 import com.fm.smartlearningplatform.course.mapper.CourseLanguageMapper;
 import com.fm.smartlearningplatform.course.model.Course;
@@ -38,6 +39,8 @@ public class CourseLanguageService {
             CreateCourseLanguageRequest request
     ) {
 
+
+
         validateCourseLanguageNotExist(
                 request.courseId(),
                 request.languageId()
@@ -51,15 +54,14 @@ public class CourseLanguageService {
                 request.languageId()
         );
 
-        if (request.isPrimary()) {
-
-            removePrimaryLanguage(
-                    request.courseId()
-            );
+        if (request.primary()) {
+            removePrimaryLanguage(request.courseId());
         }
 
         CourseLanguage courseLanguage =
                 courseLanguageMapper.toEntity(request);
+
+
 
         courseLanguage.setCourse(course);
         courseLanguage.setLanguage(language);
@@ -67,6 +69,23 @@ public class CourseLanguageService {
         return courseLanguageMapper.toResponse(
                 courseLanguageRepository.save(courseLanguage)
         );
+    }
+    // ─── update ─────────────────────────────────────────────────
+
+    @Transactional
+    public CourseLanguageResponse updatePrimaryLanguage(Long courseId,UpdateCourseLanguageRequest request) {
+
+
+        CourseLanguage courseLanguage= courseLanguageRepository.findByCourseIdAndLanguageIdAndCourseDeletedAtIsNull(courseId, request.languageId())
+                .orElseThrow(()-> new ResourceNotFoundException("course language not found."));
+
+        removePrimaryLanguage(courseId);
+
+        courseLanguageMapper.update(request,courseLanguage);
+
+
+        return courseLanguageMapper.toResponse(courseLanguageRepository.save(courseLanguage));
+
     }
 
     // ─── Find ─────────────────────────────────────────────────
@@ -176,7 +195,7 @@ public class CourseLanguageService {
     ) {
 
         courseLanguageRepository
-                .findByCourseIdAndIsPrimaryTrueAndCourseDeletedAtIsNull(
+                .findByCourseIdAndPrimaryTrueAndCourseDeletedAtIsNull(
                         courseId
                 )
                 .ifPresent(courseLanguage -> {

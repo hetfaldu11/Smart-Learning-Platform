@@ -10,7 +10,9 @@ public record CreateCourseLanguageRequest(
         @NotNull(message = "Language id is required.")
         Long languageId,
 
-        Boolean isPrimary
+        Boolean primary
+
 
 ) {
+
 }

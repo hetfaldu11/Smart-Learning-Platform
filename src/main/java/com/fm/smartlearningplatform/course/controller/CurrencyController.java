@@ -75,7 +75,7 @@ public class CurrencyController {
 
     // ─── Update ───────────────────────────────────────────────
 
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public ResponseEntity<CurrencyResponse>
     updateCurrencyById(
             @PathVariable Long id,

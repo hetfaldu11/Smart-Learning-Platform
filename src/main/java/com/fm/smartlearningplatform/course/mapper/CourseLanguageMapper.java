@@ -1,10 +1,12 @@
 package com.fm.smartlearningplatform.course.mapper;
 
 import com.fm.smartlearningplatform.course.dto.courseLanguage.request.CreateCourseLanguageRequest;
+import com.fm.smartlearningplatform.course.dto.courseLanguage.request.UpdateCourseLanguageRequest;
 import com.fm.smartlearningplatform.course.dto.courseLanguage.response.CourseLanguageResponse;
 import com.fm.smartlearningplatform.course.model.CourseLanguage;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ReportingPolicy;
 
 @Mapper(
@@ -20,7 +22,6 @@ public interface CourseLanguageMapper {
             CreateCourseLanguageRequest request
     );
 
-
     @Mapping(target = "courseId", source = "course.id")
     @Mapping(target = "courseTitle", source = "course.title")
 
@@ -29,5 +30,8 @@ public interface CourseLanguageMapper {
     CourseLanguageResponse toResponse(
             CourseLanguage courseLanguage
     );
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "course", ignore = true)
+    void update(UpdateCourseLanguageRequest request, @MappingTarget CourseLanguage courseLanguage);
 
 }

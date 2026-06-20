@@ -53,7 +53,7 @@ public class CourseRequirementController {
         );
     }
 
-    @GetMapping("/course/{courseId}")
+    @GetMapping("/{courseId}")
     public ResponseEntity<Page<CourseRequirementResponse>>
     getCourseRequirementsByCourseId(
             @PathVariable Long courseId,
@@ -92,14 +92,14 @@ public class CourseRequirementController {
 
     // ─── Delete ───────────────────────────────────────────────
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void>
-    deleteCourseRequirementById(
-            @PathVariable Long id
-    ) {
-
-        courseRequirementService.delete(id);
-
-        return ResponseEntity.noContent().build();
-    }
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void>
+//    deleteCourseRequirementById(
+//            @PathVariable Long id
+//    ) {
+//
+//        courseRequirementService.delete(id);
+//
+//        return ResponseEntity.noContent().build();
+//    }
 }

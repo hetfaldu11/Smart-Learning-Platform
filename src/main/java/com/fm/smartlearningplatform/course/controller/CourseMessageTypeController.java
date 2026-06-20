@@ -96,4 +96,17 @@ public class CourseMessageTypeController {
                 )
         );
     }
+    @DeleteMapping("/{id}")
+        public ResponseEntity<CourseMessageTypeResponse> delete(@PathVariable Long id)
+        {
+            courseMessageTypeService.delete(id);
+            return  ResponseEntity.noContent().build();
+        }
+
+    @PutMapping("/{id}/restore")
+    public ResponseEntity<CourseMessageTypeResponse> restore(@PathVariable Long id)
+    {
+        return  ResponseEntity.ok( courseMessageTypeService.restore(id));
+    }
+
 }

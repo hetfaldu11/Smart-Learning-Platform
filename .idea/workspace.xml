@@ -4,7 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="6d3ed694-56d8-471b-bd83-faac3221116c" name="Changes" comment="[IMP] Changes in course and users" />
+=======
+    <list default="true" id="6d3ed694-56d8-471b-bd83-faac3221116c" name="Changes" comment="[imp] cloudinary for course media" />
+    <list id="ecf02d34-0f16-4d94-9626-ffae6526d979" name="Changes by LENOVO" comment="">
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/CreateCourseDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/CreateCourseDetailRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/UpdateCourseDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/UpdateCourseDetailRequest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseLanguageMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseLanguageMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLanguage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLanguage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLevel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLevel.java" afterDir="false" />
+    </list>
+>>>>>>> 0e1f4f74df8b8e7b780609ecc0f42999685537b5
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -24,8 +36,8 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Enum" />
-        <option value="Record" />
         <option value="Interface" />
+        <option value="Record" />
         <option value="Class" />
       </list>
     </option>
@@ -38,6 +50,7 @@
       </GitPushTagMode>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;history&quot;: [
@@ -360,9 +373,19 @@
       <workItem from="1781680776820" duration="11104000" />
       <workItem from="1781694383529" duration="4818000" />
       <workItem from="1781701131151" duration="971000" />
+<<<<<<< HEAD
       <workItem from="1781800822437" duration="9788000" />
       <workItem from="1781892643607" duration="2764000" />
       <workItem from="1781943017270" duration="553000" />
+=======
+      <workItem from="1781759990384" duration="2787000" />
+      <workItem from="1781768545645" duration="20026000" />
+      <workItem from="1781801229378" duration="7453000" />
+      <workItem from="1781853564638" duration="320000" />
+      <workItem from="1781854786202" duration="12442000" />
+      <workItem from="1781876310062" duration="3797000" />
+      <workItem from="1781939843260" duration="3696000" />
+>>>>>>> 0e1f4f74df8b8e7b780609ecc0f42999685537b5
     </task>
     <task id="LOCAL-00001" summary="Init commit">
       <option name="closed" value="true" />
@@ -500,6 +523,7 @@
       <option name="project" value="LOCAL" />
       <updated>1781431641830</updated>
     </task>
+<<<<<<< HEAD
     <task id="LOCAL-00018" summary="[IMP] Changes in course and users">
       <option name="closed" value="true" />
       <created>1781943506104</created>
@@ -509,6 +533,25 @@
       <updated>1781943506104</updated>
     </task>
     <option name="localTasksCounter" value="19" />
+=======
+    <task id="LOCAL-00018" summary="[imp]bug fix">
+      <option name="closed" value="true" />
+      <created>1781760029408</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1781760029408</updated>
+    </task>
+    <task id="LOCAL-00019" summary="[imp] cloudinary for course media">
+      <option name="closed" value="true" />
+      <created>1781943340120</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1781943340120</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
+>>>>>>> 0e1f4f74df8b8e7b780609ecc0f42999685537b5
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -553,9 +596,43 @@
     <MESSAGE value="[imp] course entity" />
     <MESSAGE value="[imp] course dto &amp; mapper" />
     <MESSAGE value="[imp] course service &amp; controller" />
+<<<<<<< HEAD
     <MESSAGE value="[IMP] " />
     <MESSAGE value="[IMP] Changes in course and users" />
     <option name="LAST_COMMIT_MESSAGE" value="[IMP] Changes in course and users" />
+=======
+    <MESSAGE value="[imp]bug fix" />
+    <MESSAGE value="[imp] cloudinary for course media" />
+    <option name="LAST_COMMIT_MESSAGE" value="[imp] cloudinary for course media" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-field">
+          <url>file://$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/model/course/CoursePricing.java</url>
+          <line>32</line>
+          <properties field="discountPrice" class="com.fm.smartlearningplatform.model.course.CoursePricing" />
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-field">
+          <url>file://$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/Enrollment.java</url>
+          <line>37</line>
+          <properties field="course" class="com.fm.smartlearningplatform.course.model.Enrollment" />
+          <option name="timeStamp" value="18" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/security/jwt/JwtAuthenticationFilter.java</url>
+          <line>53</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/otp/service/EmailService.java</url>
+          <line>29</line>
+          <option name="timeStamp" value="17" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+>>>>>>> 0e1f4f74df8b8e7b780609ecc0f42999685537b5
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
