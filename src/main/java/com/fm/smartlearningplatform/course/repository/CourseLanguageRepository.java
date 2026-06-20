@@ -120,8 +120,6 @@ public interface CourseLanguageRepository
             Language language
     );
 
-
-
     /*
      |--------------------------------------------------------------------------
      | Sorting
