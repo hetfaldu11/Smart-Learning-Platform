@@ -1,5 +1,6 @@
 package com.fm.smartlearningplatform.course.dto.courseDetail.request;
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record UpdateCourseDetailRequest(

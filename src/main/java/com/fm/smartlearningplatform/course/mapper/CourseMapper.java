@@ -21,8 +21,8 @@ public interface CourseMapper {
     @Mapping(target = "deletedAt", ignore = true)
 
     @Mapping(target = "courseMessages", ignore = true)
-    @Mapping(target = "courseRequirements", ignore = true)
-    @Mapping(target = "courseLearningOutcomes", ignore = true)
+//    @Mapping(target = "courseRequirements", ignore = true)
+//    @Mapping(target = "courseLearningOutcomes", ignore = true)
     @Mapping(target = "courseLanguages", ignore = true)
     @Mapping(target = "assistantInstructors", ignore = true)
     Course toEntity(CreateCourseRequest request);
@@ -69,8 +69,8 @@ public interface CourseMapper {
     @Mapping(target = "deletedAt", ignore = true)
 
     @Mapping(target = "courseMessages", ignore = true)
-    @Mapping(target = "courseRequirements", ignore = true)
-    @Mapping(target = "courseLearningOutcomes", ignore = true)
+//    @Mapping(target = "courseRequirements", ignore = true)
+//    @Mapping(target = "courseLearningOutcomes", ignore = true)
     @Mapping(target = "courseLanguages", ignore = true)
     @Mapping(target = "assistantInstructors", ignore = true)
 //    @Mapping(target = "sections", ignore = true)

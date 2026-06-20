@@ -41,6 +41,5 @@ public class CourseLanguage extends Auditable {
 
     @Column(name = "is_primary")
     @Builder.Default
-    private boolean isPrimary = false;
-
+    private boolean primary = false;
 }

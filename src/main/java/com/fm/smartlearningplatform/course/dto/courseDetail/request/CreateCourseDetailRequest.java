@@ -55,5 +55,29 @@ public record CreateCourseDetailRequest(
                 description = null;
             }
         }
+
+        if (requirement != null) {
+
+            requirement = requirement.trim()
+                    .replaceAll("\\s+", " ")
+                    .toLowerCase();
+
+            if (requirement.isEmpty()) {
+                requirement = null;
+            }
+        }
+
+        if (learningOutcome != null) {
+
+            learningOutcome = learningOutcome.trim()
+                    .replaceAll("\\s+", " ")
+                    .toLowerCase();
+
+            if (learningOutcome.isEmpty()) {
+                learningOutcome = null;
+            }
+        }
+
+
     }
 }

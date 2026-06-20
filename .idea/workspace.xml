@@ -4,73 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="6d3ed694-56d8-471b-bd83-faac3221116c" name="Changes" comment="[imp]bug fix">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/cloudinary/config/CloudinaryConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/cloudinary/constant/CloudinaryFolders.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/cloudinary/controller/CloudinaryController.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/cloudinary/dto/CloudinaryUploadResponse.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/cloudinary/enums/MediaType.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/cloudinary/service/CloudinaryService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/cloudinary/service/CloudinaryServiceImpl.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/cloudinary/validation/FileValidation.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseLanguage/request/UpdateCourseLanguageRequest.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/exceptionhandler/exception/InvalidFileException.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseAssistantInstructorController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseAssistantInstructorController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseDetailController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseDetailController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseLanguageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseLanguageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseMediaController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseMediaController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseMessageController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseMessageController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseMessageTypeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseMessageTypeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseRequirementController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseRequirementController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseSupportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CourseSupportController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CurrencyController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/controller/CurrencyController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/CreateCourseDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/CreateCourseDetailRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/UpdateCourseDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/UpdateCourseDetailRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/response/CourseDetailResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/response/CourseDetailResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseLanguage/request/CreateCourseLanguageRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseLanguage/request/CreateCourseLanguageRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseLanguage/response/CourseLanguageResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseLanguage/response/CourseLanguageResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseMessageType/response/CourseMessageTypeResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseMessageType/response/CourseMessageTypeResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/coursePricing/response/CoursePricingResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/coursePricing/response/CoursePricingResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseSupport/response/CourseSupportResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseSupport/response/CourseSupportResponse.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseLanguageMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseLanguageMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseLevelMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseLevelMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/Course.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseDetail.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseMedia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseMedia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseRequirement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseRequirement.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/repository/CourseLanguageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/repository/CourseLanguageRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseLanguageService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseLanguageService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseMediaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseMediaService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseMessageTypeService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseMessageTypeService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseRequirementService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseRequirementService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseStatusService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseStatusService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseSupportService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseSupportService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/security/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/security/config/SecurityConfig.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application-milan.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-milan.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/application-milan.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application-milan.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/fm/smartlearningplatform/security/config/SecurityConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/fm/smartlearningplatform/security/config/SecurityConfig.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/AuthorityMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/AuthorityMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/EducationLevelMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/EducationLevelMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/GenderMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/GenderMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/InterestMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/InterestMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/LanguageMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/LanguageMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/PlatformMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/PlatformMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/ProfessionMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/ProfessionMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/RoleAuthorityMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/RoleAuthorityMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/RoleMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/RoleMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/SkillMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/SkillMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/ThemeMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/ThemeMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserInterestMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserInterestMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserPreferenceMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserPreferenceMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserProfileMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserProfileMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserRoleMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserRoleMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserSkillMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserSkillMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserSocialLinkMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserSocialLinkMapperImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/verification/mapper/UserVerificationMapperImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/verification/mapper/UserVerificationMapperImpl.java" afterDir="false" />
-    </list>
+    <list default="true" id="6d3ed694-56d8-471b-bd83-faac3221116c" name="Changes" comment="[imp] cloudinary for course media" />
     <list id="ecf02d34-0f16-4d94-9626-ffae6526d979" name="Changes by LENOVO" comment="">
       <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/CreateCourseDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/CreateCourseDetailRequest.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/UpdateCourseDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/UpdateCourseDetailRequest.java" afterDir="false" />
@@ -105,6 +39,7 @@
       </GitPushTagMode>
     </option>
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
   &quot;lastFilter&quot;: {
@@ -128,30 +63,6 @@
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/7.1.0-RC1/spring-security-core-7.1.0-RC1-sources.jar!/org/springframework/security/authentication/dao/AbstractUserDetailsAuthenticationProvider.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="jar://$MAVEN_REPOSITORY$/org/springframework/security/spring-security-core/7.1.0-RC1/spring-security-core-7.1.0-RC1-sources.jar!/org/springframework/security/authentication/dao/DaoAuthenticationProvider.java" root0="FORCE_HIGHLIGHTING" />
     <setting file="jar://$PROJECT_DIR$/../../java compiler/jdk-25.0.1/lib/src.zip!/java.base/java/util/Collections.java" root0="FORCE_HIGHLIGHTING" />
-  </component>
-  <component name="LineStatusTrackerManager">
-    <file path="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseLanguageMapper.java">
-      <ranges>
-        <range start1="3" end1="3" start2="3" end2="4" changelist="6d3ed694-56d8-471b-bd83-faac3221116c" />
-        <range start1="7" end1="7" start2="8" end2="9" changelist="6d3ed694-56d8-471b-bd83-faac3221116c" />
-        <range start1="18" end1="19" start2="20" end2="20" changelist="ecf02d34-0f16-4d94-9626-ffae6526d979" />
-        <range start1="23" end1="25" start2="24" end2="24" changelist="6d3ed694-56d8-471b-bd83-faac3221116c" />
-        <range start1="33" end1="33" start2="32" end2="35" changelist="6d3ed694-56d8-471b-bd83-faac3221116c" />
-      </ranges>
-    </file>
-    <file path="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/CreateCourseDetailRequest.java">
-      <ranges>
-        <range start1="18" end1="18" start2="18" end2="34" changelist="6d3ed694-56d8-471b-bd83-faac3221116c" />
-        <range start1="41" end1="41" start2="57" end2="81" changelist="ecf02d34-0f16-4d94-9626-ffae6526d979" />
-      </ranges>
-    </file>
-    <file path="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/UpdateCourseDetailRequest.java">
-      <ranges>
-        <range start1="2" end1="2" start2="2" end2="3" changelist="ecf02d34-0f16-4d94-9626-ffae6526d979" />
-        <range start1="12" end1="12" start2="13" end2="27" changelist="6d3ed694-56d8-471b-bd83-faac3221116c" />
-        <range start1="35" end1="35" start2="50" end2="71" changelist="6d3ed694-56d8-471b-bd83-faac3221116c" />
-      </ranges>
-    </file>
   </component>
   <component name="MavenImportPreferences">
     <option name="generalSettings">
@@ -450,7 +361,7 @@
       <workItem from="1781853564638" duration="320000" />
       <workItem from="1781854786202" duration="12442000" />
       <workItem from="1781876310062" duration="3797000" />
-      <workItem from="1781939843260" duration="3192000" />
+      <workItem from="1781939843260" duration="3696000" />
     </task>
     <task id="LOCAL-00001" summary="Init commit">
       <option name="closed" value="true" />
@@ -596,7 +507,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781760029408</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="[imp] cloudinary for course media">
+      <option name="closed" value="true" />
+      <created>1781943340120</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1781943340120</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -642,7 +561,8 @@
     <MESSAGE value="[imp] course dto &amp; mapper" />
     <MESSAGE value="[imp] course service &amp; controller" />
     <MESSAGE value="[imp]bug fix" />
-    <option name="LAST_COMMIT_MESSAGE" value="[imp]bug fix" />
+    <MESSAGE value="[imp] cloudinary for course media" />
+    <option name="LAST_COMMIT_MESSAGE" value="[imp] cloudinary for course media" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

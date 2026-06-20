@@ -24,7 +24,6 @@ public class CourseLevel  extends Auditable {
     @Column(name="name",nullable = false,unique = true)
     private String name;
 
-
     @Column(name= "deleted_at")
     private LocalDateTime deletedAt;
 }
