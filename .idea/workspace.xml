@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="f60a23e3-0162-4c9b-b5e3-0fb33d4d5cb9" name="Changes" comment="[IMP] Changes in course and users">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-het.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-het.properties" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application-milan.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/fm/smartlearningplatform/security/config/SecurityConfig.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/AuthorityMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/EducationLevelMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/GenderMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/InterestMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/LanguageMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/PlatformMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/ProfessionMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/RoleAuthorityMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/RoleMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/SkillMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/ThemeMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserInterestMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserPreferenceMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserProfileMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserRoleMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserSkillMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/user/mapper/UserSocialLinkMapperImpl.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/generated-sources/annotations/com/fm/smartlearningplatform/verification/mapper/UserVerificationMapperImpl.java" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="McpProjectServerCommands">
+    <commands />
+    <urls />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RequestMappingsPanelOrder0": "0",
+    "RequestMappingsPanelOrder1": "1",
+    "RequestMappingsPanelWidth0": "75",
+    "RequestMappingsPanelWidth1": "75",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "Spring Boot.SmartLearningPlatformApplication.executor": "Run",
+    "git-widget-placeholder": "main",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "preferences.fileTypes"
+  }
+}]]></component>
+  <component name="RunManager">
+    <configuration name="SmartLearningPlatformApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
+      <module name="smart-learning-platform" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.fm.smartlearningplatform.SmartLearningPlatformApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="TaskManager">
+    <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
+  </component>
+</project>
