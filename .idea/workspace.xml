@@ -5,14 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6d3ed694-56d8-471b-bd83-faac3221116c" name="Changes" comment="[imp] cloudinary for course media" />
-    <list id="ecf02d34-0f16-4d94-9626-ffae6526d979" name="Changes by LENOVO" comment="">
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/CreateCourseDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/CreateCourseDetailRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/UpdateCourseDetailRequest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/dto/courseDetail/request/UpdateCourseDetailRequest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseLanguageMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseLanguageMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/mapper/CourseMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLanguage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLanguage.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLevel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLevel.java" afterDir="false" />
-    </list>
+    <list id="ecf02d34-0f16-4d94-9626-ffae6526d979" name="Changes by LENOVO" comment="Changes by LENOVO" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -361,7 +354,7 @@
       <workItem from="1781853564638" duration="320000" />
       <workItem from="1781854786202" duration="12442000" />
       <workItem from="1781876310062" duration="3797000" />
-      <workItem from="1781939843260" duration="3696000" />
+      <workItem from="1781939843260" duration="4395000" />
     </task>
     <task id="LOCAL-00001" summary="Init commit">
       <option name="closed" value="true" />
@@ -515,7 +508,15 @@
       <option name="project" value="LOCAL" />
       <updated>1781943340120</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Changes by LENOVO">
+      <option name="closed" value="true" />
+      <created>1781943616051</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1781943616051</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -562,7 +563,8 @@
     <MESSAGE value="[imp] course service &amp; controller" />
     <MESSAGE value="[imp]bug fix" />
     <MESSAGE value="[imp] cloudinary for course media" />
-    <option name="LAST_COMMIT_MESSAGE" value="[imp] cloudinary for course media" />
+    <MESSAGE value="Changes by LENOVO" />
+    <option name="LAST_COMMIT_MESSAGE" value="Changes by LENOVO" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
