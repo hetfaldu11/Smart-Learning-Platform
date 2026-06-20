@@ -132,6 +132,4 @@ public interface CourseLanguageRepository
     findByCourseIdAndCourseDeletedAtIsNullOrderByPrimaryDescIdAsc(
             Long courseId
     );
-
-    Optional<Object> findByCourseIdAndPrimaryTrueAndCourseDeletedAtIsNull(Long courseId, boolean isPrimary, LocalDateTime courseDeletedAt);
 }
