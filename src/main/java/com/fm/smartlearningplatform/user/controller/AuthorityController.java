@@ -2,20 +2,17 @@ package com.fm.smartlearningplatform.user.controller;
 
 import com.fm.smartlearningplatform.user.dto.authority.request.CreateAuthorityRequest;
 import com.fm.smartlearningplatform.user.dto.authority.request.UpdateAuthorityRequest;
-import com.fm.smartlearningplatform.user.dto.authority.response.DeleteAuthorityResponse;
 import com.fm.smartlearningplatform.user.dto.authority.response.AuthorityResponse;
+import com.fm.smartlearningplatform.user.dto.authority.response.DeleteAuthorityResponse;
 import com.fm.smartlearningplatform.user.service.AuthorityService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/authorities")
@@ -35,7 +32,7 @@ public class AuthorityController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<AuthorityResponse>> getAuthorities(@RequestParam(value = "q", required = false) String keyword , @PageableDefault(size = 10, sort = "name")Pageable pageable) {
+    public ResponseEntity<Page<AuthorityResponse>> getAuthorities(@RequestParam(value = "q", required = false) String keyword, @PageableDefault(size = 10, sort = "name") Pageable pageable) {
         return ResponseEntity.ok(authorityService.searchByKeyword(keyword, pageable));
     }
 

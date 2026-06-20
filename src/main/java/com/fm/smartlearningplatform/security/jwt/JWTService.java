@@ -9,6 +9,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,14 @@ public class JWTService {
 
     public final UserRepository userRepository;
 
-    private static final String SECRET =
-            "ejndenfnfjejwlsjndajkdnkdlnsdjsdnsjmdnssdsfdv";
+    @Value("${jwt.secret}")
+    private String SECRET;
+
+    @Value("${jwt.token.expiration.time.micro.seconds}")
+    private Long jwtTokenExpirationTime;
+
+    @Value("${password.reset.token.expiration.time.micro.seconds}")
+    private Long passwordResetTokenExpirationTime;
 
     private SecretKey getSignKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
@@ -44,17 +51,17 @@ public class JWTService {
         return Jwts.builder()
                 .issuer("Smart Learning Platform")
                 .subject("JWT Token")
-                .claim("id",user.getId())
-                .claim("email",user.getEmail())
+                .claim("id", user.getId())
+                .claim("email", user.getEmail())
                 .claim("authorities", authorities.stream().map(Authority::getName).collect(Collectors.joining(",")))
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 300000))
+                .expiration(new Date(System.currentTimeMillis() + jwtTokenExpirationTime))
                 .signWith(getSignKey())
                 .compact();
     }
 
     public Claims extractClaims(String token) {
-        return  Jwts.parser()
+        return Jwts.parser()
                 .verifyWith(getSignKey())
                 .build()
                 .parseSignedClaims(token)
@@ -86,18 +93,16 @@ public class JWTService {
         Long id = userPrincipal.id();
         String email = userPrincipal.email();
 
-        return Objects.equals(id, user.getId()) && Objects.equals(email,user.getEmail());
+        return Objects.equals(id, user.getId()) && Objects.equals(email, user.getEmail());
     }
 
 
-    public String generatePasswordResetToken(Long userId)
-    {
-
+    public String generatePasswordResetToken(Long userId) {
         return Jwts.builder()
                 .subject(userId.toString())
                 .claim("purpose", "PASSWORD_RESET")
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .expiration(new Date(System.currentTimeMillis() + passwordResetTokenExpirationTime))
                 .signWith(getSignKey())
                 .compact();
     }

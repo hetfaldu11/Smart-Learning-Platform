@@ -2,13 +2,11 @@ package com.fm.smartlearningplatform.user.service;
 
 import com.fm.smartlearningplatform.exceptionhandler.exception.DuplicateResourceException;
 import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundException;
-import com.fm.smartlearningplatform.user.dto.theme.response.ThemeResponse;
 import com.fm.smartlearningplatform.user.dto.theme.request.CreateThemeRequest;
 import com.fm.smartlearningplatform.user.dto.theme.request.UpdateThemeRequest;
 import com.fm.smartlearningplatform.user.dto.theme.response.DeleteThemeResponse;
 import com.fm.smartlearningplatform.user.dto.theme.response.ThemeResponse;
 import com.fm.smartlearningplatform.user.mapper.ThemeMapper;
-import com.fm.smartlearningplatform.user.model.Theme;
 import com.fm.smartlearningplatform.user.model.Theme;
 import com.fm.smartlearningplatform.user.repository.ThemeRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -62,8 +59,7 @@ public class ThemeService {
     }
 
     @Transactional(readOnly = true)
-    public Page<ThemeResponse> searchByKeyword(String keyword, Pageable pageable)
-    {
+    public Page<ThemeResponse> searchByKeyword(String keyword, Pageable pageable) {
         Page<Theme> themes;
         if (keyword == null || keyword.isBlank()) {
             themes = themeRepository.findByDeletedAtIsNull(pageable);

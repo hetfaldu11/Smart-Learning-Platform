@@ -8,9 +8,9 @@ public record UpdateInterestRequest(
         String name
 
 ) {
-        public UpdateInterestRequest {
-                if (name != null) {
-                        name = name.trim().replaceAll("\\s+", " ").toLowerCase();
-                }
+    public UpdateInterestRequest {
+        if (name != null) {
+            name = name.trim().replaceAll("\\s+", " ").toLowerCase();
         }
+    }
 }

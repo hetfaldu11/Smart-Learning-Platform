@@ -39,7 +39,8 @@ public record UpdateCourseRequest(
 
         if (subtitle != null) {
             subtitle = subtitle.trim().replaceAll("\\s+", " ")
-                    .toLowerCase();;
+                    .toLowerCase();
+            ;
 
             if (subtitle.isBlank()) {
                 subtitle = null;

@@ -13,8 +13,6 @@ import org.mapstruct.*;
 public interface CurrencyMapper {
 
     @Mapping(target = "id", ignore = true)
-
-
     Currency toEntity(
             CreateCurrencyRequest request
     );
@@ -28,7 +26,6 @@ public interface CurrencyMapper {
                     NullValuePropertyMappingStrategy.IGNORE
     )
     @Mapping(target = "id", ignore = true)
-
     void update(
             UpdateCurrencyRequest request,
             @MappingTarget Currency currency

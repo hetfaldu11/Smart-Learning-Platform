@@ -15,7 +15,7 @@ public interface UserProfileMapper {
 
     Address toEntity(AddressDto dto);
 
-    @Mapping(target = "id", ignore=true)
+    @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", source = "user")
     @Mapping(target = "educationLevel", source = "educationLevel")
     @Mapping(target = "profession", source = "profession")

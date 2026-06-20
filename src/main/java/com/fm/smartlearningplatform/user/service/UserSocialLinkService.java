@@ -64,7 +64,7 @@ public class UserSocialLinkService {
     // ─── Update ────────────────────────────────────────────────
 
     @Transactional
-    public UserSocialLinkResponse update(Long userId, Long platformId,PatchUserSocialLinkRequest request) {
+    public UserSocialLinkResponse update(Long userId, Long platformId, PatchUserSocialLinkRequest request) {
         UserSocialLink userSocialLink = getUserSocialLink(userId, platformId);
 
         userSocialLinkMapper.update(request, userSocialLink);

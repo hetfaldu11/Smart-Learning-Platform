@@ -14,8 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/api/v1/platforms")
 @RequiredArgsConstructor
@@ -35,7 +33,7 @@ public class PlatformController {
 
     @GetMapping
     public ResponseEntity<Page<PlatformResponse>> getPlatforms(@RequestParam(value = "q", required = false) String keyword,
-                                                               @PageableDefault(size = 10, sort = "name") Pageable pageable ) {
+                                                               @PageableDefault(size = 10, sort = "name") Pageable pageable) {
         return ResponseEntity.ok(platformService.searchByKeyword(keyword, pageable));
     }
 

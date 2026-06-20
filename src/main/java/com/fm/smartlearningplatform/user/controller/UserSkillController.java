@@ -33,6 +33,6 @@ public class UserSkillController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteUserSkillResponse> deleteById(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long id) {
-        return ResponseEntity.ok().body( userSkillService.deleteById(principal.id(), id));
+        return ResponseEntity.ok().body(userSkillService.deleteById(principal.id(), id));
     }
 }

@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseSupport  extends Auditable {
+public class CourseSupport extends Auditable {
 
     @Id
     @Column(name = "course_id")

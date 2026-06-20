@@ -20,8 +20,8 @@ public final class ScheduledTask {
     public void cleanupSessions() {
         log.info("Session cleanup job started");
         LocalDateTime cutoff = LocalDateTime.now().minusDays(30);
-        Long revoked =userSessionRepository.deleteByStatusAndRevokedAtBefore(SessionStatus.REVOKED, cutoff);
-       Long expired= userSessionRepository.deleteByStatusAndExpiresAtBefore(SessionStatus.EXPIRED, cutoff);
+        Long revoked = userSessionRepository.deleteByStatusAndRevokedAtBefore(SessionStatus.REVOKED, cutoff);
+        Long expired = userSessionRepository.deleteByStatusAndExpiresAtBefore(SessionStatus.EXPIRED, cutoff);
         log.info("Session cleanup job completed, revoked deleted : {}, expired deleted : {}", revoked, expired);
     }
 }

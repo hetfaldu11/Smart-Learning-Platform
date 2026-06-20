@@ -15,7 +15,6 @@ public interface CourseSupportMapper {
     @Mapping(target = "id", ignore = true)
 
     @Mapping(target = "course", ignore = true)
-
     CourseSupport toEntity(
             CreateCourseSupportRequest request
     );
@@ -32,8 +31,6 @@ public interface CourseSupportMapper {
     @Mapping(target = "id", ignore = true)
 
     @Mapping(target = "course", ignore = true)
-
-
     void update(
             UpdateCourseSupportRequest request,
             @MappingTarget CourseSupport courseSupport

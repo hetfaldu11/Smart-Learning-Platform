@@ -126,7 +126,7 @@ public class UserSkillService {
     // ─── Delete ────────────────────────────────────────────────
     @Transactional
     public DeleteUserSkillResponse deleteById(Long userId, Long skillId) {
-        validateUserSkillExist(userId,skillId);
+        validateUserSkillExist(userId, skillId);
         UserSkill userSkill = getUserSkill(userId, skillId);
         userSkillRepository.delete(userSkill);
         return new DeleteUserSkillResponse("User skill association deleted successfully.");

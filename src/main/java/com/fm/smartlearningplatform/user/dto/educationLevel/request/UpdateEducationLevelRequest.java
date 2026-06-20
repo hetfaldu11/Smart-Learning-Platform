@@ -8,9 +8,9 @@ public record UpdateEducationLevelRequest(
         String name
 
 ) {
-        public UpdateEducationLevelRequest {
-                if (name != null) {
-                        name = name.trim().replaceAll("\\s+", " ").toLowerCase();
-                }
+    public UpdateEducationLevelRequest {
+        if (name != null) {
+            name = name.trim().replaceAll("\\s+", " ").toLowerCase();
         }
+    }
 }

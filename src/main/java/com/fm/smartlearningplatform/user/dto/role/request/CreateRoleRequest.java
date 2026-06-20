@@ -8,9 +8,9 @@ public record CreateRoleRequest(
         String name
 
 ) {
-        public  CreateRoleRequest{
-                if (name != null) {
-                        name = name.trim().replaceAll("\\s+", " ").toLowerCase();
-                }
+    public CreateRoleRequest {
+        if (name != null) {
+            name = name.trim().replaceAll("\\s+", " ").toLowerCase();
         }
+    }
 }

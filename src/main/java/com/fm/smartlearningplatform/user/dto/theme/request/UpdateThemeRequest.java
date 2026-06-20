@@ -8,9 +8,9 @@ public record UpdateThemeRequest(
         String name
 
 ) {
-        public  UpdateThemeRequest{
-                if (name != null) {
-                        name = name.trim().replaceAll("\\s+", " ").toLowerCase();
-                }
+    public UpdateThemeRequest {
+        if (name != null) {
+            name = name.trim().replaceAll("\\s+", " ").toLowerCase();
         }
+    }
 }

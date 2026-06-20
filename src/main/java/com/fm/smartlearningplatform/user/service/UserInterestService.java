@@ -126,7 +126,7 @@ public class UserInterestService {
     // ─── Delete ────────────────────────────────────────────────
     @Transactional
     public DeleteUserInterestResponse deleteById(Long userId, Long interestId) {
-        validateUserInterestExist(userId,interestId);
+        validateUserInterestExist(userId, interestId);
         UserInterest userInterest = getUserInterest(userId, interestId);
         userInterestRepository.delete(userInterest);
         return new DeleteUserInterestResponse("User interest association deleted successfully.");

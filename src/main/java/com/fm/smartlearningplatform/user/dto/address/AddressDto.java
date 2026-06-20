@@ -10,15 +10,15 @@ public record AddressDto(
         String fullAddress
 
 ) {
-    public  AddressDto {
+    public AddressDto {
         if (street != null) {
             street = street.trim().replaceAll("\\s+", " ").toLowerCase();
         }
         if (city != null) {
-            city= city.trim().replaceAll("\\s+", " ").toLowerCase();
+            city = city.trim().replaceAll("\\s+", " ").toLowerCase();
         }
         if (state != null) {
-            state =state.trim().replaceAll("\\s+", " ").toLowerCase();
+            state = state.trim().replaceAll("\\s+", " ").toLowerCase();
         }
         if (country != null) {
             country = country.trim().replaceAll("\\s+", " ").toLowerCase();

@@ -20,11 +20,9 @@ public interface CourseStatusMapper {
     );
 
 
-
     CourseStatusResponse toResponse(
             CourseStatus courseStatus
     );
-
 
 
     @BeanMapping(
@@ -34,7 +32,6 @@ public interface CourseStatusMapper {
     @Mapping(target = "id", ignore = true)
 
     @Mapping(target = "deletedAt", ignore = true)
-
     void update(
             UpdateCourseStatusRequest request,
             @MappingTarget CourseStatus courseStatus

@@ -28,7 +28,6 @@ public interface CourseMapper {
     Course toEntity(CreateCourseRequest request);
 
 
-
     @Mapping(target = "instructorId", source = "instructor.id")
     @Mapping(
             target = "instructorName",
@@ -53,7 +52,6 @@ public interface CourseMapper {
             source = "courseStatus.name"
     )
     CourseResponse toResponse(Course course);
-
 
 
     @BeanMapping(

@@ -8,7 +8,7 @@ public record UpdateSkillRequest(
         String name
 
 ) {
-    public  UpdateSkillRequest{
+    public UpdateSkillRequest {
         if (name != null) {
             name = name.trim().replaceAll("\\s+", " ").toLowerCase();
         }

@@ -14,7 +14,6 @@ public interface CourseLearningOutcomeMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "course", ignore = true)
-
     CourseLearningOutcome toEntity(CreateCourseLearningOutcomeRequest request);
 
     @Mapping(target = "courseId", source = "course.id")
@@ -22,7 +21,6 @@ public interface CourseLearningOutcomeMapper {
     CourseLearningOutcomeResponse toResponse(
             CourseLearningOutcome courseLearningOutcome
     );
-
 
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)

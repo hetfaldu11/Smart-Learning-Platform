@@ -8,9 +8,9 @@ public record CreateGenderRequest(
         String name
 
 ) {
-        public CreateGenderRequest {
-                if (name != null) {
-                        name = name.trim().replaceAll("\\s+", " ").toLowerCase();
-                }
+    public CreateGenderRequest {
+        if (name != null) {
+            name = name.trim().replaceAll("\\s+", " ").toLowerCase();
         }
+    }
 }

@@ -9,7 +9,6 @@ import com.fm.smartlearningplatform.security.dto.RefreshTokenRequest;
 import com.fm.smartlearningplatform.security.jwt.JWTService;
 import com.fm.smartlearningplatform.security.principal.UserPrincipal;
 import com.fm.smartlearningplatform.security.ratelimit.RateLimitService;
-import com.fm.smartlearningplatform.security.ratelimit.RateLimitType;
 import com.fm.smartlearningplatform.security.usersession.*;
 import com.fm.smartlearningplatform.user.model.User;
 import com.fm.smartlearningplatform.user.repository.UserRepository;
@@ -19,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -47,15 +47,37 @@ public class AuthController {
     private final GeoLocationService geoLocationService;
     private final RateLimitService rateLimitService;
 
+    @Value("${device.id.cookie.name}")
+    private String DEVICE_ID_COOKIE_NAME;
+
+    @Value("${device.id.cookie.expiry.seconds}")
+    private Integer DEVICE_ID_COOKIE_EXPIRY_SECONDS;
+
+    @Value("${device.id.cookie.http_only}")
+    private Boolean DEVICE_ID_COOKIE_HTTP_ONLY;
+
+    @Value("${device.id.cookie.secure}")
+    private Boolean DEVICE_ID_COOKIE_SECURE;
+
+    @Value("${device.id.cookie.path}")
+    private String DEVICE_ID_COOKIE_PATH;
+
+    @Value("${device.id.cookie.same.site}")
+    private String DEVICE_ID_COOKIE_SAME_SITE;
+
+    @Value("${user.agent.header}")
+    private String USER_AGENT_HEADER;
+
+    @Value("${session.expiry.time.seconds}")
+    private Long SESSION_EXPIRY_TIME_SECONDS;
+
+    @Value("${session.client.ip.header}")
+    private String SESSION_CLIENT_IP_HEADER;
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request, HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse) throws IOException, GeoIp2Exception {
 
-        // Rate limitation
-
         String deviceId = getDeviceIdentifier(httpServletRequest);
-        rateLimitService.consume(RateLimitType.LOGIN,deviceId + ":" + httpServletRequest.getRemoteAddr());
-
         // Authentication and retrieval
 
         Authentication authentication = userAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(request.email(), request.password()));
@@ -63,12 +85,11 @@ public class AuthController {
         User user = userRepository.findByIdAndDeletedAtIsNull(userPrincipal.id())
                 .orElseThrow(() -> new ResourceNotFoundException("User not found."));
 
-
         // Device ID
 
         if (null != deviceId) {
             Optional<UserSession> existingSession = userSessionService.existingSessions(user.getId(), deviceId);
-            if(existingSession.isPresent()){
+            if (existingSession.isPresent()) {
 
                 log.info("Existing session reused for userId: {} and deviceId: {}", user.getId(), deviceId);
 
@@ -78,19 +99,19 @@ public class AuthController {
                 session.setRefreshTokenHash(passwordEncoder.encode(refreshToken));
                 session.setLastActiveAt(LocalDateTime.now());
                 userSessionService.save(session);
-                return ResponseEntity.ok(new AuthResponse(accessToken,refreshToken));
+                return ResponseEntity.ok(new AuthResponse(accessToken, refreshToken));
             }
         }
 
         deviceId = UUID.randomUUID().toString();
         log.info("New device login for userId: {}", user.getId());
 
-        Cookie cookie = new Cookie("device_id", deviceId);
-        cookie.setHttpOnly(true);
-        cookie.setSecure(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(86400 * 365);
-        cookie.setAttribute("SameSite", "Strict");// Other option server.servlet.session.cookie.same-site=lax
+        Cookie cookie = new Cookie(DEVICE_ID_COOKIE_NAME, deviceId);
+        cookie.setHttpOnly(DEVICE_ID_COOKIE_HTTP_ONLY);
+        cookie.setSecure(DEVICE_ID_COOKIE_SECURE);
+        cookie.setPath(DEVICE_ID_COOKIE_PATH);
+        cookie.setMaxAge(DEVICE_ID_COOKIE_EXPIRY_SECONDS);
+        cookie.setAttribute("SameSite", DEVICE_ID_COOKIE_SAME_SITE);// Other option server.servlet.session.cookie.same-site=lax
         httpServletResponse.addCookie(cookie);
 
         // New session
@@ -107,7 +128,7 @@ public class AuthController {
 
         // User agent
 
-        String userAgent = httpServletRequest.getHeader("User-Agent");
+        String userAgent = httpServletRequest.getHeader(USER_AGENT_HEADER);
         DeviceInfo deviceInfo = userAgentService.parse(userAgent);
         session.setBrowserName(deviceInfo.getBrowserName());
         session.setBrowserVersion(deviceInfo.getBrowserVersion());
@@ -120,7 +141,7 @@ public class AuthController {
 
         session.setLastLoginAt(LocalDateTime.now());
         session.setLastActiveAt(LocalDateTime.now());
-        session.setExpiresAt(LocalDateTime.now().plusDays(7));
+        session.setExpiresAt(LocalDateTime.now().plusSeconds(SESSION_EXPIRY_TIME_SECONDS));
 
         // Ip address and location
 
@@ -138,7 +159,6 @@ public class AuthController {
         }
 
 
-
         // Trusted
         // Have to add for if it trusted from device id which is last loged in or something like that do not remove this
 
@@ -150,7 +170,7 @@ public class AuthController {
 
         userSessionService.save(session);
         userSessionService.enforceSessionLimit(userPrincipal.id());
-        return ResponseEntity.ok().body(new AuthResponse(accessToken,refreshToken));
+        return ResponseEntity.ok().body(new AuthResponse(accessToken, refreshToken));
     }
 
     @PostMapping("/refresh")
@@ -159,13 +179,13 @@ public class AuthController {
         String deviceId = getDeviceIdentifier(httpServletRequest);
         UserSession session = userSessionService.findByDeviceId(deviceId);
 
-        rateLimitService.consume(RateLimitType.REFRESH_TOKEN, String.valueOf(session.getId()));
+//        rateLimitService.consume(RateLimitType.REFRESH_TOKEN, String.valueOf(session.getId()));
 
-        if(SessionStatus.ACTIVE != session.getStatus()){
+        if (SessionStatus.ACTIVE != session.getStatus()) {
             return ResponseEntity.notFound().build();
         }
 
-        if(!passwordEncoder.matches(request.refreshToken(),session.getRefreshTokenHash())){
+        if (!passwordEncoder.matches(request.refreshToken(), session.getRefreshTokenHash())) {
             return ResponseEntity.status(401).body("Refresh token is invalid.");
         }
 
@@ -178,19 +198,19 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    public ResponseEntity<String> logout(@AuthenticationPrincipal UserPrincipal userPrincipal, HttpServletRequest request){
+    public ResponseEntity<String> logout(@AuthenticationPrincipal UserPrincipal userPrincipal, HttpServletRequest request) {
 
 
         String deviceId = getDeviceIdentifier(request);
         UserSession session = userSessionService.existingSessions(userPrincipal.id(), deviceId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Session not found."));
+                .orElseThrow(() -> new ResourceNotFoundException("Session not found."));
         userSessionService.revokeSession(session);
         log.info("Logout successful for userId: {}", userPrincipal.id());
         return ResponseEntity.ok().body("Logout successfully.");
     }
 
     @PostMapping("/logoutAll")
-    public ResponseEntity<String> logoutAll(@AuthenticationPrincipal UserPrincipal userPrincipal, HttpServletRequest request){
+    public ResponseEntity<String> logoutAll(@AuthenticationPrincipal UserPrincipal userPrincipal, HttpServletRequest request) {
         userSessionService.revokeAllSessions(userPrincipal.id());
         return ResponseEntity.ok().body("Logout successfully.");
     }
@@ -199,9 +219,9 @@ public class AuthController {
     // Helper
 
     private String getClientIp(HttpServletRequest request) {
-        String xForwardedFor = request.getHeader("X-Forwarded-For");
-        if (xForwardedFor != null && !xForwardedFor.isBlank()) {
-            return xForwardedFor.split(",")[0].trim();
+        String header = request.getHeader(SESSION_CLIENT_IP_HEADER);
+        if (header != null && !header.isBlank()) {
+            return header.split(",")[0].trim();
         }
         return request.getRemoteAddr();
     }
@@ -212,7 +232,7 @@ public class AuthController {
             return null;
         }
         for (Cookie cookie : cookies) {
-            if ("device_id".equals(cookie.getName())) {
+            if (DEVICE_ID_COOKIE_NAME.equals(cookie.getName())) {
                 return cookie.getValue();
             }
         }

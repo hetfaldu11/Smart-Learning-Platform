@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -19,6 +20,9 @@ public class JWTGeneratorFilter extends OncePerRequestFilter {
 
     private final JWTService jwtService;
 
+    @Value("${jwt.header}")
+    private String JWT_HEADER;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
@@ -29,7 +33,7 @@ public class JWTGeneratorFilter extends OncePerRequestFilter {
         }
 
         String jwt = jwtService.generateToken(userPrincipal.id());
-        response.setHeader("Authorization", jwt);
+        response.setHeader(JWT_HEADER, jwt);
 
         filterChain.doFilter(request, response);
     }

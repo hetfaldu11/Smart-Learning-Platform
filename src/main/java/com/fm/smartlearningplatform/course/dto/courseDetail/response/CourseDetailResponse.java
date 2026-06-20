@@ -1,7 +1,5 @@
 package com.fm.smartlearningplatform.course.dto.courseDetail.response;
 
-import java.time.LocalDateTime;
-
 public record CourseDetailResponse(
 
         Long courseId,

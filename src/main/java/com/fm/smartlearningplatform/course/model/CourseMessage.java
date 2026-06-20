@@ -18,7 +18,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseMessage  extends Auditable {
+public class CourseMessage extends Auditable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -29,10 +29,10 @@ public class CourseMessage  extends Auditable {
     private Course course;
 
     @ManyToOne
-    @JoinColumn(name= "message_type_id", nullable = false)
+    @JoinColumn(name = "message_type_id", nullable = false)
     private CourseMessageType courseMessageType;
 
-    @Column(name = "message", nullable = false,columnDefinition = "TEXT")
+    @Column(name = "message", nullable = false, columnDefinition = "TEXT")
     private String message;
 
 }

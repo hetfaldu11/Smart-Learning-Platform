@@ -6,9 +6,7 @@ import com.fm.smartlearningplatform.user.dto.educationLevel.request.CreateEducat
 import com.fm.smartlearningplatform.user.dto.educationLevel.request.UpdateEducationLevelRequest;
 import com.fm.smartlearningplatform.user.dto.educationLevel.response.DeleteEducationLevelResponse;
 import com.fm.smartlearningplatform.user.dto.educationLevel.response.EducationLevelResponse;
-import com.fm.smartlearningplatform.user.dto.educationLevel.response.EducationLevelResponse;
 import com.fm.smartlearningplatform.user.mapper.EducationLevelMapper;
-import com.fm.smartlearningplatform.user.model.EducationLevel;
 import com.fm.smartlearningplatform.user.model.EducationLevel;
 import com.fm.smartlearningplatform.user.repository.EducationLevelRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -62,14 +59,13 @@ public class EducationLevelService {
     }
 
     @Transactional(readOnly = true)
-    public Page<EducationLevelResponse> searchByKeyword(String keyword, Pageable pageable)
-    {
+    public Page<EducationLevelResponse> searchByKeyword(String keyword, Pageable pageable) {
         Page<EducationLevel> educationLevels;
         if (keyword == null || keyword.isBlank()) {
             educationLevels = educationLevelRepository.findByDeletedAtIsNull(pageable);
         } else {
             keyword = keyword.trim();
-            educationLevels = educationLevelRepository .findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
+            educationLevels = educationLevelRepository.findByDeletedAtIsNullAndNameContainingIgnoreCase(keyword, pageable);
         }
         return educationLevels.map(educationLevelMapper::toResponse);
     }

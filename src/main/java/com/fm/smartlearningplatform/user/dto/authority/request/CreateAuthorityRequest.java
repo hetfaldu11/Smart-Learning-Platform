@@ -8,9 +8,9 @@ public record CreateAuthorityRequest(
         String name
 
 ) {
-        public  CreateAuthorityRequest{
-                if (name != null) {
-                        name = name.trim().replaceAll("\\s+", " ").toLowerCase();
-                }
+    public CreateAuthorityRequest {
+        if (name != null) {
+            name = name.trim().replaceAll("\\s+", " ").toLowerCase();
         }
+    }
 }

@@ -8,9 +8,9 @@ public record CreateInterestRequest(
         String name
 
 ) {
-        public  CreateInterestRequest{
-                if (name != null) {
-                        name = name.trim().replaceAll("\\s+", " ").toLowerCase();
-                }
+    public CreateInterestRequest {
+        if (name != null) {
+            name = name.trim().replaceAll("\\s+", " ").toLowerCase();
         }
+    }
 }

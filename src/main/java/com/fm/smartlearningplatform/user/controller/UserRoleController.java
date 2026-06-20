@@ -33,6 +33,6 @@ public class UserRoleController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<DeleteUserRoleResponse> deleteById(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long id) {
-        return ResponseEntity.ok().body( userRoleService.deleteById(principal.id(), id));
+        return ResponseEntity.ok().body(userRoleService.deleteById(principal.id(), id));
     }
 }

@@ -4,10 +4,6 @@ import com.fm.smartlearningplatform.user.model.Auditable;
 import com.fm.smartlearningplatform.user.model.Language;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Table(

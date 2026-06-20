@@ -4,6 +4,7 @@ package com.fm.smartlearningplatform.security.config;
 import com.fm.smartlearningplatform.security.authenticationprovider.UserAuthenticationProvider;
 import com.fm.smartlearningplatform.security.jwt.JWTService;
 import com.fm.smartlearningplatform.security.jwt.JWTValidatorFilter;
+import com.fm.smartlearningplatform.security.ratelimit.RateLimitFilter;
 import com.maxmind.geoip2.DatabaseReader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -17,6 +18,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 
@@ -29,7 +31,7 @@ public class SecurityConfig {
 
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity http, UserAuthenticationProvider userAuthenticationProvider,  JWTValidatorFilter jwtValidatorFilter) throws Exception {
+    SecurityFilterChain securityFilterChain(HttpSecurity http, UserAuthenticationProvider userAuthenticationProvider, JWTValidatorFilter jwtValidatorFilter, RateLimitFilter rateLimitFilter) throws Exception {
 
         return http
 
@@ -43,12 +45,12 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
-                        .requestMatchers("/login","/refresh").permitAll()
-                        .requestMatchers("/error").permitAll()
+                        .requestMatchers("/login", "/refresh").permitAll()
                         .anyRequest().authenticated()
                 )
-
                 .logout(AbstractHttpConfigurer::disable)
+
+                .addFilterBefore(rateLimitFilter, UsernamePasswordAuthenticationFilter.class)
 
                 .addFilterBefore(jwtValidatorFilter, BasicAuthenticationFilter.class)
 
@@ -59,12 +61,12 @@ public class SecurityConfig {
                         ) // it redirects to https instead of http so it is for prod only
 
                         .frameOptions(frame -> frame.deny()) // If the other site is <iframe src="https://yourwebsite.com"></iframe>
-                                                    // It not allows that
+                        // It not allows that
 
                         .contentTypeOptions(Customizer.withDefaults())// Server sends: alert("hacked");
-                                                                      // Browser guesses:  JavaScript
-                                                                      //and executes it.
-                                                                      // Do not guess. Use exactly what server says.
+                        // Browser guesses:  JavaScript
+                        //and executes it.
+                        // Do not guess. Use exactly what server says.
                         .contentSecurityPolicy(csp ->
                                 csp.policyDirectives(
                                         "default-src 'self'; " +

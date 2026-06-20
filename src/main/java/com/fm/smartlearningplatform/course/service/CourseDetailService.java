@@ -107,7 +107,7 @@ public class CourseDetailService {
             Long courseId
     ) {
 
-       return  courseDetailRepository
+        return courseDetailRepository
                 .existsByCourseIdAndCourseDeletedAtIsNull(courseId);
     }
 

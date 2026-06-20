@@ -38,8 +38,8 @@ public class UserSocialLinkController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<UserSocialLinkResponse> update(@AuthenticationPrincipal UserPrincipal principal,@PathVariable Long id ,@Valid @RequestBody PatchUserSocialLinkRequest request) {
-        return ResponseEntity.ok(userSocialLinkService.update(principal.id(), id,request));
+    public ResponseEntity<UserSocialLinkResponse> update(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long id, @Valid @RequestBody PatchUserSocialLinkRequest request) {
+        return ResponseEntity.ok(userSocialLinkService.update(principal.id(), id, request));
     }
 
     @DeleteMapping("/{id}")

@@ -1,7 +1,6 @@
 package com.fm.smartlearningplatform.verification.controller;
 
 
-import com.fm.smartlearningplatform.otp.dto.request.CreatePhoneRequest;
 import com.fm.smartlearningplatform.otp.dto.request.VerifyPhoneRequest;
 import com.fm.smartlearningplatform.otp.service.OtpService;
 import com.fm.smartlearningplatform.security.principal.UserPrincipal;
@@ -26,11 +25,11 @@ public class PhoneVerificationController {
     @PostMapping("/request")
     public ResponseEntity<String> requestPhoneVerification(@AuthenticationPrincipal UserPrincipal principal) {
         Long userId = principal.id();
-        String email= principal.email();
+        String email = principal.email();
 
         phoneVerificationService.validatePhoneNumberNotVerified(userId);
 
-        otpService.sendPhoneVerificationOtp(userId,email);
+        otpService.sendPhoneVerificationOtp(userId, email);
 
         return ResponseEntity.ok().body("Otp sent successfully.");
     }

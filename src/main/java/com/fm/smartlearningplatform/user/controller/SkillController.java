@@ -7,14 +7,12 @@ import com.fm.smartlearningplatform.user.dto.skill.response.SkillResponse;
 import com.fm.smartlearningplatform.user.service.SkillService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-
-import java.util.List;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/skills")
@@ -35,8 +33,7 @@ public class SkillController {
 
     @GetMapping
     public ResponseEntity<Page<SkillResponse>> getSkills(@RequestParam(value = "q", required = false) String keyword,
-            @PageableDefault(size = 10, sort = "name") Pageable pageable )
-    {
+                                                         @PageableDefault(size = 10, sort = "name") Pageable pageable) {
         return ResponseEntity.ok(skillService.searchByKeyword(keyword, pageable));
     }
 

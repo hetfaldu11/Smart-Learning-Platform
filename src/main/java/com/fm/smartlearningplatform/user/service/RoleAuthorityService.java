@@ -132,7 +132,7 @@ public class RoleAuthorityService {
         validateRoleAuthorityExist(request.roleId(), request.authorityId());
         RoleAuthority roleAuthority = getRoleAuthority(request.roleId(), request.authorityId());
         roleAuthorityRepository.delete(roleAuthority);
-        return  new DeleteRoleAuthorityResponse("role Authority successfully deleted:");
+        return new DeleteRoleAuthorityResponse("role Authority successfully deleted:");
     }
 
     // ─── Helper ────────────────────────────────────────────────

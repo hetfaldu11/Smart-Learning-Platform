@@ -21,8 +21,8 @@ public class RoleAuthorityController {
     private final RoleAuthorityService roleAuthorityService;
 
     @PostMapping
-    public ResponseEntity<RoleAuthorityResponse> createRoleAuthority( @Valid @RequestBody CreateRoleAuthorityRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(roleAuthorityService.create( request));
+    public ResponseEntity<RoleAuthorityResponse> createRoleAuthority(@Valid @RequestBody CreateRoleAuthorityRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(roleAuthorityService.create(request));
     }
 
     @GetMapping("/{id}")

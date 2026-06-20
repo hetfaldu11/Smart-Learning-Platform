@@ -44,13 +44,13 @@ public interface LanguageRepository extends JpaRepository<Language, Long> {
     );
 
     @Query("""
-        SELECT l
-        FROM Language l
-        WHERE l.deletedAt IS NULL
-          AND (
-                l.name LIKE CONCAT('%', :keyword, '%')
-                OR l.code LIKE CONCAT('%', :keyword, '%')
-              )
-    """)
+                SELECT l
+                FROM Language l
+                WHERE l.deletedAt IS NULL
+                  AND (
+                        l.name LIKE CONCAT('%', :keyword, '%')
+                        OR l.code LIKE CONCAT('%', :keyword, '%')
+                      )
+            """)
     List<Language> search(@Param("keyword") String keyword);
 }

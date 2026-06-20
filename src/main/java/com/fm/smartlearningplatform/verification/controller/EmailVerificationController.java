@@ -1,6 +1,5 @@
 package com.fm.smartlearningplatform.verification.controller;
 
-import com.fm.smartlearningplatform.otp.dto.request.CreateEmailRequest;
 import com.fm.smartlearningplatform.otp.dto.request.VerifyEmailRequest;
 import com.fm.smartlearningplatform.otp.service.OtpService;
 import com.fm.smartlearningplatform.security.principal.UserPrincipal;
@@ -24,11 +23,11 @@ public class EmailVerificationController {
     @PostMapping("/request")
     public ResponseEntity<String> requestEmailVerification(@AuthenticationPrincipal UserPrincipal principal) {
         Long userId = principal.id();
-        String email= principal.email();
+        String email = principal.email();
 
         emailVerificationService.validateEmailNotVerified(userId);
 
-        otpService.sendEmailVerificationOtp(userId,email);
+        otpService.sendEmailVerificationOtp(userId, email);
 
         return ResponseEntity.ok().body("Otp sent successfully.");
     }

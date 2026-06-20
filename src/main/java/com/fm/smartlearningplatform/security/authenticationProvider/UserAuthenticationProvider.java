@@ -3,8 +3,8 @@ package com.fm.smartlearningplatform.security.authenticationprovider;
 import com.fm.smartlearningplatform.security.principal.UserPrincipal;
 import com.fm.smartlearningplatform.user.model.User;
 import com.fm.smartlearningplatform.user.repository.UserRepository;
+import jakarta.annotation.Nullable;
 import lombok.RequiredArgsConstructor;
-import org.jspecify.annotations.Nullable;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -49,10 +49,6 @@ public class UserAuthenticationProvider implements AuthenticationProvider {
         throw new BadCredentialsException("Email and password not found.");
     }
 
-    /**
-     * @param authentication
-     * @return
-     */
     @Override
     public boolean supports(Class<?> authentication) {
         return UsernamePasswordAuthenticationToken.class.isAssignableFrom(authentication);
