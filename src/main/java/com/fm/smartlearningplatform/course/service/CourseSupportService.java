@@ -26,20 +26,14 @@ public class CourseSupportService {
     // ─── Create ───────────────────────────────────────────────
 
     @Transactional
-    public CourseSupportResponse create(
-            CreateCourseSupportRequest request
-    ) {
+    public CourseSupportResponse create(CreateCourseSupportRequest request)
+    {
 
-        validateCourseSupportNotExist(
-                request.courseId()
-        );
+        validateCourseSupportNotExist(request.courseId());
 
-        Course course = getCourse(
-                request.courseId()
-        );
+        Course course = getCourse(request.courseId());
 
-        CourseSupport courseSupport =
-                courseSupportMapper.toEntity(request);
+        CourseSupport courseSupport = courseSupportMapper.toEntity(request);
 
         courseSupport.setCourse(course);
 
@@ -50,46 +44,35 @@ public class CourseSupportService {
 
     // ─── Find ─────────────────────────────────────────────────
 
-    public CourseSupportResponse findByCourseId(
-            Long courseId
-    ) {
+    public CourseSupportResponse findByCourseId(Long courseId)
+    {
 
-        return courseSupportMapper.toResponse(
-                getCourseSupport(courseId)
-        );
+        return courseSupportMapper.toResponse(getCourseSupport(courseId));
     }
 
     // ─── Update ───────────────────────────────────────────────
 
     @Transactional
-    public CourseSupportResponse update(
-            Long courseId,
-            UpdateCourseSupportRequest request
-    ) {
+    public CourseSupportResponse update(Long courseId, UpdateCourseSupportRequest request)
+    {
 
-        CourseSupport courseSupport =
-                getCourseSupport(courseId);
+        CourseSupport courseSupport = getCourseSupport(courseId);
 
-        courseSupportMapper.update(
-                request,
-                courseSupport
-        );
+        courseSupportMapper.update(request, courseSupport);
 
-        return courseSupportMapper.toResponse(
-                courseSupportRepository.save(courseSupport)
-        );
+        return courseSupportMapper.toResponse(courseSupportRepository.save(courseSupport));
     }
 
     // ─── Delete ───────────────────────────────────────────────
 
-    @Transactional
-    public void delete(Long courseId) {
-
-        CourseSupport courseSupport =
-                getCourseSupport(courseId);
-
-        courseSupportRepository.delete(courseSupport);
-    }
+//    @Transactional
+//    public void delete(Long courseId) {
+//
+//        CourseSupport courseSupport =
+//                getCourseSupport(courseId);
+//
+//        courseSupportRepository.delete(courseSupport);
+//    }
 
     // ─── Exists ───────────────────────────────────────────────
 
@@ -97,10 +80,7 @@ public class CourseSupportService {
             Long courseId
     ) {
 
-        return courseSupportRepository
-                .existsByCourseIdAndCourseDeletedAtIsNull(
-                        courseId
-                );
+        return courseSupportRepository.existsByCourseIdAndCourseDeletedAtIsNull(courseId);
     }
 
     // ─── Helper ───────────────────────────────────────────────
@@ -122,28 +102,16 @@ public class CourseSupportService {
 
     private Course getCourse(Long courseId) {
 
-        return courseRepository.findById(courseId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Course not found."
-                        )
-                );
+        return courseRepository.findByIdAndDeletedAtIsNull(courseId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found."));
     }
 
-    private void validateCourseSupportNotExist(
-            Long courseId
-    ) {
+    private void validateCourseSupportNotExist(Long courseId)
+    {
 
-        if (
-                courseSupportRepository
-                        .existsByCourseIdAndCourseDeletedAtIsNull(
-                                courseId
-                        )
-        ) {
-
-            throw new DuplicateResourceException(
-                    "Course support already exists."
-            );
+        if (courseSupportRepository.existsByCourseIdAndCourseDeletedAtIsNull(courseId))
+        {
+            throw new DuplicateResourceException("Course support already exists.");
         }
     }
 }

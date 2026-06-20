@@ -29,14 +29,9 @@ public class CourseMessageController {
             @RequestBody
             CreateCourseMessageRequest request
     ) {
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(
-                        courseMessageService.create(
-                                request
-                        )
-                );
+                .body(courseMessageService.create(request));
     }
 
     // ─── Find ─────────────────────────────────────────────────

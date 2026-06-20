@@ -32,7 +32,6 @@ public interface CourseLevelMapper {
                     NullValuePropertyMappingStrategy.IGNORE
     )
     @Mapping(target = "id", ignore = true)
-
     @Mapping(target = "deletedAt", ignore = true)
 
     void update(

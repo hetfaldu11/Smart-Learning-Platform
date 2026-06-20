@@ -54,18 +54,18 @@ public class CourseDetailController {
         );
     }
 
-    @GetMapping
-    public ResponseEntity<Page<CourseDetailResponse>> getCourseDetails(
-            @PageableDefault(
-                    size = 10,
-                    sort = "createdAt"
-            )
-            Pageable pageable
-    ) {
-        return ResponseEntity.ok(
-                courseDetailService.findAll(pageable)
-        );
-    }
+//    @GetMapping
+//    public ResponseEntity<Page<CourseDetailResponse>> getCourseDetails(
+//            @PageableDefault(
+//                    size = 10,
+//                    sort = "createdAt"
+//            )
+//            Pageable pageable
+//    ) {
+//        return ResponseEntity.ok(
+//                courseDetailService.findAll(pageable)
+//        );
+//    }
 
     // ─── Update ───────────────────────────────────────────────
 
@@ -85,18 +85,5 @@ public class CourseDetailController {
                         request
                 )
         );
-    }
-
-    // ─── Delete ───────────────────────────────────────────────
-
-    @DeleteMapping("/course/{courseId}")
-    public ResponseEntity<Void>
-    deleteCourseDetailByCourseId(
-            @PathVariable Long courseId
-    ) {
-
-        courseDetailService.delete(courseId);
-
-        return ResponseEntity.noContent().build();
     }
 }

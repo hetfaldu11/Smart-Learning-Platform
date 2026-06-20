@@ -21,15 +21,14 @@ import lombok.*;
 public class CourseRequirement  extends Auditable {
 
     @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @MapsId
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(name = "requirement", nullable = false)
+    @Column(name = "requirement", nullable = false, columnDefinition = "TEXT")
     private String requirement;
 
 }

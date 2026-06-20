@@ -13,11 +13,9 @@ public record CoursePricingResponse(
 
         Long currencyId,
         String currencyName,
-        String currencyCode,
+        String currencyCode
 
-        LocalDateTime createdAt,
 
-        LocalDateTime updatedAt
 
 ) {
 }

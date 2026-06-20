@@ -87,32 +87,20 @@ public class CourseStatusService {
             Long courseStatusId,
             UpdateCourseStatusRequest request
     ) {
+        validateCourseStatusNameNotExist(request.name());
 
-        CourseStatus courseStatus =
-                getCourseStatus(courseStatusId);
+        CourseStatus courseStatus = getCourseStatus(courseStatusId);
 
-        if (
-                request.name() != null
-                        && courseStatusRepository
-                        .existsByIdNotAndNameAndDeletedAtIsNull(
-                                courseStatusId,
-                                request.name()
-                        )
-        ) {
+        if (request.name() != null && courseStatusRepository
+                .existsByIdNotAndNameAndDeletedAtIsNull(courseStatusId, request.name()))
+        {
 
-            throw new DuplicateResourceException(
-                    "Course status already exists."
-            );
+            throw new DuplicateResourceException("Course status already exists.");
         }
 
-        courseStatusMapper.update(
-                request,
-                courseStatus
-        );
+        courseStatusMapper.update(request, courseStatus);
 
-        return courseStatusMapper.toResponse(
-                courseStatusRepository.save(courseStatus)
-        );
+        return courseStatusMapper.toResponse(courseStatusRepository.save(courseStatus));
     }
 
     // ─── Delete ───────────────────────────────────────────────
@@ -120,8 +108,7 @@ public class CourseStatusService {
     @Transactional
     public void delete(Long courseStatusId) {
 
-        CourseStatus courseStatus =
-                getCourseStatus(courseStatusId);
+        CourseStatus courseStatus = getCourseStatus(courseStatusId);
 
         courseStatus.setDeletedAt(LocalDateTime.now());
 
@@ -131,9 +118,8 @@ public class CourseStatusService {
     // ─── Restore ──────────────────────────────────────────────
 
     @Transactional
-    public CourseStatusResponse restore(
-            Long courseStatusId
-    ) {
+    public CourseStatusResponse restore(Long courseStatusId)
+    {
 
         CourseStatus courseStatus =
                 courseStatusRepository.findById(courseStatusId)
@@ -142,53 +128,39 @@ public class CourseStatusService {
                                         "Course status not found."
                                 )
                         );
+        if(courseStatus.getDeletedAt()==null)
+        {
+            throw  new DuplicateResourceException("course Status already restored");
+        }
 
         courseStatus.setDeletedAt(null);
 
-        return courseStatusMapper.toResponse(
-                courseStatusRepository.save(courseStatus)
-        );
+        return courseStatusMapper.toResponse(courseStatusRepository.save(courseStatus));
     }
 
     // ─── Exists ───────────────────────────────────────────────
 
     public boolean existsById(Long courseStatusId) {
 
-        return courseStatusRepository
-                .existsByIdAndDeletedAtIsNull(
-                        courseStatusId
-                );
+        return courseStatusRepository.existsByIdAndDeletedAtIsNull(courseStatusId);
     }
 
     // ─── Helper ───────────────────────────────────────────────
 
-    private CourseStatus getCourseStatus(
-            Long courseStatusId
-    ) {
+    private CourseStatus getCourseStatus(Long courseStatusId)
+    {
 
         return courseStatusRepository
-                .findByIdAndDeletedAtIsNull(
-                        courseStatusId
-                )
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Course status not found."
-                        )
-                );
+                .findByIdAndDeletedAtIsNull(courseStatusId)
+                .orElseThrow(() -> new ResourceNotFoundException("Course status not found."));
     }
 
-    private void validateCourseStatusNameNotExist(
-            String name
-    ) {
+    private void validateCourseStatusNameNotExist(String name)
+    {
 
-        if (
-                courseStatusRepository
-                        .existsByNameAndDeletedAtIsNull(name)
-        ) {
-
-            throw new DuplicateResourceException(
-                    "Course status already exists."
-            );
+        if (courseStatusRepository.existsByNameAndDeletedAtIsNull(name))
+        {
+            throw new DuplicateResourceException("Course status already exists.");
         }
     }
 }

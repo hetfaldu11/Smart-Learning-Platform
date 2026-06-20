@@ -53,24 +53,6 @@ public class Course extends Auditable {
     @Builder.Default
     private List<CourseMessage> courseMessages = new ArrayList<>();
 
-
-    @OneToMany(
-            mappedBy = "course",
-            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<CourseRequirement> courseRequirements = new ArrayList<>();
-
-
-    @OneToMany(
-            mappedBy = "course",
-            cascade = {CascadeType.PERSIST,CascadeType.MERGE},
-            orphanRemoval = true,
-            fetch = FetchType.LAZY)
-    @Builder.Default
-    private List<CourseLearningOutcome> courseLearningOutcomes= new ArrayList<>();
-
     @OneToMany(
             mappedBy = "course",
             cascade = {CascadeType.PERSIST,CascadeType.MERGE},

@@ -25,15 +25,20 @@ public class CourseMedia  extends Auditable {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(name = "thumbnail_url")
+    @Column(name = "thumbnail_url", length = 1000)
     private String thumbnailUrl;
 
-    @Column(name = "promotional_lesson_url")
+    @Column(name = "thumbnail_public_id", length = 255)
+    private String thumbnailPublicId;
+
+    @Column(name = "promotional_lesson_url", length = 1000)
     private String promotionalLessonUrl;
+    @Column(name = "promotional_lesson_id", length = 255)
+    private String promotionalLessonPublicId;
 
-    @Column(name = "certificate_template_url")
+    @Column(name = "certificate_template_url", length = 1000)
     private String certificateTemplateUrl;
+    @Column(name = "certificate_template_public_id", length = 255)
+    private String certificateTemplatePublicId;
 
-    @Column(name= "deleted_At")
-    private LocalDate deletedAt;
 }

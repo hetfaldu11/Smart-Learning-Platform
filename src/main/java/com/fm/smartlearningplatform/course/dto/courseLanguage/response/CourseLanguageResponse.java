@@ -10,7 +10,7 @@ public record CourseLanguageResponse(
         Long languageId,
         String languageName,
 
-        boolean isPrimary
+        boolean primary
 
 ) {
 }

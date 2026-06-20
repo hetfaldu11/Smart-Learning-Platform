@@ -17,6 +17,22 @@ public record CreateCourseDetailRequest(
         )
         String description,
 
+        @Size(
+                min = 10,
+                max = 10000,
+                message = "Course requirement must be between 10 and 10000 characters."
+        )
+        @NotBlank(message = "Course requirement is required.")
+        String requirement,
+
+        @Size(
+                min = 10,
+                max = 10000,
+                message = "Course learning outcome must be between 10 and 10000 characters."
+        )
+        @NotBlank(message = "Course learning outcome is required.")
+        String learningOutcome,
+
         Boolean hasCertificate,
 
         Boolean hasAssignment,

@@ -44,8 +44,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                         .requestMatchers("/login","/refresh").permitAll()
+                        .requestMatchers("/error").permitAll()
                         .anyRequest().authenticated()
                 )
+
                 .logout(AbstractHttpConfigurer::disable)
 
                 .addFilterBefore(jwtValidatorFilter, BasicAuthenticationFilter.class)
