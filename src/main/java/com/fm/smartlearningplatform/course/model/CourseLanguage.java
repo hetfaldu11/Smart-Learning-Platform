@@ -1,6 +1,6 @@
 package com.fm.smartlearningplatform.course.model;
 
-import com.fm.smartlearningplatform.user.model.Auditable;
+import com.fm.smartlearningplatform.common.model.Auditable;
 import com.fm.smartlearningplatform.user.model.Language;
 import jakarta.persistence.*;
 import lombok.*;

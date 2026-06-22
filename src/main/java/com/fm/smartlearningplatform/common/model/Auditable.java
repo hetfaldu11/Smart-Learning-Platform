@@ -1,4 +1,4 @@
-package com.fm.smartlearningplatform.user.model;
+package com.fm.smartlearningplatform.common.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.MappedSuperclass;

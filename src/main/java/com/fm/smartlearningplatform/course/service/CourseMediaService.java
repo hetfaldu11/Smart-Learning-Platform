@@ -5,6 +5,10 @@ import com.fm.smartlearningplatform.cloudinary.dto.CloudinaryUploadResponse;
 import com.fm.smartlearningplatform.cloudinary.enums.MediaType;
 import com.fm.smartlearningplatform.cloudinary.service.CloudinaryService;
 import com.fm.smartlearningplatform.cloudinary.validation.FileValidation;
+import com.fm.smartlearningplatform.common.enums.FileStatus;
+import com.fm.smartlearningplatform.common.enums.FileType;
+import com.fm.smartlearningplatform.common.enums.StorageProvider;
+import com.fm.smartlearningplatform.common.model.File;
 import com.fm.smartlearningplatform.course.dto.courseMedia.response.CourseMediaResponse;
 import com.fm.smartlearningplatform.course.mapper.CourseMediaMapper;
 import com.fm.smartlearningplatform.course.model.Course;
@@ -30,56 +34,82 @@ public class CourseMediaService {
 
     private final CourseMediaMapper courseMediaMapper;
 
-    private  final CloudinaryService cloudinaryService;
+    private final CloudinaryService cloudinaryService;
 
-    private  final FileValidation fileValidation;
+    private final FileValidation fileValidation;
 
     // ─── Create ───────────────────────────────────────────────
 
     @Transactional
-    public  CourseMediaResponse uploadThumbnail(Long courseId,MultipartFile file) throws  IOException
-    {
-        String folder = getCourseFolder(courseId) ;
+    public CourseMediaResponse uploadThumbnail(Long courseId, MultipartFile file) throws IOException {
+        String folder = getCourseFolder(courseId);
 
         String publicId = "thumbnail";
         fileValidation.validateImage(file);
 
-        CourseMedia courseMedia= getOrCreateCourseMedia(courseId);
+        CourseMedia courseMedia = getOrCreateCourseMedia(courseId);
         CloudinaryUploadResponse response = cloudinaryService.uploadImage(file, folder, publicId);
-        courseMedia.setThumbnailUrl(response.url());
-        courseMedia.setThumbnailPublicId(response.publicId());
-        return  courseMediaMapper.toResponse(courseMediaRepository.save(courseMedia));
+
+        File thumbnail = File.builder()
+                .publicId(response.publicId())
+                .url(response.url())
+                .fileName(file.getName())
+                .contentType(file.getContentType())
+                .size(file.getSize())
+                .type(FileType.IMAGE)
+                .provider(StorageProvider.CLOUDINARY)
+                .status(FileStatus.UPLOADING)
+                .build();
+        courseMedia.setThumbnail(thumbnail);
+        return courseMediaMapper.toResponse(courseMediaRepository.save(courseMedia));
     }
 
     @Transactional
-    public  CourseMediaResponse uploadPromotionalLesson(Long courseId,MultipartFile file) throws  IOException
-    {
-        String folder = getCourseFolder(courseId) ;
-        String publicId= "promo-video";
+    public CourseMediaResponse uploadPromotionalLesson(Long courseId, MultipartFile file) throws IOException {
+        String folder = getCourseFolder(courseId);
+        String publicId = "promo-video";
         fileValidation.validateVideo(file);
 
-        CourseMedia courseMedia= getOrCreateCourseMedia(courseId);
+        CourseMedia courseMedia = getOrCreateCourseMedia(courseId);
 
-        CloudinaryUploadResponse response = cloudinaryService.uploadVideo(file, folder,publicId);
-        courseMedia.setPromotionalLessonUrl(response.url());
-        courseMedia.setPromotionalLessonPublicId(response.publicId());
-        return  courseMediaMapper.toResponse(courseMediaRepository.save(courseMedia));
+        CloudinaryUploadResponse response = cloudinaryService.uploadVideo(file, folder, publicId);
+
+        File promotionalLesson = File.builder()
+                .publicId(response.publicId())
+                .url(response.url())
+                .fileName(file.getName())
+                .contentType(file.getContentType())
+                .size(file.getSize())
+                .type(FileType.VIDEO)
+                .provider(StorageProvider.CLOUDINARY)
+                .status(FileStatus.UPLOADING)
+                .build();
+        courseMedia.setThumbnail(promotionalLesson);
+        return courseMediaMapper.toResponse(courseMediaRepository.save(courseMedia));
     }
 
     @Transactional
-    public  CourseMediaResponse uploadCertificateTemplate(Long courseId,MultipartFile file) throws  IOException
-    {
-        String folder = getCourseFolder(courseId) ;
-        String publicId= "certificate-template";
+    public CourseMediaResponse uploadCertificateTemplate(Long courseId, MultipartFile file) throws IOException {
+        String folder = getCourseFolder(courseId);
+        String publicId = "certificate-template";
         fileValidation.validatePdf(file);
 
-        CourseMedia courseMedia= getOrCreateCourseMedia(courseId);
-        CloudinaryUploadResponse response = cloudinaryService.uploadPdf(file,folder,publicId);
-        courseMedia.setCertificateTemplateUrl(response.url());
-        courseMedia.setCertificateTemplatePublicId(response.publicId());
-        return  courseMediaMapper.toResponse(courseMediaRepository.save(courseMedia));
-    }
+        CourseMedia courseMedia = getOrCreateCourseMedia(courseId);
+        CloudinaryUploadResponse response = cloudinaryService.uploadPdf(file, folder, publicId);
 
+        File certificateTemplate = File.builder()
+                .publicId(response.publicId())
+                .url(response.url())
+                .fileName(file.getName())
+                .contentType(file.getContentType())
+                .size(file.getSize())
+                .type(FileType.IMAGE)
+                .provider(StorageProvider.CLOUDINARY)
+                .status(FileStatus.UPLOADING)
+                .build();
+        courseMedia.setCertificateTemplate(certificateTemplate);
+        return courseMediaMapper.toResponse(courseMediaRepository.save(courseMedia));
+    }
 
     // ─── Find ─────────────────────────────────────────────────
 
@@ -94,18 +124,12 @@ public class CourseMediaService {
     public CourseMediaResponse deleteThumbnail(Long courseId) throws  IOException
     {
         CourseMedia courseMedia = getCourseMedia(courseId);
-        if(courseMedia.getThumbnailPublicId()!=null)
+        if(courseMedia.getThumbnail().getPublicId()!=null)
         {
-            cloudinaryService.delete(courseMedia.getThumbnailPublicId(), MediaType.IMAGE);
+            cloudinaryService.delete(courseMedia.getThumbnail().getPublicId(), MediaType.IMAGE);
 
         }
-        courseMedia.setThumbnailUrl(
-                null
-        );
-
-        courseMedia.setThumbnailPublicId(
-                null
-        );
+        courseMedia.setThumbnail(null);
         return courseMediaMapper.toResponse(
                 courseMediaRepository.save(
                         courseMedia
@@ -117,18 +141,12 @@ public class CourseMediaService {
     public CourseMediaResponse deletePromotionalLesson(Long courseId) throws  IOException
     {
         CourseMedia courseMedia = getCourseMedia(courseId);
-        if(courseMedia.getPromotionalLessonPublicId()!=null)
+        if(courseMedia.getPromotionalLesson().getPublicId()!=null)
         {
-            cloudinaryService.delete(courseMedia.getPromotionalLessonPublicId(), MediaType.VIDEO);
+            cloudinaryService.delete(courseMedia.getPromotionalLesson().getPublicId(), MediaType.VIDEO);
 
         }
-        courseMedia.setPromotionalLessonUrl(
-                null
-        );
-
-        courseMedia.setPromotionalLessonPublicId(
-                null
-        );
+        courseMedia.setPromotionalLesson(null);
         return courseMediaMapper.toResponse(
                 courseMediaRepository.save(
                         courseMedia
@@ -140,18 +158,14 @@ public class CourseMediaService {
     public CourseMediaResponse deleteCertificateTemplate(Long courseId) throws  IOException
     {
         CourseMedia courseMedia = getCourseMedia(courseId);
-        if(courseMedia.getCertificateTemplatePublicId()!=null)
+        if(courseMedia.getCertificateTemplate().getPublicId()!=null)
         {
-            cloudinaryService.delete(courseMedia.getCertificateTemplatePublicId(), MediaType.PDF);
+            cloudinaryService.delete(courseMedia.getCertificateTemplate().getPublicId(), MediaType.PDF);
 
         }
-        courseMedia.setCertificateTemplateUrl(null);
-
-        courseMedia.setCertificateTemplatePublicId(null);
+        courseMedia.setCertificateTemplate(null);
         return courseMediaMapper.toResponse(courseMediaRepository.save(courseMedia));
     }
-
-
 
 
 

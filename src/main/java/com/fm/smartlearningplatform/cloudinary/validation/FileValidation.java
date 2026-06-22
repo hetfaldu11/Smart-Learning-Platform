@@ -37,16 +37,15 @@ public class FileValidation {
     );
 
     @Value("${media.image.max-size}")
-    private DataSize maxImageSize;
+    private DataSize MAX_IMAGE_SIZE;
 
     @Value("${media.video.max-size}")
-    private DataSize maxVideoSize;
+    private DataSize MAX_VIDEO_SIZE;
 
     @Value("${media.pdf.max-size}")
-    private DataSize maxPdfSize;
+    private DataSize MAX_PDF_SIZE;
 
-    public void  validateImage(MultipartFile file)
-    {
+    public void  validateImage(MultipartFile file) {
         String contentType= file.getContentType();
 
         if(contentType==null || !ALLOWED_IMAGE_TYPES.contains(contentType))
@@ -55,7 +54,7 @@ public class FileValidation {
         }
         validateFileSize(
                 file,
-                maxImageSize,
+                MAX_IMAGE_SIZE,
                 "Image"
         );
     }
@@ -71,7 +70,7 @@ public class FileValidation {
 
         validateFileSize(
                 file,
-                maxVideoSize,
+                MAX_VIDEO_SIZE,
                 "Video"
         );
     }
@@ -86,7 +85,7 @@ public class FileValidation {
 
         validateFileSize(
                 file,
-                maxPdfSize,
+                MAX_PDF_SIZE,
                 "PDF"
         );
 

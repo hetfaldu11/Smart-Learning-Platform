@@ -1,6 +1,6 @@
 package com.fm.smartlearningplatform.verification.model;
 
-import com.fm.smartlearningplatform.user.model.Auditable;
+import com.fm.smartlearningplatform.common.model.Auditable;
 import com.fm.smartlearningplatform.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;

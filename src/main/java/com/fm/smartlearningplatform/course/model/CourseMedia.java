@@ -1,11 +1,9 @@
 package com.fm.smartlearningplatform.course.model;
 
-import com.fm.smartlearningplatform.user.model.Auditable;
-import com.github.benmanes.caffeine.cache.LoadingCache;
+import com.fm.smartlearningplatform.common.model.Auditable;
+import com.fm.smartlearningplatform.common.model.File;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "course_media")
@@ -25,20 +23,26 @@ public class CourseMedia  extends Auditable {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(name = "thumbnail_url", length = 1000)
-    private String thumbnailUrl;
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
+    @JoinColumn(name = "thumbnail_id")
+    private File thumbnail;
 
-    @Column(name = "thumbnail_public_id", length = 255)
-    private String thumbnailPublicId;
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
+    @JoinColumn(name = "promotional_lesson_id")
+    private File promotionalLesson;
 
-    @Column(name = "promotional_lesson_url", length = 1000)
-    private String promotionalLessonUrl;
-    @Column(name = "promotional_lesson_id", length = 255)
-    private String promotionalLessonPublicId;
 
-    @Column(name = "certificate_template_url", length = 1000)
-    private String certificateTemplateUrl;
-    @Column(name = "certificate_template_public_id", length = 255)
-    private String certificateTemplatePublicId;
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
+    @JoinColumn(name = "certificate_template_public_id")
+    private File certificateTemplate;
 
 }

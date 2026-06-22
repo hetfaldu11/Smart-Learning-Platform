@@ -1,59 +1,190 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AIDiffSettings">
+    <option name="showAIDiff" value="false" />
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f60a23e3-0162-4c9b-b5e3-0fb33d4d5cb9" name="Changes" comment="[IMP] Changes in course and users">
-      <change afterPath="$PROJECT_DIR$/.dockerignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.env.prod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose-copy.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+    <list default="true" id="f60a23e3-0162-4c9b-b5e3-0fb33d4d5cb9" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/common/enums/FileStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/common/enums/FileType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/common/enums/StorageProvider.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/common/model/File.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/repository/CourseLanguageRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/repository/CourseLanguageRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application-het.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application-milan.properties" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__create_partial_indexes.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__create_partial_indexes.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/cloudinary/controller/CloudinaryController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/cloudinary/controller/UploadController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/cloudinary/validation/FileValidation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/cloudinary/validation/FileValidation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/AssistantInstructorRole.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/AssistantInstructorRole.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/Course.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/Course.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseAssistantInstructor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseAssistantInstructor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseDetail.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseDetail.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLanguage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLanguage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLearningOutcome.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLearningOutcome.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLevel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseLevel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseMedia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseMedia.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseMessage.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseMessage.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseMessageType.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseMessageType.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CoursePricing.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CoursePricing.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseRequirement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseRequirement.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseSupport.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/CourseSupport.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/Currency.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/Currency.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/Enrollment.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/Enrollment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/EnrollmentStatus.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/model/EnrollmentStatus.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseMediaService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/course/service/CourseMediaService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/user/model/Auditable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/common/model/Auditable.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/user/model/UserProfile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/user/model/UserProfile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/verification/model/UserVerification.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/fm/smartlearningplatform/verification/model/UserVerification.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="CodeInsightWorkspaceSettings">
+    <option name="optimizeImportsOnTheFly" value="true" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
+  <component name="EmbeddingIndexingInfo">
+    <option name="cachedIndexableFilesCount" value="4330" />
+    <option name="fileBasedEmbeddingIndicesEnabled" value="true" />
+  </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Dockerfile" />
+        <option value="Class" />
+        <option value="Enum" />
       </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="downloadAnnotationsAutomatically" value="true" />
+        <option name="downloadDocsAutomatically" value="true" />
+      </MavenImportingSettings>
     </option>
   </component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
   </component>
+  <component name="NextEditCompletionFeaturesState">
+    <decayedCancelled>
+      <entry key="MS100" value="7.534239131218408E-230" />
+      <entry key="MS500" value="1.4977628338964044E-46" />
+      <entry key="S2" value="3.830117326934996E-12" />
+      <entry key="S5" value="3.639427380510637E-5" />
+      <entry key="S10" value="0.008523033133273723" />
+      <entry key="S30" value="0.4198448987164513" />
+      <entry key="S60" value="1.6322069943745303" />
+      <entry key="M2" value="4.586206094933296" />
+      <entry key="M5" value="12.109002312846105" />
+      <entry key="M10" value="20.269196768385303" />
+      <entry key="M15" value="25.75127930351545" />
+      <entry key="M30" value="34.921487579841525" />
+      <entry key="H1" value="42.04283457416208" />
+      <entry key="H2" value="46.59037617161459" />
+      <entry key="H4" value="49.175886945785926" />
+      <entry key="D1" value="51.511656259241356" />
+      <entry key="W1" value="51.92978916347765" />
+    </decayedCancelled>
+    <decayedSelected>
+      <entry key="MS100" value="1.0" />
+      <entry key="MS500" value="1.0" />
+      <entry key="S2" value="1.0000000000061748" />
+      <entry key="S5" value="1.0000625435828183" />
+      <entry key="S10" value="1.016252529926767" />
+      <entry key="S30" value="1.9526168635462255" />
+      <entry key="S60" value="4.422548093546773" />
+      <entry key="M2" value="10.115239877996206" />
+      <entry key="M5" value="24.78500403267889" />
+      <entry key="M10" value="39.19900122809062" />
+      <entry key="M15" value="47.386677510861645" />
+      <entry key="M30" value="58.901460314750274" />
+      <entry key="H1" value="66.54565786147325" />
+      <entry key="H2" value="71.01205170968396" />
+      <entry key="H4" value="73.43580109327283" />
+      <entry key="D1" value="75.56241410302552" />
+      <entry key="W1" value="75.93723109672786" />
+    </decayedSelected>
+    <decayedShown>
+      <entry key="MS100" value="4.53646512986267E-6" />
+      <entry key="MS500" value="0.08537751604714973" />
+      <entry key="S2" value="0.5405500089247265" />
+      <entry key="S5" value="0.781954878768533" />
+      <entry key="S10" value="0.9071008453737923" />
+      <entry key="S30" value="2.2963374151591127" />
+      <entry key="S60" value="5.963621964028788" />
+      <entry key="M2" value="14.5771431084209" />
+      <entry key="M5" value="36.753772223570884" />
+      <entry key="M10" value="59.35539419590994" />
+      <entry key="M15" value="73.0467851038384" />
+      <entry key="M30" value="93.76578990676241" />
+      <entry key="H1" value="108.5558801063812" />
+      <entry key="H2" value="117.58490014303206" />
+      <entry key="H4" value="122.60258562685485" />
+      <entry key="D1" value="127.07250308693834" />
+      <entry key="W1" value="127.86679508982479" />
+    </decayedShown>
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3FPYLq4OLTq3N8GAkK8d6HpccFF" />
   <component name="ProjectLevelVcsManager">
     <ConfirmationsSetting value="2" id="Add" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "ASKED_MARK_IGNORED_FILES_AS_EXCLUDED": "true",
-    "Docker.docker-compose.yml.redis: Compose Deployment.executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
-    "RunOnceActivity.MCP Project settings loaded": "true",
-    "Spring Boot.SmartLearningPlatformApplication.executor": "Run",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "C:/Users/LENOVO/OneDrive/Desktop/Spring Boot/Smart-Learning-Platform - Copy",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "settings.editor.selected.configurable": "preferences.fileTypes"
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_MARK_IGNORED_FILES_AS_EXCLUDED&quot;: &quot;true&quot;,
+    &quot;Docker.docker-compose.yml.redis: Compose Deployment.executor&quot;: &quot;Run&quot;,
+    &quot;RequestMappingsPanelOrder0&quot;: &quot;0&quot;,
+    &quot;RequestMappingsPanelOrder1&quot;: &quot;1&quot;,
+    &quot;RequestMappingsPanelWidth0&quot;: &quot;75&quot;,
+    &quot;RequestMappingsPanelWidth1&quot;: &quot;75&quot;,
+    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.readMode.enableVisualFormatting&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;Spring Boot.SmartLearningPlatformApplication.executor&quot;: &quot;Run&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;ignore.virus.scanning.warn.message&quot;: &quot;true&quot;,
+    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/LENOVO/OneDrive/Desktop/Spring Boot/Smart-Learning-Platform - Copy&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;SDKs&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;editor.preferences.import&quot;,
+    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\LENOVO\OneDrive\Desktop\Spring Boot\Smart-Learning-Platform - Copy" />
@@ -69,7 +200,9 @@
       </method>
     </configuration>
     <configuration default="true" type="docker-deploy" factoryName="docker-compose.yml" temporary="true">
-      <deployment type="docker-compose.yml" />
+      <deployment type="docker-compose.yml">
+        <settings />
+      </deployment>
       <method v="2" />
     </configuration>
     <configuration name="docker-compose.yml.redis: Compose Deployment" type="docker-deploy" factoryName="docker-compose.yml" temporary="true" server-name="Docker">
@@ -98,8 +231,8 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.32098.37" />
-        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.32098.37" />
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.25134.95" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.25134.95" />
       </set>
     </attachedChunks>
   </component>
@@ -112,12 +245,47 @@
       <option name="project" value="LOCAL" />
       <updated>1781945798765</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="[IMP] Changes in course and users">
+      <option name="closed" value="true" />
+      <created>1781958788201</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1781958788201</updated>
+    </task>
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="f60a23e3-0162-4c9b-b5e3-0fb33d4d5cb9" name="Changes" comment="[IMP] Changes in course and users" />
+      <created>1781978118892</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1781978118892</updated>
+      <workItem from="1781978120454" duration="78000" />
+      <workItem from="1781978793079" duration="211000" />
+      <workItem from="1781979035125" duration="32000" />
+      <workItem from="1781980834561" duration="410000" />
+      <workItem from="1781981279984" duration="201000" />
+      <workItem from="1781981521884" duration="215000" />
+      <workItem from="1781981754031" duration="332000" />
+      <workItem from="1782022383978" duration="3667000" />
+      <workItem from="1782065719323" duration="5209000" />
+      <workItem from="1782115092886" duration="1233000" />
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName=".env" />
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="[IMP] Changes in course and users" />
     <option name="LAST_COMMIT_MESSAGE" value="[IMP] Changes in course and users" />
     <option name="GROUP_MULTIFILE_MERGE_BY_DIRECTORY" value="true" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>

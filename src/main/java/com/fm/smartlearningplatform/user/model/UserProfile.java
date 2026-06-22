@@ -1,5 +1,6 @@
 package com.fm.smartlearningplatform.user.model;
 
+import com.fm.smartlearningplatform.common.model.File;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -78,8 +79,12 @@ public class UserProfile {
     private String instituteName;
 
 
-    @Column(name = "profile_picture_url")
-    private String profilePictureUrl;
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE}
+    )
+    @JoinColumn(name = "profile_picture_file_id")
+    private File profilePicture;
 
     @CreationTimestamp
     @Column(name = "created_at")
