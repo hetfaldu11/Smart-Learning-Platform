@@ -5,6 +5,7 @@ import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.fm.smartlearningplatform.cloudinary.dto.CloudinaryUploadResponse;
 import com.fm.smartlearningplatform.cloudinary.enums.MediaType;
+import com.fm.smartlearningplatform.common.enums.FileType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -85,14 +86,26 @@ public class CloudinaryServiceImpl
                 ObjectUtils.asMap("resource_type", resourceType)
         );
     }
-    private CloudinaryUploadResponse buildResponse(Map<String, Object> result)
-    {
+
+    private FileType mapFileType(String resourceType) {
+
+        return switch (resourceType.toLowerCase()) {
+            case "image" -> FileType.IMAGE;
+            case "video" -> FileType.VIDEO;
+            case "raw" -> FileType.PDF;
+            default -> throw new IllegalArgumentException(
+                    "Unsupported resource type: " + resourceType
+            );
+        };
+    }
+    private CloudinaryUploadResponse buildResponse(Map<String, Object> result) {
+
+        String resourceType = (String) result.get("resource_type");
 
         return new CloudinaryUploadResponse(
-
                 (String) result.get("secure_url"),
-
-                (String) result.get("public_id")
+                (String) result.get("public_id"),
+                mapFileType(resourceType)
         );
     }
 }

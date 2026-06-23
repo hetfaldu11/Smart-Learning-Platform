@@ -69,12 +69,6 @@ public class Course extends DateAudit {
     @Builder.Default
     private List<CourseAssistantInstructor> assistantInstructors= new ArrayList<>();
 
-//    @OneToMany(
-//            mappedBy = "course",
-//            cascade =  {CascadeType.PERSIST,CascadeType.MERGE},
-//            orphanRemoval = true,
-//            fetch = FetchType.LAZY)
-//    @Builder.Default
-//    private List<Section>sections = new ArrayList<>();
+
 
 }

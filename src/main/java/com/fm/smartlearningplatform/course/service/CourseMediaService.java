@@ -8,7 +8,9 @@ import com.fm.smartlearningplatform.cloudinary.validation.FileValidation;
 import com.fm.smartlearningplatform.common.enums.FileStatus;
 import com.fm.smartlearningplatform.common.enums.FileType;
 import com.fm.smartlearningplatform.common.enums.StorageProvider;
+import com.fm.smartlearningplatform.common.mapper.FileMapper;
 import com.fm.smartlearningplatform.common.model.File;
+import com.fm.smartlearningplatform.common.service.FileService;
 import com.fm.smartlearningplatform.course.dto.courseMedia.response.CourseMediaResponse;
 import com.fm.smartlearningplatform.course.mapper.CourseMediaMapper;
 import com.fm.smartlearningplatform.course.model.Course;
@@ -22,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +41,10 @@ public class CourseMediaService {
 
     private final FileValidation fileValidation;
 
+    private final FileMapper fileMapper;
+
+    private final FileService fileService;
+
     // ─── Create ───────────────────────────────────────────────
 
     @Transactional
@@ -50,16 +57,10 @@ public class CourseMediaService {
         CourseMedia courseMedia = getOrCreateCourseMedia(courseId);
         CloudinaryUploadResponse response = cloudinaryService.uploadImage(file, folder, publicId);
 
-        File thumbnail = File.builder()
-                .publicId(response.publicId())
-                .url(response.url())
-                .fileName(file.getName())
-                .contentType(file.getContentType())
-                .size(file.getSize())
-                .type(FileType.IMAGE)
-                .provider(StorageProvider.CLOUDINARY)
-                .status(FileStatus.UPLOADING)
-                .build();
+        File oldFile = courseMedia.getThumbnail();
+        fileService.softDelete(oldFile);
+
+        File thumbnail = fileService.createFile(file, response, StorageProvider.CLOUDINARY,FileStatus.UPLOADING);
         courseMedia.setThumbnail(thumbnail);
         return courseMediaMapper.toResponse(courseMediaRepository.save(courseMedia));
     }
@@ -74,17 +75,12 @@ public class CourseMediaService {
 
         CloudinaryUploadResponse response = cloudinaryService.uploadVideo(file, folder, publicId);
 
-        File promotionalLesson = File.builder()
-                .publicId(response.publicId())
-                .url(response.url())
-                .fileName(file.getName())
-                .contentType(file.getContentType())
-                .size(file.getSize())
-                .type(FileType.VIDEO)
-                .provider(StorageProvider.CLOUDINARY)
-                .status(FileStatus.UPLOADING)
-                .build();
-        courseMedia.setThumbnail(promotionalLesson);
+        File oldFile = courseMedia.getPromotionalLesson();
+
+        fileService.softDelete(oldFile);
+
+        File promotionalLesson = fileService.createFile(file, response, StorageProvider.CLOUDINARY,FileStatus.UPLOADING);
+        courseMedia.setPromotionalLesson(promotionalLesson);
         return courseMediaMapper.toResponse(courseMediaRepository.save(courseMedia));
     }
 
@@ -95,18 +91,12 @@ public class CourseMediaService {
         fileValidation.validatePdf(file);
 
         CourseMedia courseMedia = getOrCreateCourseMedia(courseId);
-        CloudinaryUploadResponse response = cloudinaryService.uploadPdf(file, folder, publicId);
 
-        File certificateTemplate = File.builder()
-                .publicId(response.publicId())
-                .url(response.url())
-                .fileName(file.getName())
-                .contentType(file.getContentType())
-                .size(file.getSize())
-                .type(FileType.IMAGE)
-                .provider(StorageProvider.CLOUDINARY)
-                .status(FileStatus.UPLOADING)
-                .build();
+        CloudinaryUploadResponse response = cloudinaryService.uploadPdf(file, folder, publicId);
+        File oldFile = courseMedia.getCertificateTemplate();
+
+        fileService.softDelete(oldFile);
+        File certificateTemplate = fileService.createFile(file, response, StorageProvider.CLOUDINARY,FileStatus.UPLOADING);
         courseMedia.setCertificateTemplate(certificateTemplate);
         return courseMediaMapper.toResponse(courseMediaRepository.save(courseMedia));
     }
@@ -124,11 +114,7 @@ public class CourseMediaService {
     public CourseMediaResponse deleteThumbnail(Long courseId) throws  IOException
     {
         CourseMedia courseMedia = getCourseMedia(courseId);
-        if(courseMedia.getThumbnail().getPublicId()!=null)
-        {
-            cloudinaryService.delete(courseMedia.getThumbnail().getPublicId(), MediaType.IMAGE);
-
-        }
+        fileService.softDelete(courseMedia.getThumbnail());
         courseMedia.setThumbnail(null);
         return courseMediaMapper.toResponse(
                 courseMediaRepository.save(
@@ -141,11 +127,7 @@ public class CourseMediaService {
     public CourseMediaResponse deletePromotionalLesson(Long courseId) throws  IOException
     {
         CourseMedia courseMedia = getCourseMedia(courseId);
-        if(courseMedia.getPromotionalLesson().getPublicId()!=null)
-        {
-            cloudinaryService.delete(courseMedia.getPromotionalLesson().getPublicId(), MediaType.VIDEO);
-
-        }
+        fileService.softDelete(courseMedia.getPromotionalLesson());
         courseMedia.setPromotionalLesson(null);
         return courseMediaMapper.toResponse(
                 courseMediaRepository.save(
@@ -158,11 +140,7 @@ public class CourseMediaService {
     public CourseMediaResponse deleteCertificateTemplate(Long courseId) throws  IOException
     {
         CourseMedia courseMedia = getCourseMedia(courseId);
-        if(courseMedia.getCertificateTemplate().getPublicId()!=null)
-        {
-            cloudinaryService.delete(courseMedia.getCertificateTemplate().getPublicId(), MediaType.PDF);
-
-        }
+        fileService.softDelete(courseMedia.getCertificateTemplate());
         courseMedia.setCertificateTemplate(null);
         return courseMediaMapper.toResponse(courseMediaRepository.save(courseMedia));
     }

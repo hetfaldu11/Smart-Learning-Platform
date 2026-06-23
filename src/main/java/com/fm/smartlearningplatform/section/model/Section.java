@@ -5,6 +5,8 @@ import com.fm.smartlearningplatform.course.model.Course;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(
         name = "section",
@@ -30,16 +32,22 @@ public class Section extends UserDateAudit {
     @JoinColumn(name = "course_id", nullable = false)
     private Course course;
 
-    @Column(nullable = false, length = 200)
+    @Column(name = "title", nullable = false, length = 200)
     private String title;
 
-    @Column(length = 1000)
+    @Column(name = "description", length = 1000)
     private String description;
 
-    @Column(nullable = false)
+    @Column(name = "position", nullable = false)
     private Integer position;
+
+    @Column(name = "duration_seconds")
+    private Integer durationSeconds;
 
     @Builder.Default
     @Column(name = "is_published", nullable = false)
     private boolean published = false;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
 }
