@@ -45,7 +45,7 @@ public class File extends Auditable {
     private StorageProvider provider;
 
     @Column(name = "hash",length = 64)
-    private String hash; // to me karyu te ama convert karvu pdse ne ? kayu batav mara,a
+    private String hash;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status",nullable = false)
