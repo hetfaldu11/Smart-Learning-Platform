@@ -1,7 +1,7 @@
 package com.fm.smartlearningplatform.course.model;
 
 
-import com.fm.smartlearningplatform.common.model.Auditable;
+import com.fm.smartlearningplatform.common.model.DateAudit;
 import com.fm.smartlearningplatform.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -23,7 +23,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Enrollment extends Auditable {
+public class Enrollment extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

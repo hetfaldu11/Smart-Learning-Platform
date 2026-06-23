@@ -1,6 +1,6 @@
 package com.fm.smartlearningplatform.course.model;
 
-import com.fm.smartlearningplatform.common.model.Auditable;
+import com.fm.smartlearningplatform.common.model.DateAudit;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CoursePricing extends Auditable {
+public class CoursePricing extends DateAudit {
 
     @Id
     @Column(name = "course_id")

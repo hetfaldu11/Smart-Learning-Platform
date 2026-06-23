@@ -11,7 +11,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableWebSecurity(debug = true)
 @EnableAsync
 @EnableScheduling
-@EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 public class SmartLearningPlatformApplication {
 
     public static void main(String[] args) {

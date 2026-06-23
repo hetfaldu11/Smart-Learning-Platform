@@ -1,6 +1,6 @@
-package com.fm.smartlearningplatform.section;
+package com.fm.smartlearningplatform.section.model;
 
-import com.fm.smartlearningplatform.common.model.Auditable;
+import com.fm.smartlearningplatform.common.model.UserDateAudit;
 import com.fm.smartlearningplatform.course.model.Course;
 import jakarta.persistence.*;
 import lombok.*;
@@ -20,7 +20,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Section extends Auditable {
+public class Section extends UserDateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

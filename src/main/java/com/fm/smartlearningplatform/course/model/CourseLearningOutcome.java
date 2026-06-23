@@ -1,6 +1,6 @@
 package com.fm.smartlearningplatform.course.model;
 
-import com.fm.smartlearningplatform.common.model.Auditable;
+import com.fm.smartlearningplatform.common.model.DateAudit;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -20,7 +20,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class
-CourseLearningOutcome extends Auditable {
+CourseLearningOutcome extends DateAudit {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

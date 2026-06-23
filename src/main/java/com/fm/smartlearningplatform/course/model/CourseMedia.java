@@ -1,6 +1,6 @@
 package com.fm.smartlearningplatform.course.model;
 
-import com.fm.smartlearningplatform.common.model.Auditable;
+import com.fm.smartlearningplatform.common.model.DateAudit;
 import com.fm.smartlearningplatform.common.model.File;
 import jakarta.persistence.*;
 import lombok.*;
@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CourseMedia  extends Auditable {
+public class CourseMedia  extends DateAudit {
 
     @Id
     @Column(name = "course_id")

@@ -14,7 +14,7 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class File extends Auditable {
+public class File extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

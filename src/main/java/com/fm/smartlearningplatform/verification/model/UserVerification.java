@@ -1,6 +1,6 @@
 package com.fm.smartlearningplatform.verification.model;
 
-import com.fm.smartlearningplatform.common.model.Auditable;
+import com.fm.smartlearningplatform.common.model.DateAudit;
 import com.fm.smartlearningplatform.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString(exclude = "user")
 @Builder
-public class UserVerification extends Auditable {
+public class UserVerification extends DateAudit {
 
     @Id
     @Column(name = "user_id")
