@@ -6,6 +6,7 @@ import com.fm.smartlearningplatform.common.enums.StorageProvider;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "files")
@@ -14,7 +15,7 @@ import java.time.Instant;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class File extends DateAudit {
+public class File extends UserDateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
@@ -52,5 +53,5 @@ public class File extends DateAudit {
     private FileStatus status;
 
     @Column(name = "deleted_at")
-    private Instant deletedAt;
+    private LocalDateTime deletedAt;
 }

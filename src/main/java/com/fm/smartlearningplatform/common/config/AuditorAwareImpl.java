@@ -19,7 +19,7 @@ public class AuditorAwareImpl
         Authentication auth =
                 SecurityContextHolder.getContext().getAuthentication();
 
-        if (auth == null || !auth.isAuthenticated()) {
+        if (!(auth.getPrincipal() instanceof UserPrincipal userPrincipal)) {
             return Optional.empty();
         }
 
@@ -29,7 +29,7 @@ public class AuditorAwareImpl
         Optional<User> user = Optional.of(
                 User.builder()
                         .id(principal.id())
-                        .email(principal.email())
+//                        .email(principal.email())  not need of this . becuase for relationship need only id not email ..
                         .build()
         );
         return user;

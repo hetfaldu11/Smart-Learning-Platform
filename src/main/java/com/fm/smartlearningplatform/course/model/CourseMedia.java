@@ -42,7 +42,7 @@ public class CourseMedia  extends DateAudit {
             fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE}
     )
-    @JoinColumn(name = "certificate_template_public_id")
+    @JoinColumn(name = "certificate_template_id")
     private File certificateTemplate;
 
 }
