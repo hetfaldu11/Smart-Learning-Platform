@@ -1,8 +1,5 @@
-package com.fm.smartlearningplatform.section.dto.response;
+package com.fm.smartlearningplatform.section.dto.section.response;
 
-
-
-import java.time.LocalDateTime;
 
 public record SectionResponse(
 

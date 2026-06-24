@@ -1,24 +1,25 @@
-package com.fm.smartlearningplatform.lesson;
+package com.fm.smartlearningplatform.lesson.model;
 
 import com.fm.smartlearningplatform.common.model.File;
 import com.fm.smartlearningplatform.common.model.UserDateAudit;
+import com.fm.smartlearningplatform.lesson.model.Lesson;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "lesson_media")
+@Table(name = "video_lessons")
 @Getter
 @Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LessonMedia extends UserDateAudit {
+public class VideoLesson extends UserDateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
             name = "lesson_id",
             nullable = false,
@@ -26,11 +27,14 @@ public class LessonMedia extends UserDateAudit {
     )
     private Lesson lesson;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "video_file_id")
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "video_file_id", nullable = false)
     private File video;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "thumbnail_file_id")
     private File thumbnail;
+
+    @Column(name = "duration_seconds", nullable = false)
+    private Integer durationSeconds;
 }

@@ -12,9 +12,6 @@ public record EnrollmentResponse(
         Long courseId,
         String courseTitle,
 
-        Long enrollmentStatusId,
-        String enrollmentStatusName,
-
         LocalDateTime completedAt
 
 ) {

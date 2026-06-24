@@ -1,7 +1,7 @@
-package com.fm.smartlearningplatform.lesson.model;
+package com.fm.smartlearningplatform.section.model;
 
 import com.fm.smartlearningplatform.common.model.DateAudit;
-import com.fm.smartlearningplatform.lesson.model.Lesson;
+import com.fm.smartlearningplatform.section.model.Section;
 import com.fm.smartlearningplatform.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -10,12 +10,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(
-        name = "lesson_progress",
+        name = "section_progress",
         uniqueConstraints = {
                 @UniqueConstraint(
-                        name = "uk_user_lesson",
+                        name = "uk_user_section",
                         columnNames = {
-                                "user_id", "lesson_id"
+                                "user_id", "section_id"
                         }
                 )
         }
@@ -25,30 +25,28 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class LessonProgress extends DateAudit {
+public class SectionProgress extends DateAudit {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "lesson_id", nullable = false)
-    private Lesson lesson;
+    @JoinColumn(name = "section_id")
+    private Section section;
 
-    @Builder.Default
-    @Column(name = "watched_seconds", nullable = false)
-    private Integer watchedSeconds = 0;
+    @Column(name = "completed_lessons", nullable = false)
+    private Integer completedLessons;
 
-    @Builder.Default
-    @Column(name = "last_position_seconds", nullable = false)
-    private Integer lastPositionSeconds = 0;
+    @Column(name = "total_lessons", nullable = false)
+    private Integer totalLessons;
 
-    @Builder.Default
     @Column(name = "is_completed", nullable = false)
+    @Builder.Default
     private Boolean completed = false;
 
     @Column(name = "completed_at")

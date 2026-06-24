@@ -1,15 +1,11 @@
-package com.fm.smartlearningplatform.section.dto.request;
-
+package com.fm.smartlearningplatform.section.dto.section.request;
 
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-public record CreateSectionRequest(
-
-        @NotNull(message = "Course id is required.")
-        Long courseId,
+public record UpdateSectionRequest(
 
         @NotBlank(message = "Section title is required.")
         @Size(
@@ -27,11 +23,13 @@ public record CreateSectionRequest(
 
         @NotNull(message = "Section position is required.")
         @Min(value = 1, message = "Position must be greater than 0.")
-        Integer position
+        Integer position,
+
+        boolean published
 
 ) {
 
-    public CreateSectionRequest {
+    public UpdateSectionRequest {
 
         if (title != null) {
             title = title.trim().replaceAll("\\s+", " ");

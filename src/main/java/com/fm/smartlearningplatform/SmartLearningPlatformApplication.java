@@ -12,9 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 @EnableAsync
 @EnableScheduling
 public class SmartLearningPlatformApplication {
-
     public static void main(String[] args) {
         SpringApplication.run(SmartLearningPlatformApplication.class, args);
     }
-
 }

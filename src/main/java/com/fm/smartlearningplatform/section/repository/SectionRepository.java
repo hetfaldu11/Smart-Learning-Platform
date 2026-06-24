@@ -14,21 +14,13 @@ public interface SectionRepository extends JpaRepository<Section, Long> {
 
     Optional<Section> findByIdAndDeletedAtIsNull(Long id);
 
-    boolean existsByCourseIdAndPositionAndDeletedAtIsNull(
-            Long courseId,
-            Integer position
-    );
+    boolean existsByCourseIdAndPositionAndDeletedAtIsNull(Long courseId, Integer position);
 
     long countByCourseIdAndDeletedAtIsNull(Long courseId);
 
-    List<Section> findByCourseIdAndPublishedTrueAndDeletedAtIsNullOrderByPositionAsc(
-            Long courseId
-    );
+    List<Section> findByCourseIdAndPublishedTrueAndDeletedAtIsNullOrderByPositionAsc(Long courseId);
 
-    Page<Section> findByCourseIdAndDeletedAtIsNullOrderByPositionAsc(
-            Long courseId,
-            Pageable pageable
-    );
+    Page<Section> findByCourseIdAndDeletedAtIsNullOrderByPositionAsc(Long courseId, Pageable pageable);
 
     boolean existsByIdAndDeletedAtIsNull(Long id);
 }
