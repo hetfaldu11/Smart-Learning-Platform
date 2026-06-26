@@ -10,28 +10,21 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
-public class AuditorAwareImpl
-        implements AuditorAware<User> {
+public class AuditorAwareImpl implements AuditorAware<User> {
 
     @Override
     public Optional<User> getCurrentAuditor() {
 
-        Authentication auth =
-                SecurityContextHolder.getContext().getAuthentication();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
         if (!(auth.getPrincipal() instanceof UserPrincipal userPrincipal)) {
             return Optional.empty();
         }
 
-        UserPrincipal principal =
-                (UserPrincipal) auth.getPrincipal();
-
-        Optional<User> user = Optional.of(
-                User.builder()
-                        .id(principal.id())
-//                        .email(principal.email())  not need of this . becuase for relationship need only id not email ..
-                        .build()
-        );
+        Optional<User> user = Optional.of(User.builder()
+                .id(userPrincipal.id())
+//              .email(principal.email())  not need of this . becuase for relationship need only id not email ..
+                .build());
         return user;
     }
 }

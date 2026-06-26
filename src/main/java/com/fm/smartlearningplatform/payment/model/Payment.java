@@ -1,6 +1,7 @@
 package com.fm.smartlearningplatform.payment.model;
 
 import com.fm.smartlearningplatform.common.model.UserDateAudit;
+import com.fm.smartlearningplatform.payment.model.enums.CurrencyCode;
 import com.fm.smartlearningplatform.payment.model.enums.PaymentGatewayType;
 import com.fm.smartlearningplatform.payment.model.enums.PaymentMethod;
 import com.fm.smartlearningplatform.payment.model.enums.PaymentStatus;
@@ -75,8 +76,9 @@ public class Payment extends UserDateAudit {
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 3)
-    private String currency;
+    private CurrencyCode currency;
 
     @Column(name = "failure_reason", length = 500)
     private String failureReason;

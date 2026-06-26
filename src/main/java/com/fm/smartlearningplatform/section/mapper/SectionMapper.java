@@ -11,7 +11,7 @@ public interface SectionMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "course", ignore = true)
-    @Mapping(target = "durationSeconds", ignore = true)
+//    @Mapping(target = "durationSeconds", ignore = true)
     @Mapping(target = "published", constant = "false")
     @Mapping(target = "deletedAt", ignore = true)
     Section toEntity(CreateSectionRequest request);
@@ -22,7 +22,7 @@ public interface SectionMapper {
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "course", ignore = true)
-    @Mapping(target = "durationSeconds", ignore = true)
+//    @Mapping(target = "durationSeconds", ignore = true)
     @Mapping(target = "deletedAt", ignore = true)
     void update(UpdateSectionRequest request, @MappingTarget Section section);
 }

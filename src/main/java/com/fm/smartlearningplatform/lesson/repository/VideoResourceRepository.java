@@ -11,17 +11,13 @@ public interface VideoResourceRepository extends JpaRepository<VideoResource, Lo
 
     // ─── Find ─────────────────────────────────────────────────
 
-    Optional<VideoResource> findById(Long videoResourceId);
-
     Optional<VideoResource> findByIdAndVideoLessonId(Long videoResourceId, Long videoLessonId);
 
     Page<VideoResource> findByVideoLessonIdOrderByPositionAsc(Long videoLessonId, Pageable pageable);
 
     // ─── Exists ───────────────────────────────────────────────
 
-    boolean existsById(Long videoResourceId);
-
-    boolean existsByVideoLessonIdAndFileId(Long videoLessonId, String fileId);
+    boolean existsByVideoLessonIdAndFileId(Long videoLessonId, Long fileId);
 
     boolean existsByVideoLessonIdAndPosition(Long videoLessonId, Integer position);
 

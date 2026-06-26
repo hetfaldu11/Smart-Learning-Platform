@@ -31,11 +31,8 @@ public record LessonResponse(
 
         LocalDateTime publishedAt,
 
-        LocalDateTime scheduledAt,
+        LocalDateTime scheduledAt
 
-        Long createdBy,
-
-        Long updatedBy
 
 ) {
 }

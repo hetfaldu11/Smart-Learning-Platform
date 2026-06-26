@@ -1,5 +1,6 @@
 package com.fm.smartlearningplatform.payment.config;
 
+import com.cloudinary.Url;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -14,5 +15,4 @@ public class PaymentProperties {
     private String successUrl;
 
     private String failureUrl;
-
 }

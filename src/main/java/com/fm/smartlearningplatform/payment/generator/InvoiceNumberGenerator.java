@@ -1,18 +1,29 @@
 package com.fm.smartlearningplatform.payment.generator;
 
+import com.fm.smartlearningplatform.payment.generator.DatabaseSequenceService;
+import com.fm.smartlearningplatform.payment.generator.NumberGenerator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDate;
-
 @Component
-public class InvoiceNumberGenerator {
+@RequiredArgsConstructor
+public class InvoiceNumberGenerator
+        extends NumberGenerator {
 
-    private static final String PREFIX = "INV";
+    private final DatabaseSequenceService sequenceService;
 
-    public String generate(long sequenceNumber) {
-        int year = LocalDate.now().getYear();
-        int month = LocalDate.now().getMonthValue();
-        int date = LocalDate.now().getDayOfMonth();
-        return String.format("%s-%d%d$d%08d", PREFIX, year, month, date, sequenceNumber);
+    @Override
+    protected String getPrefix() {
+
+        return "INV";
+
     }
+
+    @Override
+    protected long getNextSequence() {
+
+        return sequenceService.nextInvoiceSequence();
+
+    }
+
 }

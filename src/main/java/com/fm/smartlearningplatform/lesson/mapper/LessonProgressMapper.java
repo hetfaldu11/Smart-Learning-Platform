@@ -41,10 +41,10 @@ public interface LessonProgressMapper {
             target = "lessonDurationSeconds",
             source = "lesson.durationSeconds"
     )
-    @Mapping(
-            target = "progressPercentage",
-            source = "progressPercentage"
-    )
+//    @Mapping(
+//            target = "progressPercentage",
+//            source = "progressPercentage"
+//    )
     LessonProgressResponse toResponse(
             LessonProgress lessonProgress
     );

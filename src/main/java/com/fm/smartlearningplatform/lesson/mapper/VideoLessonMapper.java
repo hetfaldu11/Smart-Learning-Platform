@@ -18,8 +18,8 @@ public interface VideoLessonMapper {
 
     @Mapping(target = "lessonId", source = "lesson.id")
     @Mapping(target = "lessonTitle", source = "lesson.title")
-    @Mapping(target = "video", source = "video")
-    @Mapping(target = "thumbnail", source = "thumbnail")
+//    @Mapping(target = "video", source = "video")
+//    @Mapping(target = "thumbnail", source = "thumbnail")
     VideoLessonResponse toResponse(
             VideoLesson videoLesson
     );

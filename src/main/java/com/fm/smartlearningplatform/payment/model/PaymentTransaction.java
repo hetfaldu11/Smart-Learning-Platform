@@ -24,12 +24,12 @@ import lombok.*;
                 @Index(
                         name = "idx_payment_transaction_status",
                         columnList = "status"
-                ),
-
-                @Index(
-                        name = "idx_payment_transaction_gateway_reference",
-                        columnList = "gateway_reference_id"
                 )
+//
+//                @Index(
+//                        name = "idx_payment_transaction_gateway_reference",
+//                        columnList = "gateway_reference_id"
+//                )
         }
 )
 @Getter

@@ -21,10 +21,6 @@ public interface VideoLessonRepository
     );
 
     boolean existsByVideoId(
-            String videoId
-    );
-
-    boolean existsByThumbnailId(
-            String thumbnailId
+            Long thumbnailId
     );
 }

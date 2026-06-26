@@ -34,9 +34,9 @@ import java.time.LocalDateTime;
 public class File extends UserDateAudit {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private String id;
+    private Long id;
 
     @Column(name = "public_id",nullable = false, unique = true)
     private String publicId;

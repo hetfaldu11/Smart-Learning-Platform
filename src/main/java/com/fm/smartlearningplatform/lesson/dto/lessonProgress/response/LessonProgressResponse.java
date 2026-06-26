@@ -20,7 +20,7 @@ public record LessonProgressResponse(
 
         Integer lessonDurationSeconds,
 
-        Double progressPercentage,
+//        Double progressPercentage,
 
         Boolean completed,
 

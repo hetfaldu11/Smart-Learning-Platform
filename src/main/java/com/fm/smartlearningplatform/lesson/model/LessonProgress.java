@@ -6,6 +6,7 @@ import com.fm.smartlearningplatform.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
@@ -48,10 +49,8 @@ public class LessonProgress extends DateAudit {
     private Integer lastPositionSeconds = 0;
 
     @Builder.Default
-    @Column(name = "progress_percentage", nullable = false,
-            precision = 5,
-            scale = 2)
-    private Double progressPercentage = 0.0;
+    @Column(name = "progress_percentage", nullable = false, precision = 5, scale = 2)
+    private BigDecimal progressPercentage = BigDecimal.ZERO;
 
     @Builder.Default
     @Column(name = "is_completed", nullable = false)

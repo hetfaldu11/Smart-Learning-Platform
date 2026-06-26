@@ -18,6 +18,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Service
@@ -58,7 +59,7 @@ public class LessonProgressService {
 
         double percentage = calculateProgress(lessonProgress.getWatchedSeconds(), lesson.getDurationSeconds());
 
-        lessonProgress.setProgressPercentage(percentage);
+        lessonProgress.setProgressPercentage(new BigDecimal(percentage));
 
         boolean completed = percentage >= 100.0;
 
@@ -135,7 +136,7 @@ public class LessonProgressService {
 
     private LessonProgress getOrCreateLessonProgress(User user, Lesson lesson) {
 
-        return lessonProgressRepository.findByUserIdAndLessonId(user.getId(), lesson.getId()).orElseGet(() -> LessonProgress.builder().user(user).lesson(lesson).watchedSeconds(0).lastPositionSeconds(0).progressPercentage(0.0).completed(false).build());
+        return lessonProgressRepository.findByUserIdAndLessonId(user.getId(), lesson.getId()).orElseGet(() -> LessonProgress.builder().user(user).lesson(lesson).watchedSeconds(0).lastPositionSeconds(0).progressPercentage(new BigDecimal(0)).completed(false).build());
     }
 
     private LessonProgress getLessonProgress(Long userId, Long lessonId) {

@@ -22,13 +22,13 @@ public class SectionProgressController {
 
     // ─── Create ───────────────────────────────────────────────
 
-    @PostMapping("/section-progress")
-    public ResponseEntity<SectionProgressResponse> create(
-            @Valid @RequestBody CreateSectionProgressRequest request) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(sectionProgressService.create(request));
-    }
+//    @PostMapping("/section-progress")
+//    public ResponseEntity<SectionProgressResponse> create(
+//            @Valid @RequestBody CreateSectionProgressRequest request) {
+//        return ResponseEntity
+//                .status(HttpStatus.CREATED)
+//                .body(sectionProgressService.create(request));
+//    }
 
     // ─── Find ─────────────────────────────────────────────────
 
@@ -41,11 +41,11 @@ public class SectionProgressController {
 
     // ─── Update ───────────────────────────────────────────────
 
-    @PatchMapping("/users/{userId}/sections/{sectionId}/progress")
-    public ResponseEntity<SectionProgressResponse> update(
-            @PathVariable Long userId,
-            @PathVariable Long sectionId,
-            @Valid @RequestBody UpdateSectionProgressRequest request) {
-        return ResponseEntity.ok(sectionProgressService.update(userId, sectionId, request));
-    }
+//    @PatchMapping("/users/{userId}/sections/{sectionId}/progress")
+//    public ResponseEntity<SectionProgressResponse> update(
+//            @PathVariable Long userId,
+//            @PathVariable Long sectionId,
+//            @Valid @RequestBody UpdateSectionProgressRequest request) {
+//        return ResponseEntity.ok(sectionProgressService.update(userId, sectionId, request));
+//    }
 }

@@ -6,15 +6,15 @@ public record VideoLessonResponse(
 
         Long lessonId,
 
-        String lessonTitle,
+        String lessonTitle
 
-        Long videoId,
-
-        String videoUrl,
-
-        Long thumbnailId,
-
-        String thumbnailUrl
+//        String videoId,
+//
+//        String videoUrl,
+//
+//        String thumbnailId,
+//
+//        String thumbnailUrl
 
 ) {
 }
