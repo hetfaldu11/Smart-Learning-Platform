@@ -9,7 +9,23 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "files")
+@Table(
+        name = "files",
+        indexes = {
+                @Index(
+                        name = "idx_file_public_id",
+                        columnList = "public_id"
+                ),
+                @Index(
+                        name = "idx_file_status",
+                        columnList = "status"
+                ),
+                @Index(
+                        name = "idx_file_deleted_at",
+                        columnList = "deleted_at"
+                )
+        }
+)
 @Getter
 @Setter
 @Builder

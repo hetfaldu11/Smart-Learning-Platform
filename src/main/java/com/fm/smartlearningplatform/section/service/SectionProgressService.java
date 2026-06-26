@@ -1,9 +1,8 @@
 package com.fm.smartlearningplatform.section.service;
 
-import com.fm.smartlearningplatform.exceptionhandler.exception.DuplicateResourceException;
 import com.fm.smartlearningplatform.exceptionhandler.exception.ResourceNotFoundException;
-import com.fm.smartlearningplatform.section.dto.sectionProgress.request.CreateSectionProgressRequest;
-import com.fm.smartlearningplatform.section.dto.sectionProgress.request.UpdateSectionProgressRequest;
+import com.fm.smartlearningplatform.lesson.repository.LessonProgressRepository;
+import com.fm.smartlearningplatform.lesson.repository.LessonRepository;
 import com.fm.smartlearningplatform.section.dto.sectionProgress.response.SectionProgressResponse;
 import com.fm.smartlearningplatform.section.mapper.SectionProgressMapper;
 import com.fm.smartlearningplatform.section.model.Section;
@@ -18,69 +17,38 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class SectionProgressService {
 
     private final SectionProgressRepository sectionProgressRepository;
+
     private final SectionRepository sectionRepository;
+
+    private final LessonRepository lessonRepository;
+
+    private final LessonProgressRepository lessonProgressRepository;
+
     private final UserRepository userRepository;
+
     private final SectionProgressMapper sectionProgressMapper;
-
-    // ─── Create ───────────────────────────────────────────────
-
-    @Transactional
-    public SectionProgressResponse create(CreateSectionProgressRequest request) {
-
-        User user = getUser(request.userId());
-
-        Section section = getSection(request.sectionId());
-
-        validateSectionProgressNotExists(request.userId(), request.sectionId());
-
-        SectionProgress sectionProgress = sectionProgressMapper.toEntity(request);
-
-        sectionProgress.setUser(user);
-        sectionProgress.setSection(section);
-
-        return sectionProgressMapper.toResponse(sectionProgressRepository.save(sectionProgress));
-    }
 
     // ─── Find ─────────────────────────────────────────────────
 
     public SectionProgressResponse findByUserAndSection(Long userId, Long sectionId) {
+
         return sectionProgressMapper.toResponse(getSectionProgress(userId, sectionId));
     }
 
     public Page<SectionProgressResponse> findAllByUser(Long userId, Pageable pageable) {
+
         return sectionProgressRepository.findByUserId(userId, pageable).map(sectionProgressMapper::toResponse);
     }
 
     public Page<SectionProgressResponse> findAllBySection(Long sectionId, Pageable pageable) {
+
         return sectionProgressRepository.findBySectionId(sectionId, pageable).map(sectionProgressMapper::toResponse);
-    }
-
-    // ─── Update ───────────────────────────────────────────────
-
-    @Transactional
-    public SectionProgressResponse update(Long userId, Long sectionId, UpdateSectionProgressRequest request) {
-
-        SectionProgress progress = getSectionProgress(userId, sectionId);
-
-        progress.setCompletedLessons(request.completedLessons());
-
-        if (request.completedLessons() >= progress.getTotalLessons()) {
-            progress.setCompleted(true);
-            progress.setCompletedAt(LocalDateTime.now());
-
-        } else {
-            progress.setCompleted(false);
-            progress.setCompletedAt(null);
-        }
-
-        return sectionProgressMapper.toResponse(sectionProgressRepository.save(progress));
     }
 
     // ─── Exists ───────────────────────────────────────────────
@@ -89,8 +57,40 @@ public class SectionProgressService {
 
         return sectionProgressRepository.existsByUserIdAndSectionId(userId, sectionId);
     }
+    // ─── Refresh Progress ───────────────────────────────────────
 
-    // ─── Helper ───────────────────────────────────────────────
+    @Transactional
+    public void refreshProgress(Long userId, Long sectionId) {
+
+        User user = getUser(userId);
+
+        Section section = getSection(sectionId);
+
+        SectionProgress progress = getOrCreateSectionProgress(user, section);
+        long totalLessons = lessonRepository.countBySectionIdAndDeletedAtIsNull(sectionId);
+
+        long completedLessons = lessonProgressRepository.countByUserIdAndLessonSectionIdAndCompletedTrue(userId, sectionId);
+        progress.setTotalLessons(Math.toIntExact(totalLessons));
+
+        progress.setCompletedLessons(Math.toIntExact(completedLessons));
+
+        boolean completed = totalLessons > 0 && completedLessons == totalLessons;
+
+        progress.setCompleted(completed);
+
+        progress.setCompletedAt(completed ? java.time.LocalDateTime.now() : null);
+
+        sectionProgressRepository.save(progress);
+    }
+
+// ─── Helper ─────────────────────────────────────────────────
+
+    private SectionProgress getOrCreateSectionProgress(User user, Section section) {
+
+        return sectionProgressRepository.findByUserIdAndSectionId(user.getId(), section.getId()).orElseGet(() ->
+
+                SectionProgress.builder().user(user).section(section).completedLessons(0).totalLessons(0).completed(false).build());
+    }
 
     private SectionProgress getSectionProgress(Long userId, Long sectionId) {
 
@@ -99,19 +99,11 @@ public class SectionProgressService {
 
     private User getUser(Long userId) {
 
-        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found."));
+        return userRepository.findByIdAndDeletedAtIsNull(userId).orElseThrow(() -> new ResourceNotFoundException("User not found."));
     }
 
     private Section getSection(Long sectionId) {
 
-        return sectionRepository.findById(sectionId).orElseThrow(() -> new ResourceNotFoundException("Section not found."));
-    }
-
-    private void validateSectionProgressNotExists(Long userId, Long sectionId) {
-
-        if (sectionProgressRepository.existsByUserIdAndSectionId(userId, sectionId)) {
-
-            throw new DuplicateResourceException("Section progress already exists.");
-        }
+        return sectionRepository.findByIdAndDeletedAtIsNull(sectionId).orElseThrow(() -> new ResourceNotFoundException("Section not found."));
     }
 }

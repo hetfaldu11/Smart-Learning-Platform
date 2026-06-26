@@ -317,6 +317,23 @@ public class GlobalExceptionHandler {
                 .body(response);
     }
 
+    @ExceptionHandler(BadRequestException.class)
+    public ResponseEntity<ErrorResponse> handleBadRequest(
+            BadRequestException ex,
+            HttpServletRequest request
+    ) {
+
+        ErrorResponse response = buildError(
+                HttpStatus.BAD_REQUEST,
+                "BAD_REQUEST",
+                ex.getMessage(),
+                request,
+                null
+        );
+
+        return ResponseEntity.badRequest().body(response);
+    }
+
     // ────────────────────── Helper ────────────────────────────────────────────────
 
     private ErrorResponse buildError(

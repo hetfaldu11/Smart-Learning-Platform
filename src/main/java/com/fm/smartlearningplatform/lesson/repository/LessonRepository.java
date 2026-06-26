@@ -4,81 +4,54 @@ import com.fm.smartlearningplatform.lesson.model.Lesson;
 import com.fm.smartlearningplatform.lesson.model.LessonStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
-@Repository
-public interface LessonRepository extends JpaRepository<Lesson, Long> { //yaa 1 min
+public interface LessonRepository extends JpaRepository<Lesson, Long> {
 
-    // =========================
-    // Basic
-    // =========================
+    // ─── Find ─────────────────────────────────────────────────
 
-    Optional<Lesson> findByIdAndDeletedAtIsNull(Long id);
+    Optional<Lesson> findByIdAndDeletedAtIsNull(
+            Long lessonId
+    );
 
-    boolean existsBySectionIdAndPosition(Long sectionId, Integer position);
+    Page<Lesson> findBySectionIdAndDeletedAtIsNullOrderByPositionAsc(
+            Long sectionId,
+            Pageable pageable
+    );
 
-    // =========================
-    // Section Lessons
-    // =========================
+    Page<Lesson> findBySectionIdAndStatusAndDeletedAtIsNullOrderByPositionAsc(
+            Long sectionId,
+            LessonStatus status,
+            Pageable pageable
+    );
 
-    List<Lesson> findAllBySectionIdAndDeletedAtIsNullOrderByPositionAsc(Long sectionId);
+    // ─── Exists ───────────────────────────────────────────────
 
-    Page<Lesson> findAllBySectionIdAndDeletedAtIsNull(Long sectionId, Pageable pageable);
+    boolean existsByIdAndDeletedAtIsNull(
+            Long lessonId
+    );
 
-    // =========================
-    // Published Lessons
-    // =========================
+    boolean existsBySectionIdAndPositionAndDeletedAtIsNull(
+            Long sectionId,
+            Integer position
+    );
 
-    List<Lesson> findAllBySectionIdAndStatusAndDeletedAtIsNullOrderByPositionAsc(Long sectionId, LessonStatus status);
+    boolean existsBySectionIdAndPositionAndIdNotAndDeletedAtIsNull(
+            Long sectionId,
+            Integer position,
+            Long lessonId
+    );
 
-    // =========================
-    // Navigation
-    // =========================
+    // ─── Count ────────────────────────────────────────────────
 
-    Optional<Lesson> findFirstBySectionIdAndPositionGreaterThanAndDeletedAtIsNullOrderByPositionAsc(Long sectionId, Integer position);
+    long countBySectionIdAndDeletedAtIsNull(
+            Long sectionId
+    );
 
-    Optional<Lesson> findFirstBySectionIdAndPositionLessThanAndDeletedAtIsNullOrderByPositionDesc(Long sectionId, Integer position);
-
-    // =========================
-    // Counts
-    // =========================
-
-    long countBySectionIdAndDeletedAtIsNull(Long sectionId);
-
-    long countBySectionCourseIdAndDeletedAtIsNull(Long courseId);
-
-    // =========================
-    // Search
-    // =========================
-
-    Page<Lesson> findByTitleContainingIgnoreCaseAndDeletedAtIsNull(String keyword, Pageable pageable);
-
-    // =========================
-    // Fetch Curriculum
-    // =========================
-
-    @EntityGraph(
-            attributePaths = {"section"}
-    )
-    List<Lesson> findAllBySectionCourseIdAndDeletedAtIsNullOrderBySectionPositionAscPositionAsc(Long courseId);
-
-    // =========================
-    // Soft Delete
-    // =========================
-
-    @Modifying
-    @Query("""
-            update Lesson l
-            set l.deletedAt = CURRENT_TIMESTAMP
-            where l.id = :lessonId
-            """)
-    void softDelete(@Param("lessonId") Long lessonId);
+    long countBySectionIdAndStatusAndDeletedAtIsNull(
+            Long sectionId,
+            LessonStatus status
+    );
 }

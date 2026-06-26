@@ -48,6 +48,12 @@ public class LessonProgress extends DateAudit {
     private Integer lastPositionSeconds = 0;
 
     @Builder.Default
+    @Column(name = "progress_percentage", nullable = false,
+            precision = 5,
+            scale = 2)
+    private Double progressPercentage = 0.0;
+
+    @Builder.Default
     @Column(name = "is_completed", nullable = false)
     private Boolean completed = false;
 

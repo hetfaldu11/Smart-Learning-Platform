@@ -101,11 +101,22 @@ public class CloudinaryServiceImpl
     private CloudinaryUploadResponse buildResponse(Map<String, Object> result) {
 
         String resourceType = (String) result.get("resource_type");
+        Integer durationSeconds = null;
+
+        if ("video".equals(resourceType)) {
+
+            Object duration = result.get("duration");
+
+            if (duration instanceof Number number) {
+                durationSeconds = number.intValue();
+            }
+        }
 
         return new CloudinaryUploadResponse(
                 (String) result.get("secure_url"),
                 (String) result.get("public_id"),
-                mapFileType(resourceType)
+                mapFileType(resourceType),
+                durationSeconds
         );
     }
 }

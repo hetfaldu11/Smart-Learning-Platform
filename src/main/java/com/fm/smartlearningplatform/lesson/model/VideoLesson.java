@@ -7,7 +7,18 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "video_lessons")
+@Table(name = "video_lessons",
+        indexes = {
+                @Index(
+                        name = "idx_video_lesson",
+                        columnList = "lesson_id"
+                ),
+                @Index(
+                        name = "idx_video_file",
+                        columnList = "video_file_id"
+                )
+        }
+)
 @Getter
 @Setter
 @Builder
@@ -34,7 +45,4 @@ public class VideoLesson extends UserDateAudit {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "thumbnail_file_id")
     private File thumbnail;
-
-    @Column(name = "duration_seconds", nullable = false)
-    private Integer durationSeconds;
 }
