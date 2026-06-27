@@ -1,5 +1,6 @@
 package com.fm.smartlearningplatform.course.dto.enrollment.request;
 
+import com.fm.smartlearningplatform.course.model.EnrollmentStatus;
 import jakarta.validation.constraints.NotNull;
 
 public record CreateEnrollmentRequest(
@@ -11,7 +12,7 @@ public record CreateEnrollmentRequest(
         Long courseId,
 
         @NotNull(message = "Enrollment status id is required.")
-        Long enrollmentStatusId
+        EnrollmentStatus enrollmentStatus
 
 ) {
 }

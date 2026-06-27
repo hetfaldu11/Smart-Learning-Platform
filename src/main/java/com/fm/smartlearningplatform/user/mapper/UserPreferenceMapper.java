@@ -15,14 +15,13 @@ public interface UserPreferenceMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", source = "user")
     @Mapping(target = "language", source = "language")
-    @Mapping(target = "theme", source = "theme")
+//    @Mapping(target = "theme", source = "theme")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     UserPreference toEntity(
             CreateUserPreferenceRequest request,
             User user,
-            Language language,
-            Theme theme
+            Language language
     );
 
     @Mapping(target = "userId", source = "user.id")
@@ -30,8 +29,8 @@ public interface UserPreferenceMapper {
     @Mapping(target = "languageId",
             source = "language.id")
 
-    @Mapping(target = "themeId",
-            source = "theme.id")
+//    @Mapping(target = "themeId",
+//            source = "theme.id")
     UserPreferenceResponse toResponse(
             UserPreference preference
     );
@@ -43,7 +42,7 @@ public interface UserPreferenceMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "language", ignore = true)
-    @Mapping(target = "theme", ignore = true)
+//    @Mapping(target = "theme", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
     void update(

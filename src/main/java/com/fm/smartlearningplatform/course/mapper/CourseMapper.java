@@ -16,7 +16,7 @@ public interface CourseMapper {
 
     @Mapping(target = "instructor", ignore = true)
     @Mapping(target = "courseLevel", ignore = true)
-    @Mapping(target = "courseStatus", ignore = true)
+//    @Mapping(target = "courseStatus", ignore = true)
 
     @Mapping(target = "deletedAt", ignore = true)
 
@@ -43,10 +43,10 @@ public interface CourseMapper {
             source = "courseLevel.name"
     )
 
-    @Mapping(
-            target = "courseStatusId",
-            source = "courseStatus.id"
-    )
+//    @Mapping(
+//            target = "courseStatusId",
+//            source = "courseStatus.id"
+//    )
     @Mapping(
             target = "courseStatusName",
             source = "courseStatus.name"
@@ -62,7 +62,7 @@ public interface CourseMapper {
 
     @Mapping(target = "instructor", ignore = true)
     @Mapping(target = "courseLevel", ignore = true)
-    @Mapping(target = "courseStatus", ignore = true)
+//    @Mapping(target = "courseStatus", ignore = true)
 
     @Mapping(target = "deletedAt", ignore = true)
 

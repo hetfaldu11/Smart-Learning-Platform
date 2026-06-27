@@ -1,6 +1,7 @@
 package com.fm.smartlearningplatform.user.dto.userProfile.request;
 
 import com.fm.smartlearningplatform.user.dto.address.AddressDto;
+import com.fm.smartlearningplatform.user.model.Gender;
 import org.hibernate.validator.constraints.URL;
 
 import java.time.LocalDate;
@@ -14,7 +15,7 @@ public record PatchUserProfileRequest(
 
         Long educationLevelId,
         Long professionId,
-        Long genderId,
+        Gender gender,
 
         LocalDate dateOfBirth,
 

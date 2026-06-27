@@ -1,6 +1,7 @@
 package com.fm.smartlearningplatform.user.dto.userProfile.response;
 
 import com.fm.smartlearningplatform.user.dto.address.AddressDto;
+import com.fm.smartlearningplatform.user.model.Gender;
 
 import java.time.LocalDate;
 
@@ -17,7 +18,7 @@ public record UserProfileResponse(
 
         Long professionId,
 
-        Long genderId,
+        Gender gender,
 
         LocalDate dateOfBirth,
 

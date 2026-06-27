@@ -56,10 +56,10 @@ public class EnrollmentService {
                 request.courseId()
         );
 
-        EnrollmentStatus enrollmentStatus =
-                getEnrollmentStatus(
-                        request.enrollmentStatusId()
-                );
+//        EnrollmentStatus enrollmentStatus =
+//                getEnrollmentStatus(
+//                        request.enrollmentStatusId()
+//                );
 
         Enrollment enrollment =
                 enrollmentMapper.toEntity(request);
@@ -68,9 +68,9 @@ public class EnrollmentService {
 
         enrollment.setCourse(course);
 
-        enrollment.setEnrollmentStatus(
-                enrollmentStatus
-        );
+//        enrollment.setEnrollmentStatus(
+//                enrollmentStatus
+//        );
 
         return enrollmentMapper.toResponse(
                 enrollmentRepository.save(enrollment)

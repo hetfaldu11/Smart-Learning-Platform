@@ -38,9 +38,7 @@ public class UserProfileService {
 
         Profession profession = getProfession(request.professionId());
 
-        Gender gender = getGender(request.genderId());
-
-        UserProfile profile = userProfileMapper.toEntity(request, user, educationLevel, profession, gender);
+        UserProfile profile = userProfileMapper.toEntity(request, user, educationLevel, profession);
 
         return userProfileMapper.toResponse(userProfileRepository.save(profile));
     }
@@ -68,10 +66,7 @@ public class UserProfileService {
             Profession profession = getProfession(request.professionId());
             profile.setProfession(profession);
         }
-        if (request.genderId() != null) {
-            Gender gender = getGender(request.genderId());
-            profile.setGender(gender);
-        }
+
         userProfileMapper.update(request, profile);
         return userProfileMapper.toResponse(userProfileRepository.save(profile)
         );
@@ -103,11 +98,6 @@ public class UserProfileService {
     private Profession getProfession(Long id) {
         return professionRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Profession not found."));
-    }
-
-    private Gender getGender(Long id) {
-        return genderRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Gender not found."));
     }
 
 }

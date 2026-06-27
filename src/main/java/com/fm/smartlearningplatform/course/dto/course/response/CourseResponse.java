@@ -1,5 +1,7 @@
 package com.fm.smartlearningplatform.course.dto.course.response;
 
+import com.fm.smartlearningplatform.course.model.CourseStatus;
+
 public record CourseResponse(
 
         Long id,
@@ -13,8 +15,7 @@ public record CourseResponse(
         Long courseLevelId,
         String courseLevelName,
 
-        Long courseStatusId,
-        String courseStatusName
+        CourseStatus courseStatus
 
 
 ) {

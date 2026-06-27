@@ -1,9 +1,11 @@
 package com.fm.smartlearningplatform.user.dto.userPreference.request;
 
+import com.fm.smartlearningplatform.user.model.Theme;
+
 public record CreateUserPreferenceRequest(
 
         Long languageId,
-        Long themeId,
+        Theme theme,
 
         Boolean notificationEnabled
 

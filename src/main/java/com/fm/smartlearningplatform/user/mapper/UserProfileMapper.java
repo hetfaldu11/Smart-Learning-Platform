@@ -19,42 +19,27 @@ public interface UserProfileMapper {
     @Mapping(target = "user", source = "user")
     @Mapping(target = "educationLevel", source = "educationLevel")
     @Mapping(target = "profession", source = "profession")
-    @Mapping(target = "gender", source = "gender")
+//    @Mapping(target = "gender", source = "gender")
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    UserProfile toEntity(
-            CreateUserProfileRequest request,
-            User user,
-            EducationLevel educationLevel,
-            Profession profession,
-            Gender gender
-    );
+    UserProfile toEntity(CreateUserProfileRequest request, User user, EducationLevel educationLevel, Profession profession);
 
     @Mapping(target = "userId", source = "id")
 
-    @Mapping(target = "educationLevelId",
-            source = "educationLevel.id")
+    @Mapping(target = "educationLevelId", source = "educationLevel.id")
 
-    @Mapping(target = "professionId",
-            source = "profession.id")
+    @Mapping(target = "professionId", source = "profession.id")
 
-    @Mapping(target = "genderId",
-            source = "gender.id")
+//    @Mapping(target = "genderId",
+//            source = "gender.id")
     UserProfileResponse toResponse(UserProfile profile);
 
-    @BeanMapping(
-            nullValuePropertyMappingStrategy =
-                    NullValuePropertyMappingStrategy.IGNORE
-    )
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "educationLevel", ignore = true)
     @Mapping(target = "profession", ignore = true)
-    @Mapping(target = "gender", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
-    void update(
-            PatchUserProfileRequest request,
-            @MappingTarget UserProfile profile
-    );
+    void update(PatchUserProfileRequest request, @MappingTarget UserProfile profile);
 }

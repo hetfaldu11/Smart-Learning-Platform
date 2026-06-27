@@ -40,9 +40,7 @@ public class Enrollment extends DateAudit {
     @Column(name = "completed_at")
     private LocalDateTime completedAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "status_id", nullable = false)
+   @Enumerated(EnumType.STRING)
+    @JoinColumn(name = "enrollment_Status", nullable = false)
     private EnrollmentStatus enrollmentStatus;
-
-
 }

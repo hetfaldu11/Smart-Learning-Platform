@@ -16,7 +16,7 @@ public interface EnrollmentMapper {
 
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "course", ignore = true)
-    @Mapping(target = "enrollmentStatus", ignore = true)
+//    @Mapping(target = "enrollmentStatus", ignore = true)
 
     @Mapping(target = "completedAt", ignore = true)
     Enrollment toEntity(
@@ -29,7 +29,6 @@ public interface EnrollmentMapper {
 
     @Mapping(target = "courseId", source = "course.id")
     @Mapping(target = "courseTitle", source = "course.title")
-
 
     EnrollmentResponse toResponse(
             Enrollment enrollment
@@ -44,7 +43,7 @@ public interface EnrollmentMapper {
 
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "course", ignore = true)
-    @Mapping(target = "enrollmentStatus", ignore = true)
+//    @Mapping(target = "enrollmentStatus", ignore = true)
     void update(
             UpdateEnrollmentRequest request,
             @MappingTarget Enrollment enrollment

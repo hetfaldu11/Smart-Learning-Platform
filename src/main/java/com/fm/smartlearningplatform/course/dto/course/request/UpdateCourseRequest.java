@@ -1,5 +1,6 @@
 package com.fm.smartlearningplatform.course.dto.course.request;
 
+import com.fm.smartlearningplatform.course.model.CourseStatus;
 import jakarta.validation.constraints.Size;
 
 public record UpdateCourseRequest(
@@ -20,7 +21,7 @@ public record UpdateCourseRequest(
 
         Long courseLevelId,
 
-        Long courseStatusId,
+        CourseStatus courseStatus,
 
         Long instructorId
 

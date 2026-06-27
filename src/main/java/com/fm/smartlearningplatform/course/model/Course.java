@@ -37,10 +37,9 @@ public class Course extends DateAudit {
     @JoinColumn(name = "course_level_id", nullable = false)
     private CourseLevel courseLevel;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "course_status_id", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "course_status", nullable = false)
     private CourseStatus courseStatus;
-
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;

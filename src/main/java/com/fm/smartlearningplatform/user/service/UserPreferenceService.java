@@ -42,9 +42,9 @@ public class UserPreferenceService {
 
         Language language = getLanguage(request.languageId());
 
-        Theme theme = getTheme(request.themeId());
+//        Theme theme = getTheme(request.themeId());
 
-        UserPreference preference = userPreferenceMapper.toEntity(request, user, language, theme);
+        UserPreference preference = userPreferenceMapper.toEntity(request, user, language);
 
         return userPreferenceMapper.toResponse(userPreferenceRepository.save(preference));
     }
@@ -60,10 +60,7 @@ public class UserPreferenceService {
             Language language = getLanguage(request.languageId());
             preference.setLanguage(language);
         }
-        if (request.themeId() != null) {
-            Theme theme = getTheme(request.themeId());
-            preference.setTheme(theme);
-        }
+
         userPreferenceMapper.update(request, preference);
         return userPreferenceMapper.toResponse(userPreferenceRepository.save(preference));
     }
@@ -97,9 +94,9 @@ public class UserPreferenceService {
         return languageRepository.findByIdAndDeletedAtIsNull(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Language not found."));
     }
-
-    private Theme getTheme(Long id) {
-        return themeRepository.findByIdAndDeletedAtIsNull(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Theme not found."));
-    }
+//
+//    private Theme getTheme(Long id) {
+//        return themeRepository.findByIdAndDeletedAtIsNull(id)
+//                .orElseThrow(() -> new ResourceNotFoundException("Theme not found."));
+//    }
 }

@@ -1,5 +1,6 @@
 package com.fm.smartlearningplatform.course.dto.course.request;
 
+import com.fm.smartlearningplatform.course.model.CourseStatus;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -29,7 +30,7 @@ public record CreateCourseRequest(
         Long courseLevelId,
 
         @NotNull(message = "Course status id is required.")
-        Long courseStatusId
+        CourseStatus courseStatus
 
 ) {
 

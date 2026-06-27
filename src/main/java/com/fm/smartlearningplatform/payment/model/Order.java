@@ -1,6 +1,7 @@
 package com.fm.smartlearningplatform.payment.model;
 
 import com.fm.smartlearningplatform.common.model.UserDateAudit;
+import com.fm.smartlearningplatform.payment.dto.request.OrderPrice;
 import com.fm.smartlearningplatform.payment.model.enums.CurrencyCode;
 import com.fm.smartlearningplatform.payment.model.enums.OrderStatus;
 import com.fm.smartlearningplatform.user.model.User;
@@ -74,5 +75,14 @@ public class Order extends UserDateAudit {
     public void removeItem(OrderItem item) {
         items.remove(item);
         item.setOrder(null);
+    }
+
+    public void applyPrice(OrderPrice price) {
+
+        this.subtotalAmount = price.subtotal();
+        this.discountAmount = price.discount();
+        this.taxAmount = price.tax();
+        this.totalAmount = price.total();
+
     }
 }

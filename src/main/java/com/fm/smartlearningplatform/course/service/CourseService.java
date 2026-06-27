@@ -39,120 +39,85 @@ public class CourseService {
     // ─── Create ───────────────────────────────────────────────
 
     @Transactional
-    public CourseResponse create(
-            CreateCourseRequest request
-    ) {
+    public CourseResponse create(CreateCourseRequest request) {
 
-        User instructor = getInstructor(
-                request.instructorId()
-        );
+        User instructor = getInstructor(request.instructorId());
 
-        CourseLevel courseLevel = getCourseLevel(
-                request.courseLevelId()
-        );
+        CourseLevel courseLevel = getCourseLevel(request.courseLevelId());
 
-        CourseStatus courseStatus = getCourseStatus(
-                request.courseStatusId()
-        );
+//        CourseStatus courseStatus = getCourseStatus(
+//                request.courseStatusId()
+//        );
 
-        Course course =
-                courseMapper.toEntity(request);
+        Course course = courseMapper.toEntity(request);
 
         course.setInstructor(instructor);
 
         course.setCourseLevel(courseLevel);
 
-        course.setCourseStatus(courseStatus);
 
-        return courseMapper.toResponse(
-                courseRepository.save(course)
-        );
+        return courseMapper.toResponse(courseRepository.save(course));
     }
 
     // ─── Find ─────────────────────────────────────────────────
 
     public CourseResponse findById(Long courseId) {
 
-        return courseMapper.toResponse(
-                getCourse(courseId)
-        );
+        return courseMapper.toResponse(getCourse(courseId));
     }
 
-    public Page<CourseResponse> search(
-            String keyword,
-            Pageable pageable
-    ) {
+    public Page<CourseResponse> search(String keyword, Pageable pageable) {
 
         Page<Course> courses;
 
         if (keyword == null || keyword.isBlank()) {
 
-            courses = courseRepository
-                    .findByDeletedAtIsNull(pageable);
+            courses = courseRepository.findByDeletedAtIsNull(pageable);
 
         } else {
 
             keyword = keyword.trim();
 
-            courses = courseRepository
-                    .findByDeletedAtIsNullAndTitleContainingIgnoreCase(
-                            keyword,
-                            pageable
-                    );
+            courses = courseRepository.findByDeletedAtIsNullAndTitleContainingIgnoreCase(keyword, pageable);
         }
 
-        return courses.map(
-                courseMapper::toResponse
-        );
+        return courses.map(courseMapper::toResponse);
     }
 
     // ─── Update ───────────────────────────────────────────────
 
     @Transactional
-    public CourseResponse update(
-            Long courseId,
-            UpdateCourseRequest request
-    ) {
+    public CourseResponse update(Long courseId, UpdateCourseRequest request) {
 
         Course course = getCourse(courseId);
 
         if (request.instructorId() != null) {
 
-            User instructor = getInstructor(
-                    request.instructorId()
-            );
+            User instructor = getInstructor(request.instructorId());
 
             course.setInstructor(instructor);
         }
 
         if (request.courseLevelId() != null) {
 
-            CourseLevel courseLevel =
-                    getCourseLevel(
-                            request.courseLevelId()
-                    );
+            CourseLevel courseLevel = getCourseLevel(request.courseLevelId());
 
             course.setCourseLevel(courseLevel);
         }
 
-        if (request.courseStatusId() != null) {
+//        if (request.courseStatusId() != null) {
+//
+//            CourseStatus courseStatus =
+//                    getCourseStatus(
+//                            request.courseStatusId()
+//                    );
+//
+//            course.setCourseStatus(courseStatus);
+//        }
 
-            CourseStatus courseStatus =
-                    getCourseStatus(
-                            request.courseStatusId()
-                    );
+        courseMapper.update(request, course);
 
-            course.setCourseStatus(courseStatus);
-        }
-
-        courseMapper.update(
-                request,
-                course
-        );
-
-        return courseMapper.toResponse(
-                courseRepository.save(course)
-        );
+        return courseMapper.toResponse(courseRepository.save(course));
     }
 
     // ─── Delete ───────────────────────────────────────────────
@@ -172,86 +137,49 @@ public class CourseService {
     @Transactional
     public CourseResponse restore(Long courseId) {
 
-        Course course = courseRepository
-                .findById(courseId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Course not found."
-                        )
-                );
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new ResourceNotFoundException("Course not found."));
 
         course.setDeletedAt(null);
 
-        return courseMapper.toResponse(
-                courseRepository.save(course)
-        );
+        return courseMapper.toResponse(courseRepository.save(course));
     }
 
     // ─── Exists ───────────────────────────────────────────────
 
     public boolean existsById(Long courseId) {
 
-        return courseRepository
-                .existsByIdAndDeletedAtIsNull(
-                        courseId
-                );
+        return courseRepository.existsByIdAndDeletedAtIsNull(courseId);
     }
 
     // ─── Helper ───────────────────────────────────────────────
 
     private Course getCourse(Long courseId) {
 
-        return courseRepository
-                .findByIdAndDeletedAtIsNull(
-                        courseId
-                )
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Course not found."
-                        )
-                );
+        return courseRepository.findByIdAndDeletedAtIsNull(courseId).orElseThrow(() -> new ResourceNotFoundException("Course not found."));
     }
 
     private User getInstructor(Long instructorId) {
 
-        return userRepository
-                .findByIdAndDeletedAtIsNull(
-                        instructorId
-                )
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Instructor not found."
-                        )
-                );
+        return userRepository.findByIdAndDeletedAtIsNull(instructorId).orElseThrow(() -> new ResourceNotFoundException("Instructor not found."));
     }
 
-    private CourseLevel getCourseLevel(
-            Long courseLevelId
-    ) {
+    private CourseLevel getCourseLevel(Long courseLevelId) {
 
-        return courseLevelRepository
-                .findByIdAndDeletedAtIsNull(
-                        courseLevelId
-                )
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Course level not found."
-                        )
-                );
+        return courseLevelRepository.findByIdAndDeletedAtIsNull(courseLevelId).orElseThrow(() -> new ResourceNotFoundException("Course level not found."));
     }
 
-    private CourseStatus getCourseStatus(
-            Long courseStatusId
-    ) {
-
-        return courseStatusRepository
-                .findByIdAndDeletedAtIsNull(
-                        courseStatusId
-                )
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(
-                                "Course status not found."
-                        )
-                );
-    }
+//    private CourseStatus getCourseStatus(
+//            Long courseStatusId
+//    ) {
+//
+//        return courseStatusRepository
+//                .findByIdAndDeletedAtIsNull(
+//                        courseStatusId
+//                )
+//                .orElseThrow(() ->
+//                        new ResourceNotFoundException(
+//                                "Course status not found."
+//                        )
+//                );
+//    }
 }
