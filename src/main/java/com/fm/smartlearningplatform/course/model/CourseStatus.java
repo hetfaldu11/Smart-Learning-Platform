@@ -6,4 +6,4 @@ public enum CourseStatus {
     PUBLISHED,
     REJECTED,
     ARCHIVED
-}
+} 
